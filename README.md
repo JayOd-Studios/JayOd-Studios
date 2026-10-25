@@ -15,8 +15,8 @@ JayOd Studios has no portfolio websites yet, so this site does not pretend other
 | `index.html` | The whole page: hero, tools, services, work, approach, studio, contact, footer |
 | `styles.css` | Design system — paper/navy/terracotta palette, type scale, layout, responsive rules |
 | `script.js` | Mobile nav, header state, active-section tracking, scroll reveals, contact form |
-| `logo.jpg` | Full logo lockup — monogram plus wordmark (used for social previews) |
-| `logo-mark.jpg` | Cropped JO monogram for the header, cards and footer |
+| `logo.jpg` | Full logo lockup — monogram plus wordmark, on white (used for social previews) |
+| `logo-mark.png` | The JO monogram cut out on transparency, used in the header, hero card and footer |
 
 ## Sections
 
@@ -31,6 +31,7 @@ JayOd Studios has no portfolio websites yet, so this site does not pretend other
 ## Design notes
 
 - **Palette**: paper `#F5F1E8`, navy `#14213D` (taken from the logo), terracotta accent `#C0432A`.
+- **Logo**: `logo-mark.png` has no background and sits directly on the page. In the dark footer it is flipped to light with a CSS filter, so one asset covers both themes.
 - **Type**: Instrument Serif for display, Inter for everything else, both loaded from Google Fonts with system fallbacks.
 - Change the whole look by editing the custom properties at the top of `styles.css`.
 
