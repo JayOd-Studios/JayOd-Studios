@@ -87,9 +87,7 @@ if ("IntersectionObserver" in window && sections.length) {
 /* ---------- Scroll reveal (progressive enhancement) ---------- */
 
 if (!reduceMotion && "IntersectionObserver" in window) {
-  const targets = document.querySelectorAll(
-    ".hero-copy, .hero-card, .section-head, .service, .steps > li, .work-lead, .work-panel, .studio-head, .studio-body, .contact-lead, .form"
-  );
+  const targets = document.querySelectorAll("[data-reveal]");
 
   const revealObserver = new IntersectionObserver(
     (entries) => {
@@ -102,7 +100,6 @@ if (!reduceMotion && "IntersectionObserver" in window) {
     { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
   );
 
-  // Stagger comes from CSS (nth-child), keeping styles out of the markup.
   targets.forEach((target) => {
     target.classList.add("reveal");
     revealObserver.observe(target);
@@ -201,7 +198,12 @@ if (form) {
       subject
     )}&body=${encodeURIComponent(body)}`;
 
-    statusEl.innerHTML = `Opening your email app with the brief filled in. If nothing opens, send it to <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> instead.`;
+    // Build the fallback link as DOM nodes rather than an HTML string.
+    const fallbackLink = document.createElement("a");
+    fallbackLink.href = `mailto:${CONTACT_EMAIL}`;
+    fallbackLink.textContent = CONTACT_EMAIL;
+    statusEl.textContent = "Opening your email app with the brief filled in. If nothing opens, send it to ";
+    statusEl.append(fallbackLink, document.createTextNode(" instead."));
     statusEl.className = "form-status is-success";
   });
 }

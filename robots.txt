@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jayod-studios.github.io/JayOd-Studios/sitemap.xml

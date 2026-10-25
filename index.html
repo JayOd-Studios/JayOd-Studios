@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self'; form-action 'self'" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
   <title>JayOd Studios — Independent web development studio</title>
   <meta name="description" content="JayOd Studios is a new independent web development studio building fast, accessible websites and web apps. Now taking on its first founding client projects." />
   <meta name="theme-color" content="#F5F1E8" />
@@ -26,11 +29,11 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" id="siteHeader">
-    <div class="wrap header-inner">
+  <header class="masthead" id="siteHeader">
+    <div class="wrap masthead-inner">
       <a class="brand" href="#top" aria-label="JayOd Studios — home">
-        <img class="brand-logo" src="logo-mark.png" alt="" width="40" height="40" />
-        <span class="brand-name">JayOd<span class="brand-name-light"> Studios</span></span>
+        <img class="brand-mark" src="logo-mark.png" alt="" width="36" height="36" />
+        <span class="brand-word">JayOd <span class="brand-word-light">Studios</span></span>
       </a>
 
       <nav class="nav" id="primaryNav" aria-label="Primary">
@@ -40,7 +43,7 @@
           <li><a href="#approach">Approach</a></li>
           <li><a href="#studio">Studio</a></li>
         </ul>
-        <a class="btn btn-primary btn-sm nav-cta" href="#contact">Start a project</a>
+        <a class="btn btn-solid btn-sm nav-cta" href="#contact">Start a project</a>
       </nav>
 
       <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav">
@@ -53,51 +56,47 @@
   <main id="main">
     <!-- Hero -->
     <section class="hero" id="top">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Independent web studio · Est. 2026</p>
-          <h1>Good websites,<br /><em>built properly.</em></h1>
+      <div class="wrap">
+        <p class="eyebrow">Independent web development studio <span aria-hidden="true">·</span> Est. 2026</p>
+        <h1 class="hero-title">Good websites,<br /><em>built properly.</em></h1>
+
+        <div class="hero-lower">
           <p class="lede">JayOd Studios designs and builds fast, accessible websites and web apps for a small number of clients at a time. You work directly with the developer writing the code.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#contact">
+            <a class="btn btn-solid" href="#contact">
               Start a project
               <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a class="btn btn-ghost" href="#approach">How we work</a>
+            <a class="btn btn-quiet" href="#approach">How we work</a>
           </div>
-          <ul role="list" class="hero-facts">
-            <li>Fixed-scope quotes</li>
-            <li>Launches in weeks</li>
-            <li>You own the code</li>
-          </ul>
         </div>
 
-        <aside class="hero-card" aria-label="Studio availability">
-          <div class="hero-card-top">
-            <span class="logo-tile"><img src="logo-mark.png" alt="JayOd Studios logo" width="112" height="112" /></span>
-            <span class="badge"><span class="status-dot" aria-hidden="true"></span> Booking now</span>
+        <dl class="facts facts-hero">
+          <div class="fact">
+            <dt>Status</dt>
+            <dd><span class="status-dot" aria-hidden="true"></span>Booking first projects</dd>
           </div>
-          <p class="card-kicker">Founding clients</p>
-          <h2 class="card-title">Three slots open.</h2>
-          <p class="card-body">We're new, so our first clients get senior-level craft at a founding rate — plus a case study built on their results, if they're happy to share one.</p>
-          <dl class="card-list">
-            <div><dt>Status</dt><dd>Taking first projects</dd></div>
-            <div><dt>Reply time</dt><dd>One business day</dd></div>
-            <div><dt>Based</dt><dd>Remote, worldwide</dd></div>
-          </dl>
-          <a class="card-link" href="mailto:hello@jayodstudios.com">
-            hello@jayodstudios.com
-            <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </aside>
+          <div class="fact">
+            <dt>Reply time</dt>
+            <dd>One business day</dd>
+          </div>
+          <div class="fact">
+            <dt>Based</dt>
+            <dd>Remote, worldwide</dd>
+          </div>
+          <div class="fact">
+            <dt>Engagements</dt>
+            <dd>Fixed scope or retainer</dd>
+          </div>
+        </dl>
       </div>
     </section>
 
     <!-- Tools -->
-    <div class="stack" aria-label="Tools we build with">
-      <div class="wrap stack-inner">
-        <span class="stack-label">Tools</span>
-        <ul role="list" class="stack-list">
+    <div class="tools" aria-label="Tools we build with">
+      <div class="wrap tools-inner">
+        <span class="tools-label">Tools</span>
+        <ul role="list" class="tools-list">
           <li>TypeScript</li>
           <li>React</li>
           <li>Next.js</li>
@@ -111,210 +110,227 @@
 
     <!-- Services -->
     <section class="section" id="services">
-      <div class="wrap">
-        <header class="section-head">
-          <p class="eyebrow">01 — Services</p>
-          <h2>What we build</h2>
-          <p class="section-lede">One studio and a deliberately short list of things we do well.</p>
-        </header>
+      <div class="wrap rail">
+        <p class="rail-label">01 <span aria-hidden="true">—</span> Services</p>
+        <div class="rail-body">
+          <h2 data-reveal>What we build</h2>
+          <p class="section-lede" data-reveal>One studio and a deliberately short list of things we do well.</p>
 
-        <div class="service-grid">
-          <article class="service">
-            <span class="service-num">01</span>
-            <h3>Marketing websites</h3>
-            <p>Sites that explain what you do in five seconds and load before anyone gives up. Designed around your message, not a template.</p>
-          </article>
-          <article class="service">
-            <span class="service-num">02</span>
-            <h3>Web apps &amp; dashboards</h3>
-            <p>Client portals, internal tools and data-heavy interfaces in React and TypeScript — built to stay maintainable after launch.</p>
-          </article>
-          <article class="service">
-            <span class="service-num">03</span>
-            <h3>E-commerce</h3>
-            <p>Storefronts on Shopify or a custom stack. Clean catalogues, checkouts that don't leak sales, and a backend you can actually run.</p>
-          </article>
-          <article class="service">
-            <span class="service-num">04</span>
-            <h3>Redesigns &amp; rescues</h3>
-            <p>Inherited a slow, half-finished site? We audit what's there, keep what works and rebuild the parts that cost you customers.</p>
-          </article>
-          <article class="service">
-            <span class="service-num">05</span>
-            <h3>Performance &amp; accessibility</h3>
-            <p>Core Web Vitals, WCAG AA, real device testing. The unglamorous work that decides whether people stay or leave.</p>
-          </article>
-          <article class="service">
-            <span class="service-num">06</span>
-            <h3>Care plans</h3>
-            <p>Updates, backups, monitoring and small changes after launch, on a simple monthly plan. No retainer theatre.</p>
-          </article>
+          <div class="rows">
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">01</p>
+              <h3>Marketing websites</h3>
+              <p class="row-desc">Sites that explain what you do in five seconds and load before anyone gives up. Designed around your message, not a template.</p>
+              <p class="row-meta">Design <span aria-hidden="true">·</span> Build</p>
+            </article>
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">02</p>
+              <h3>Web apps &amp; dashboards</h3>
+              <p class="row-desc">Client portals, internal tools and data-heavy interfaces in React and TypeScript — built to stay maintainable after launch.</p>
+              <p class="row-meta">React <span aria-hidden="true">·</span> TypeScript</p>
+            </article>
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">03</p>
+              <h3>E-commerce</h3>
+              <p class="row-desc">Storefronts on Shopify or a custom stack. Clean catalogues, checkouts that don't leak sales, and a backend you can actually run.</p>
+              <p class="row-meta">Shopify <span aria-hidden="true">·</span> Custom</p>
+            </article>
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">04</p>
+              <h3>Redesigns &amp; rescues</h3>
+              <p class="row-desc">Inherited a slow, half-finished site? We audit what's there, keep what works and rebuild the parts that cost you customers.</p>
+              <p class="row-meta">Audit <span aria-hidden="true">·</span> Rebuild</p>
+            </article>
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">05</p>
+              <h3>Performance &amp; accessibility</h3>
+              <p class="row-desc">Core Web Vitals, WCAG AA, real device testing. The unglamorous work that decides whether people stay or leave.</p>
+              <p class="row-meta">Speed <span aria-hidden="true">·</span> WCAG</p>
+            </article>
+            <article class="row" data-reveal>
+              <p class="row-index" aria-hidden="true">06</p>
+              <h3>Care plans</h3>
+              <p class="row-desc">Updates, backups, monitoring and small changes after launch, on a simple monthly plan. No retainer theatre.</p>
+              <p class="row-meta">Monthly</p>
+            </article>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Work -->
-    <section class="section work" id="work">
-      <div class="wrap work-grid">
-        <div class="work-lead">
-          <p class="eyebrow eyebrow-invert">02 — Work</p>
-          <h2>No case studies.<br /><em>Yet.</em></h2>
-          <p>We launched this year and we'd rather show real work than borrow someone else's. Our first projects are being scoped now — when they ship, this page fills up with the real numbers, not screenshots in a browser frame.</p>
-          <p>Which makes this the cheapest our work will ever be.</p>
-          <a class="btn btn-paper" href="#contact">
-            Be the first case study
-            <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
+    <section class="section work on-dark" id="work">
+      <div class="wrap rail">
+        <p class="rail-label">02 <span aria-hidden="true">—</span> Work</p>
+        <div class="rail-body">
+          <h2 class="work-title" data-reveal>No case studies.<br /><em>Yet.</em></h2>
 
-        <div class="work-panel">
-          <p class="panel-label">Every project ships with</p>
-          <ul role="list" class="build-list">
-            <li><span>01</span><div><h3>A custom design</h3><p>Drawn for your business, never a bought template.</p></div></li>
-            <li><span>02</span><div><h3>A performance budget</h3><p>Targets we hold ourselves to, checked before handover.</p></div></li>
-            <li><span>03</span><div><h3>Accessibility passes</h3><p>Keyboard, contrast and screen-reader checks to WCAG AA.</p></div></li>
-            <li><span>04</span><div><h3>Code you own</h3><p>Repository, assets and a written guide to running it.</p></div></li>
-            <li><span>05</span><div><h3>Thirty days of support</h3><p>The first month after launch, we're still on the line.</p></div></li>
-          </ul>
+          <div class="work-split" data-reveal>
+            <div class="work-copy">
+              <p>We launched this year and we'd rather show real work than borrow someone else's. Our first projects are being scoped now — when they ship, this page fills up with the real numbers, not screenshots in a browser frame.</p>
+              <p class="work-note">Which makes this the cheapest our work will ever be.</p>
+              <a class="btn btn-paper" href="#contact">
+                Be the first case study
+                <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+
+            <div class="work-list">
+              <p class="list-label">Every project ships with</p>
+              <ol role="list" class="build-list">
+                <li><span aria-hidden="true">01</span><div><h3>A custom design</h3><p>Drawn for your business, never a bought template.</p></div></li>
+                <li><span aria-hidden="true">02</span><div><h3>A performance budget</h3><p>Targets we hold ourselves to, checked before handover.</p></div></li>
+                <li><span aria-hidden="true">03</span><div><h3>Accessibility passes</h3><p>Keyboard, contrast and screen-reader checks to WCAG AA.</p></div></li>
+                <li><span aria-hidden="true">04</span><div><h3>Code you own</h3><p>Repository, assets and a written guide to running it.</p></div></li>
+                <li><span aria-hidden="true">05</span><div><h3>Thirty days of support</h3><p>The first month after launch, we're still on the line.</p></div></li>
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Approach -->
     <section class="section" id="approach">
-      <div class="wrap">
-        <header class="section-head">
-          <p class="eyebrow">03 — Approach</p>
-          <h2>Four steps, no mystery</h2>
-          <p class="section-lede">You'll know the price, the pages and the timeline before any code gets written.</p>
-        </header>
+      <div class="wrap rail">
+        <p class="rail-label">03 <span aria-hidden="true">—</span> Approach</p>
+        <div class="rail-body">
+          <h2 data-reveal>Four steps, no mystery</h2>
+          <p class="section-lede" data-reveal>You'll know the price, the pages and the timeline before any code gets written.</p>
 
-        <ol role="list" class="steps">
-          <li>
-            <span class="step-num">01</span>
-            <h3>Scope</h3>
-            <p>A short call, then a written scope: pages, features, timeline and a fixed price. If the brief isn't a fit, we say so.</p>
-          </li>
-          <li>
-            <span class="step-num">02</span>
-            <h3>Design</h3>
-            <p>Structure first, then a designed direction in the browser — not a static mockup that falls apart once it's real.</p>
-          </li>
-          <li>
-            <span class="step-num">03</span>
-            <h3>Build</h3>
-            <p>Hand-written, responsive front-end with accessible components. A staging link from week one so you watch it come together.</p>
-          </li>
-          <li>
-            <span class="step-num">04</span>
-            <h3>Launch &amp; care</h3>
-            <p>Hosting, analytics, redirects and a handover you can follow. Then thirty days of support while things settle.</p>
-          </li>
-        </ol>
+          <ol role="list" class="steps">
+            <li class="step" data-reveal>
+              <p class="step-num" aria-hidden="true">01</p>
+              <h3>Scope</h3>
+              <p>A short call, then a written scope: pages, features, timeline and a fixed price. If the brief isn't a fit, we say so.</p>
+            </li>
+            <li class="step" data-reveal>
+              <p class="step-num" aria-hidden="true">02</p>
+              <h3>Design</h3>
+              <p>Structure first, then a designed direction in the browser — not a static mockup that falls apart once it's real.</p>
+            </li>
+            <li class="step" data-reveal>
+              <p class="step-num" aria-hidden="true">03</p>
+              <h3>Build</h3>
+              <p>Hand-written, responsive front-end with accessible components. A staging link from week one so you watch it come together.</p>
+            </li>
+            <li class="step" data-reveal>
+              <p class="step-num" aria-hidden="true">04</p>
+              <h3>Launch &amp; care</h3>
+              <p>Hosting, analytics, redirects and a handover you can follow. Then thirty days of support while things settle.</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
     <!-- Studio -->
     <section class="section studio" id="studio">
-      <div class="wrap studio-grid">
-        <div class="studio-head">
-          <p class="eyebrow">04 — Studio</p>
-          <h2>Small<br />on purpose.</h2>
-        </div>
-        <div class="studio-body">
-          <p class="studio-large">JayOd Studios is an independent web development studio founded in 2026. No account managers, no hand-off to a team you never meet — the person who scopes your project is the person who builds it.</p>
-          <p>We started from a simple frustration: too many small businesses pay agency prices for templated work, then get left with a site nobody can maintain. We do the opposite. Short scopes, honest timelines, clean code and a handover you can use.</p>
-          <p>Being early also means being available. Our first clients get our full attention, our best work and a rate that won't exist once the portfolio is full.</p>
+      <div class="wrap rail">
+        <p class="rail-label">04 <span aria-hidden="true">—</span> Studio</p>
+        <div class="rail-body">
+          <h2 data-reveal>Small on purpose.</h2>
 
-          <dl class="studio-facts">
-            <div><dt>Studio</dt><dd>Independent, founded 2026</dd></div>
-            <div><dt>Focus</dt><dd>Websites, web apps, e-commerce</dd></div>
-            <div><dt>Where</dt><dd>Remote, working worldwide</dd></div>
-            <div><dt>Engagements</dt><dd>Fixed scope or monthly retainer</dd></div>
+          <div class="studio-split" data-reveal>
+            <p class="statement">JayOd Studios is an independent web development studio founded in 2026. No account managers, no hand-off to a team you never meet — the person who scopes your project is the person who builds it.</p>
+            <div class="studio-copy">
+              <p>We started from a simple frustration: too many small businesses pay agency prices for templated work, then get left with a site nobody can maintain. We do the opposite. Short scopes, honest timelines, clean code and a handover you can use.</p>
+              <p>Being early also means being available. Our first clients get our full attention, our best work and a rate that won't exist once the portfolio is full.</p>
+            </div>
+          </div>
+
+          <dl class="facts facts-studio" data-reveal>
+            <div class="fact"><dt>Studio</dt><dd>Independent, founded 2026</dd></div>
+            <div class="fact"><dt>Focus</dt><dd>Websites, web apps, e-commerce</dd></div>
+            <div class="fact"><dt>Where</dt><dd>Remote, working worldwide</dd></div>
+            <div class="fact"><dt>Engagements</dt><dd>Fixed scope or monthly retainer</dd></div>
           </dl>
         </div>
       </div>
     </section>
 
     <!-- Contact -->
-    <section class="section contact" id="contact">
-      <div class="wrap contact-grid">
-        <div class="contact-lead">
-          <p class="eyebrow">05 — Contact</p>
-          <h2>Tell us what<br />you're building.</h2>
-          <p>A few lines is enough to start. You'll get a reply within one business day, and a straight answer on whether we're the right studio for it.</p>
+    <section class="section" id="contact">
+      <div class="wrap rail">
+        <p class="rail-label">05 <span aria-hidden="true">—</span> Contact</p>
+        <div class="rail-body contact-grid">
+          <div class="contact-lead" data-reveal>
+            <h2>Tell us what<br />you're building.</h2>
+            <p>A few lines is enough to start. You'll get a reply within one business day, and a straight answer on whether we're the right studio for it.</p>
 
-          <ul role="list" class="contact-lines">
-            <li><span class="contact-label">Email</span><a href="mailto:hello@jayodstudios.com">hello@jayodstudios.com</a></li>
-            <li><span class="contact-label">Where</span><span>Remote — working worldwide</span></li>
-            <li><span class="contact-label">Availability</span><span><span class="status-dot status-dot-dark" aria-hidden="true"></span> Booking first projects</span></li>
-          </ul>
+            <dl class="contact-list">
+              <div><dt>Email</dt><dd><a href="mailto:hello@jayodstudios.com">hello@jayodstudios.com</a></dd></div>
+              <div><dt>Where</dt><dd>Remote — working worldwide</dd></div>
+              <div><dt>Availability</dt><dd><span class="status-dot" aria-hidden="true"></span>Booking first projects</dd></div>
+            </dl>
+          </div>
+
+          <form class="form" id="projectForm" novalidate data-reveal>
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-error" />
+                <p class="field-error" id="name-error" hidden></p>
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-error" />
+                <p class="field-error" id="email-error" hidden></p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="projectType">Project type</label>
+                <select id="projectType" name="projectType">
+                  <option value="">Select one</option>
+                  <option>New website</option>
+                  <option>Redesign or rescue</option>
+                  <option>Web app or dashboard</option>
+                  <option>Online store</option>
+                  <option>Something else</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="budget">Budget</label>
+                <select id="budget" name="budget">
+                  <option value="">Not sure yet</option>
+                  <option>Under $2,000</option>
+                  <option>$2,000 – $5,000</option>
+                  <option>$5,000 – $15,000</option>
+                  <option>$15,000+</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="message">About the project</label>
+              <textarea id="message" name="message" rows="4" required aria-describedby="message-error" placeholder="What are you building, and when do you need it live?"></textarea>
+              <p class="field-error" id="message-error" hidden></p>
+            </div>
+
+            <button class="btn btn-solid btn-block" type="submit">
+              Send project brief
+              <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="form-note">This form opens your email app with the brief filled in — nothing is stored on this site. Prefer to write directly? <a href="mailto:hello@jayodstudios.com">Email us</a>.</p>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
         </div>
-
-        <form class="form" id="projectForm" novalidate>
-          <div class="form-row">
-            <div class="field">
-              <label for="name">Your name</label>
-              <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-error" />
-              <p class="field-error" id="name-error" hidden></p>
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-error" />
-              <p class="field-error" id="email-error" hidden></p>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field">
-              <label for="projectType">Project type</label>
-              <select id="projectType" name="projectType">
-                <option value="">Select one</option>
-                <option>New website</option>
-                <option>Redesign or rescue</option>
-                <option>Web app or dashboard</option>
-                <option>Online store</option>
-                <option>Something else</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="budget">Budget</label>
-              <select id="budget" name="budget">
-                <option value="">Not sure yet</option>
-                <option>Under $2,000</option>
-                <option>$2,000 – $5,000</option>
-                <option>$5,000 – $15,000</option>
-                <option>$15,000+</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="message">About the project</label>
-            <textarea id="message" name="message" rows="5" required aria-describedby="message-error" placeholder="What are you building, and when do you need it live?"></textarea>
-            <p class="field-error" id="message-error" hidden></p>
-          </div>
-
-          <button class="btn btn-primary btn-block" type="submit">
-            Send project brief
-            <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <p class="form-note">This form opens your email app with the brief filled in — nothing is stored on this site. Prefer to write directly? <a href="mailto:hello@jayodstudios.com">Email us</a>.</p>
-          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-        </form>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-top">
+  <footer class="site-footer on-dark">
+    <div class="wrap footer-inner">
       <div class="footer-brand">
-        <img class="footer-logo" src="logo-mark.png" alt="JayOd Studios" width="64" height="64" />
-        <p class="footer-tagline">Independent web development studio.<br />Websites and web apps, built properly.</p>
+        <img class="footer-mark" src="logo-mark.png" alt="" width="48" height="48" />
+        <p class="footer-word">JayOd Studios</p>
+        <p class="footer-tag">Independent web development studio.<br />Websites and web apps, built properly.</p>
       </div>
 
       <nav class="footer-nav" aria-label="Footer">
-        <p class="footer-heading">Elsewhere</p>
+        <p class="footer-heading">Sections</p>
         <ul role="list">
           <li><a href="#services">Services</a></li>
           <li><a href="#work">Work</a></li>
