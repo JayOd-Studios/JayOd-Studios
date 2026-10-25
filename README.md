@@ -1,97 +1,67 @@
-# JayOd Studios Portfolio Website
+# JayOd Studios
 
-A modern, responsive portfolio website for JayOd Studios - a professional web development business.
+The studio website for **JayOd Studios**, an independent web development studio.
 
-## Features
+A single-page, static site: no build step, no framework, no dependencies. Open `index.html` and it runs.
 
-- **Responsive Design**: Fully responsive and mobile-friendly
-- **Modern UI**: Clean, professional design with smooth animations
-- **Interactive Elements**: Smooth scrolling, animated sections, and interactive navigation
-- **Contact Form**: Built-in contact form with validation
-- **Performance Optimized**: Fast loading with optimized assets
-- **Accessible**: WCAG-compliant semantic HTML
+## The honest bit
+
+JayOd Studios has no portfolio websites yet, so this site does not pretend otherwise. The Work section says so plainly and turns it into the founding-client offer. There are no invented case studies, client logos, testimonials or project counts anywhere on the page — please keep it that way until there is real work to show.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `index.html` | The whole page: hero, tools, services, work, approach, studio, contact, footer |
+| `styles.css` | Design system — paper/navy/terracotta palette, type scale, layout, responsive rules |
+| `script.js` | Mobile nav, header state, active-section tracking, scroll reveals, contact form |
+| `logo.jpg` | Full logo lockup — monogram plus wordmark (used for social previews) |
+| `logo-mark.jpg` | Cropped JO monogram for the header, cards and footer |
 
 ## Sections
 
-1. **Hero**: Eye-catching landing section with call-to-action buttons
-2. **Services**: Showcases six core services offered
-3. **Portfolio**: Displays recent projects with technology tags
-4. **About**: Company information and statistics
-5. **Contact**: Contact form and business information
-6. **Footer**: Links and social media connections
+1. **Hero** — positioning, availability, founding-client card
+2. **Tools** — the stack the studio builds with
+3. **Services** — six service areas
+4. **Work** — an honest pre-portfolio statement plus what every project ships with
+5. **Approach** — scope, design, build, launch and care
+6. **Studio** — who the studio is, plus studio facts
+7. **Contact** — direct contact details and a project brief form
 
-## Customization
+## Design notes
 
-### Colors
-Edit the CSS variables in `styles.css` to match your brand:
+- **Palette**: paper `#F5F1E8`, navy `#14213D` (taken from the logo), terracotta accent `#C0432A`.
+- **Type**: Instrument Serif for display, Inter for everything else, both loaded from Google Fonts with system fallbacks.
+- Change the whole look by editing the custom properties at the top of `styles.css`.
 
-```css
-:root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
-    --accent-color: #60a5fa;
-}
+## Contact form
+
+The form validates in the browser and then opens the visitor's email app with a prefilled project brief addressed to `hello@jayodstudios.com`. Nothing is sent or stored by the site itself, so it works on any static host with no backend.
+
+To use a real form endpoint instead (Formspree, Web3Forms, Netlify Forms, etc.), replace the `const CONTACT_EMAIL` / `window.location.href = mailto:...` block at the bottom of `script.js` with a `fetch()` POST to that endpoint.
+
+## Things to fill in
+
+These are placeholders or unsigned claims — confirm or replace before launch:
+
+- Email address `hello@jayodstudios.com` (nav card, contact section, footer, `CONTACT_EMAIL` in `script.js`)
+- The GitHub link in the footer
+- The `https://jayodstudios.com/` canonical and `og:image` values in the `<head>`
+- The specifics in the founding-client offer, reply time and support period
+- Real case studies in the Work section as projects ship
+
+## Running locally
+
+```bash
+python3 -m http.server 3000
 ```
 
-### Content
-- **Contact Information**: Update email, phone, and location in `index.html` (Contact Section)
-- **Statistics**: Modify the numbers in the About Section
-- **Portfolio Items**: Replace placeholder projects with your actual work
-- **Services**: Customize the six service cards to match your offerings
+Then open <http://localhost:3000>.
 
-### Images
-Replace the placeholder portfolio images by:
-1. Adding your project images to an `images` folder
-2. Updating the `.portfolio-image` divs with actual `<img>` tags
+## Hosting
 
-## Technologies Used
+Any static host works — GitHub Pages, Netlify, Vercel, Cloudflare Pages, S3. For GitHub Pages, publish the repository root from the `main` branch.
 
-- HTML5
-- CSS3 (with CSS Grid and Flexbox)
-- Vanilla JavaScript
-- No external dependencies
+## Accessibility
 
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
-
-## Setup
-
-1. Open `index.html` in a web browser to view locally
-2. For production, host on any web server or static hosting service:
-   - Netlify
-   - Vercel
-   - GitHub Pages
-   - AWS S3
-   - Any traditional web host
-
-## Form Integration
-
-The contact form currently displays a success message. To make it functional:
-
-1. **Email Service Integration**:
-   - Use [Formspree](https://formspree.io/)
-   - Use [EmailJS](https://www.emailjs.com/)
-   - Use [Web3Forms](https://web3forms.com/)
-
-2. **Backend Integration**:
-   - Create a server endpoint to process form submissions
-   - Update the form submission handler in `script.js`
-
-## Next Steps
-
-1. Add your actual portfolio projects with images
-2. Update contact information with your real details
-3. Connect the contact form to an email service
-4. Add your social media links
-5. Consider adding a blog section
-6. Implement Google Analytics or similar tracking
-7. Add meta tags for better SEO
-
-## License
-
-Feel free to customize and use this template for your business.
+Semantic landmarks, a skip link, visible focus styles, labelled form fields with inline errors announced through `aria-live`, keyboard-operable navigation that closes on `Escape`, and full support for `prefers-reduced-motion`.

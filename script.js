@@ -1,189 +1,204 @@
-// Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-menu a');
+/* JayOd Studios — site behaviour: nav, scroll state, reveals, contact form. */
 
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+const CONTACT_EMAIL = "hello@jayodstudios.com";
 
-    // Animate hamburger icon
-    const spans = hamburger.querySelectorAll('span');
-    if (navMenu.classList.contains('active')) {
-        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-        spans[1].style.opacity = '0';
-        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-    } else {
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
-    }
-});
+const header = document.getElementById("siteHeader");
+const nav = document.getElementById("primaryNav");
+const navToggle = document.getElementById("navToggle");
+const navLinks = Array.from(document.querySelectorAll(".nav-list a"));
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Close mobile menu when clicking a link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        const spans = hamburger.querySelectorAll('span');
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
-    });
-});
+/* ---------- Mobile navigation ---------- */
 
-// Smooth scroll with offset for fixed navbar
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const offset = 80;
-            const targetPosition = target.offsetTop - offset;
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Navbar background on scroll
-const navbar = document.querySelector('.navbar');
-let lastScroll = 0;
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-
-    if (currentScroll > 100) {
-        navbar.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
-    }
-
-    lastScroll = currentScroll;
-});
-
-// Intersection Observer for scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Add fade-in animation to sections
-const animatedElements = document.querySelectorAll('.service-card, .portfolio-item, .stat');
-animatedElements.forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-});
-
-// Contact Form Handling
-const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    // Get form data
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-    };
-
-    // Here you would typically send the data to a server
-    // For now, we'll just show a success message
-    showNotification('Thank you! Your message has been sent successfully.', 'success');
-
-    // Reset form
-    contactForm.reset();
-});
-
-// Notification function
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        background: ${type === 'success' ? '#10b981' : '#ef4444'};
-        color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-    `;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+function setNav(open) {
+  if (!nav || !navToggle) return;
+  nav.classList.toggle("is-open", open);
+  navToggle.setAttribute("aria-expanded", String(open));
+  navToggle.querySelector(".sr-only").textContent = open ? "Close menu" : "Open menu";
 }
 
-// Add CSS animations for notifications
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
+navToggle?.addEventListener("click", () => {
+  setNav(navToggle.getAttribute("aria-expanded") !== "true");
+});
 
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
+navLinks.forEach((link) => link.addEventListener("click", () => setNav(false)));
 
-// Active nav link highlighting
-const sections = document.querySelectorAll('section[id]');
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && navToggle?.getAttribute("aria-expanded") === "true") {
+    setNav(false);
+    navToggle.focus();
+  }
+});
 
-function highlightNavLink() {
-    const scrollY = window.pageYOffset;
+document.addEventListener("click", (event) => {
+  if (navToggle?.getAttribute("aria-expanded") !== "true") return;
+  if (nav?.contains(event.target) || navToggle.contains(event.target)) return;
+  setNav(false);
+});
 
-    sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 100;
-        const sectionId = section.getAttribute('id');
-        const navLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900) setNav(false);
+});
 
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            navLinks.forEach(link => link.style.color = '');
-            if (navLink) {
-                navLink.style.color = 'var(--primary-color)';
-            }
-        }
-    });
+/* ---------- Header state ---------- */
+
+function syncHeader() {
+  header?.classList.toggle("is-stuck", window.scrollY > 8);
 }
 
-window.addEventListener('scroll', highlightNavLink);
+syncHeader();
+window.addEventListener("scroll", syncHeader, { passive: true });
 
-// Initialize on load
-document.addEventListener('DOMContentLoaded', () => {
-    highlightNavLink();
-});
+/* ---------- Active section in nav ---------- */
+
+const sections = Array.from(document.querySelectorAll("main section[id]"));
+
+if ("IntersectionObserver" in window && sections.length) {
+  const visible = new Map();
+
+  const navObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        visible.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+      });
+
+      let current = null;
+      let best = 0;
+      visible.forEach((ratio, id) => {
+        if (ratio > best) {
+          best = ratio;
+          current = id;
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === `#${current}`);
+      });
+    },
+    { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.25, 0.5] }
+  );
+
+  sections.forEach((section) => navObserver.observe(section));
+}
+
+/* ---------- Scroll reveal (progressive enhancement) ---------- */
+
+if (!reduceMotion && "IntersectionObserver" in window) {
+  const targets = document.querySelectorAll(
+    ".hero-copy, .hero-card, .section-head, .service, .steps > li, .work-lead, .work-panel, .studio-head, .studio-body, .contact-lead, .form"
+  );
+
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  targets.forEach((target, index) => {
+    target.classList.add("reveal");
+    target.style.transitionDelay = `${Math.min(index % 6, 5) * 55}ms`;
+    revealObserver.observe(target);
+  });
+}
+
+/* ---------- Year ---------- */
+
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+/* ---------- Contact form ---------- */
+
+const form = document.getElementById("projectForm");
+
+if (form) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+  const statusEl = document.getElementById("formStatus");
+
+  const fields = [
+    {
+      input: form.elements.name,
+      error: document.getElementById("name-error"),
+      validate: (value) => (value.trim().length >= 2 ? "" : "Please add your name."),
+    },
+    {
+      input: form.elements.email,
+      error: document.getElementById("email-error"),
+      validate: (value) => {
+        if (!value.trim()) return "Please add an email so we can reply.";
+        return emailPattern.test(value.trim()) ? "" : "That email address looks incomplete.";
+      },
+    },
+    {
+      input: form.elements.message,
+      error: document.getElementById("message-error"),
+      validate: (value) =>
+        value.trim().length >= 10 ? "" : "A sentence or two about the project is plenty.",
+    },
+  ];
+
+  function showError(field, message) {
+    const wrap = field.input.closest(".field");
+    field.input.setAttribute("aria-invalid", message ? "true" : "false");
+    if (field.error) {
+      field.error.textContent = message;
+      field.error.hidden = !message;
+    }
+    wrap?.classList.toggle("has-error", Boolean(message));
+  }
+
+  fields.forEach((field) => {
+    field.input?.addEventListener("input", () => {
+      if (field.input.getAttribute("aria-invalid") === "true") showError(field, "");
+    });
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    let firstInvalid = null;
+
+    fields.forEach((field) => {
+      if (!field.input) return;
+      const message = field.validate(field.input.value);
+      showError(field, message);
+      if (message && !firstInvalid) firstInvalid = field.input;
+    });
+
+    if (firstInvalid) {
+      statusEl.textContent = "Almost there — please check the highlighted fields.";
+      statusEl.className = "form-status is-error";
+      firstInvalid.focus();
+      return;
+    }
+
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const projectType = String(data.get("projectType") || "Not specified");
+    const budget = String(data.get("budget") || "Not specified");
+    const message = String(data.get("message") || "").trim();
+
+    const subject = `Project enquiry — ${projectType}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Project: ${projectType}`,
+      `Budget: ${budget}`,
+      "",
+      "About the project:",
+      message,
+    ].join("\n");
+
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    statusEl.innerHTML = `Opening your email app with the brief filled in. If nothing opens, send it to <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> instead.`;
+    statusEl.className = "form-status is-success";
+  });
+}
