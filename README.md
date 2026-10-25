@@ -60,7 +60,13 @@ Then open <http://localhost:3000>.
 
 ## Hosting
 
-Any static host works — GitHub Pages, Netlify, Vercel, Cloudflare Pages, S3. For GitHub Pages, publish the repository root from the `main` branch.
+Any static host works — GitHub Pages, Netlify, Vercel, Cloudflare Pages, S3.
+
+This repo is set up for GitHub Pages from the `main` branch, root folder. Once Pages is switched on in **Settings → Pages**, the site is live at:
+
+<https://jayod-studios.github.io/JayOd-Studios/>
+
+When a custom domain is added, update the `canonical`, `og:url` and `og:image` values in `index.html` to match it.
 
 ## Accessibility
 
