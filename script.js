@@ -72,7 +72,10 @@ if ("IntersectionObserver" in window && sections.length) {
       });
 
       navLinks.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === `#${current}`);
+        const active = link.getAttribute("href") === `#${current}`;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
       });
     },
     { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.25, 0.5] }
@@ -99,9 +102,9 @@ if (!reduceMotion && "IntersectionObserver" in window) {
     { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
   );
 
-  targets.forEach((target, index) => {
+  // Stagger comes from CSS (nth-child), keeping styles out of the markup.
+  targets.forEach((target) => {
     target.classList.add("reveal");
-    target.style.transitionDelay = `${Math.min(index % 6, 5) * 55}ms`;
     revealObserver.observe(target);
   });
 }
