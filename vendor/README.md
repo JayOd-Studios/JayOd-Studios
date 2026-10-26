@@ -26,8 +26,8 @@ with esbuild:
 ```sh
 npm install animejs@4.5.0 motion@14.6.0 esbuild
 
-# anime-4.5.0.js
-echo 'export { animate, svg, utils, cubicBezier } from "animejs";' > entry-anime.js
+# anime-4.5.0.js — stagger is needed by the hero sequence and card hover
+echo 'export { animate, svg, utils, cubicBezier, stagger } from "animejs";' > entry-anime.js
 npx esbuild entry-anime.js --bundle --format=esm --minify --target=es2022 \
   --outfile=vendor/anime-4.5.0.js
 
@@ -38,19 +38,20 @@ npx esbuild entry-motion.js --bundle --format=esm --minify --target=es2022 \
 ```
 
 `motion/mini` is used deliberately: the full `motion` entry is 25 KB gzipped, where
-the mini build is 3.4 KB. Scroll observation stays in `script.js` with a plain
-`IntersectionObserver`, and Motion drives the animation via the Web Animations API.
+the mini build is 3.4 KB. Scroll observation stays in `motion.js` with a plain
+`IntersectionObserver`, and Motion drives the animation through the Web Animations
+API rather than replacing the observer.
 
 To update a library, bump the version in the commands above, rename the output file
-and update the `import` in `motion-reveal.js` or `anime-fx.js`.
+and update the import in `motion.js`, `anime.js` or `hero.js`.
 
 ## Kokonut UI and Bklit UI
 
 Neither is vendored here because neither is a standalone library. Both are
-[shadcn/ui](https://ui.shadcn.com) registries: they copy React components into a
-React + Tailwind project. Kokonut UI components are installed with the shadcn CLI
-and depend on React, Tailwind and Motion; Bklit UI is a shadcn registry
-(`@bklit`) of chart and utility components. This site is hand-written HTML, CSS
-and vanilla JavaScript with no framework or build step, so there is no component
-tree for either to render into. Adding them means converting the site to
-React + Tailwind first, which is a rewrite rather than a dependency install.
+[shadcn/ui](https://ui.shadcn.com) registries that copy React components into a
+React + Tailwind project: Kokonut UI installs through the shadcn CLI and depends on
+React, Tailwind and Motion, and Bklit UI is the `@bklit` registry of chart and
+utility components. This site is hand-written HTML, CSS and vanilla JavaScript with
+no framework or build step, so there is no component tree for either to render
+into. Using them means converting the site to React + Tailwind first, which is a
+rewrite rather than a dependency install.

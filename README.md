@@ -2,20 +2,82 @@
 
 The studio website for **JayOd Studios**, an independent web development studio.
 
-A single-page static site: no build step, no framework, and no third-party requests at runtime. The two animation libraries are vendored locally, so the page still loads nothing it does not serve itself.
+A single-page static site: no build step, no framework, and no third-party
+requests at runtime. The two animation libraries are vendored locally, so the
+page never loads anything it does not serve itself.
+
+Live at <https://jayod-studios.github.io/JayOd-Studios/>.
 
 ## The honest bit
 
-JayOd Studios has no portfolio websites yet, so this site does not pretend otherwise. The Work section says so plainly and turns it into the founding-client offer. There are no invented case studies, client logos, testimonials or project counts anywhere on the page — please keep it that way until there is real work to show.
+JayOd Studios has no shipped client work yet, so this site does not pretend
+otherwise. The Work section is six deliberately badged **sample** entries with
+generated line-art previews and no links — never screenshots of someone else's
+product. Replace them as real projects ship; the moment an entry has a real URL
+the badge disappears. No invented testimonials, client logos or project counts
+anywhere. Please keep it that way.
+
+## The hero stage
+
+The homepage opens on a browser frame that builds itself. Each cycle: the
+wireframe's blocks cascade in, a ghost pointer tours the layout and "clicks",
+everything dissolves, and the next of five site types is drawn — a dashboard,
+an editorial journal, a storefront, documentation and a studio portfolio. The
+URL in the chrome bar and the caption beneath change with each build.
+
+- The drawings come from `wireframes.js`, the same definitions the work cards
+  use, so there is one source of truth for the art.
+- `app.js` paints the first frame before `hero.js` loads, so the stage is never
+  empty while the module arrives — or if it never does.
+- Under reduced motion the stage holds one static frame, the pointer effect is
+  off and the live dot stops pulsing.
+- The loop pauses when the tab is hidden and resumes when it returns.
+- The stage is `aria-hidden`: it is decoration, and nothing exists only inside it.
+
+### Two traps if you edit the animation
+
+`animate(rect, { y: 12 })` on an SVG `<rect>` animates the **geometry
+attribute**, not a transform — it resets every rectangle to `y="0"` and collapses
+the drawing. Animate `opacity` on shapes; keep `x`/`y` for HTML elements.
+
+`hero.js` removes only the old `<svg>` when switching layouts; the ghost cursor
+lives in the same box, so `replaceChildren` there would delete it.
+
+## Updating the work section
+
+Everything in the Work section comes from **`portfolio.js`** — one array, no
+markup to touch. Add, remove or reorder objects; the grid reflows on its own
+(three across, two rows at six entries).
+
+```js
+{
+  title: "Project name",
+  sector: "One short line — what kind of work it was",
+  year: "2026",
+  summary: "Two or three specific sentences.",
+  tags: ["React", "TypeScript", "Charts"],
+  url: "https://example.com",   // leave "" to keep it a placeholder
+  preview: "dashboard",         // dashboard | editorial | commerce | landing | docs | studio
+}
+```
+
+- **`url` empty** → no link, "Sample" badge on the artwork, "Sample entry — no
+  live site" in the footer.
+- **`url` set** → the title and a "View site" link open it in a new tab, and the
+  badge disappears. Nothing else needs changing.
+- **`preview`** picks the wireframe drawn behind the badge; an unknown value
+  falls back to `editorial`.
 
 ## Design
 
-An editorial "studio index" layout rather than a stack of cards:
+An editorial index on a near-black canvas, not a card stack:
 
-- A sticky left rail numbers each section (`01 — Services` … `05 — Contact`); content sits in the wide column beside it.
+- A sticky numbered index for each section (`01 — Selected work` … `05 — Contact`).
 - Services and the process are hairline-ruled rows, not a uniform card grid.
-- The hero is a typographic statement with a ruled four-column fact strip, not a floating call-to-action card.
-- Instrument Serif for display, Inter for everything else, on paper `#F5F1E8` with navy `#14213D` (from the logo) and terracotta `#C0432A`.
+- Instrument Serif for display, Inter for everything else, on ink `#05070A` with
+  paper `#F5F1E8` and terracotta `#E2603F`.
+- Motion is used for meaning: builds, reveals, and feedback — not decoration
+  loops behind text.
 
 ### Tokens
 
@@ -23,89 +85,91 @@ Everything visual is a custom property at the top of `styles.css`:
 
 | Group | Examples |
 | --- | --- |
-| Primitives | `--paper`, `--ink`, `--accent`, `--line` |
-| Semantic colour | `--surface`, `--text`, `--text-muted`, `--border`, `--on-dark`, `--danger` |
+| Primitives | `--ink-1000`, `--paper`, `--terracotta` |
+| Semantic colour | `--bg`, `--surface`, `--text`, `--text-muted`, `--border`, `--accent` |
+| Wireframe art | `--pv-block`, `--pv-panel`, `--pv-accent`, `--pv-rule` |
 | Spacing | `--space-1` … `--space-32`, named by px/4 (4px steps) |
-| Radius | `--radius-xs`, `--radius-sm` |
+| Radius | `--radius-xs`, `--radius-sm`, `--radius-md` |
 
-Dark sections opt into the inverse palette by adding `.on-dark`, which re-points the semantic tokens so descendants need no special cases. No raw hex or rgba appears in any rule — only in the token definitions.
+No raw hex or rgba appears in any rule — only in the token definitions.
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | The whole page |
-| `styles.css` | Tokens, layout, components, responsive rules |
-| `script.js` | Mobile nav, header state, active-section tracking, contact form |
-| `motion-reveal.js` | Scroll reveals, animated with Motion |
-| `anime-fx.js` | Arrow redraw, availability pulse, invalid-form bump, animated with Anime.js |
-| `vendor/` | Locally built copies of Motion and Anime.js, their licences and rebuild instructions |
+| `index.html` | The page |
+| `styles.css` | Tokens, layout, components, responsive and reduced-motion rules |
+| `portfolio.js` | Work section data — the only file to edit for projects |
+| `wireframes.js` | Generated wireframe art, shared by the work cards and the hero |
+| `hero.js` | The hero stage: assembles, tours, dissolves and cycles five layouts |
+| `app.js` | Nav, header state, section tracking, card rendering, contact form |
+| `motion.js` | Motion: scroll reveals, reading progress, hero spotlight |
+| `anime.js` | Anime.js: arrow redraw, availability pulse, card hover, form bump |
+| `vendor/` | Tree-shaken Motion and Anime.js builds, licences, rebuild notes |
 | `logo.jpg` | Full logo lockup on white (social previews only) |
 | `logo-mark.png` | Transparent JO monogram for the masthead and footer |
-| `robots.txt` | Crawl rules and sitemap pointer |
-| `sitemap.xml` | Single-URL sitemap |
+| `robots.txt` / `sitemap.xml` | Crawl rules and the single-URL sitemap |
 
-## Motion
+Core behaviour (`app.js`) imports neither library, so a failed module never
+breaks navigation, the form or the work grid.
 
-Two animation libraries, each given a job rather than both doing everything:
-
-- **Motion** (`motion/mini`, 3.4 KB gzipped) runs the scroll reveals. Observation stays with a plain `IntersectionObserver` in the module, so the animation engine is never a precondition for content appearing — Motion only supplies the tween, through the Web Animations API.
-- **Anime.js** (17.2 KB gzipped) runs the interactive moments: the CTA arrow redrawing itself on hover and keyboard focus, the slow pulse on the availability dot, and a short bump on the fields of an invalid form.
-
-Both are deferred ES modules and both are optional. Without JavaScript the page is fully readable; if the modules fail to load, the CSS leaves every `[data-reveal]` element visible. `motion-reveal.js` never hides content in the first viewport, only animates what is still below the fold, clears its inline styles when a tween finishes, and keeps a timed failsafe so an animation that silently fails to run can never leave a section invisible. Reduced-motion is read live, not once at load: switching it on mid-session settles everything immediately and stops the pulse.
-
-`vendor/README.md` records the pinned versions, the esbuild commands that produced each file, and why Kokonut UI and Bklit UI are not vendored — both are shadcn registries of React components, so they need a React + Tailwind build rather than a script tag.
-
-### What the animation layer costs
-
-It is the largest weight the page carries, and worth knowing before keeping it:
-
-| Layer | Raw | gzip |
-| --- | --- | --- |
-| `motion-reveal.js` + `anime-fx.js` | 6.0 KB | 2.7 KB |
-| `vendor/motion-14.6.0.js` | 8.4 KB | 3.4 KB |
-| `vendor/anime-4.5.0.js` | 43.1 KB | 17.2 KB |
-| **Total** | **57.6 KB** | **23.3 KB** |
-
-That is roughly triple the 12.6 KB gzipped the rest of the page ships, and Anime.js is three quarters of it. Its jobs could be done with ~40 lines of CSS and `requestAnimationFrame`, but the library was requested. `anime-fx.js` is self-contained: deleting it, its script tag and `vendor/anime-4.5.0.js` removes every trace without touching the reveals.
-
-## Security
-
-- A **Content-Security-Policy** is set in a `<meta>` tag: `default-src 'self'`, with Google Fonts allowed only for styles and font files. No third-party scripts.
-- `referrer` is `strict-origin-when-cross-origin`.
-- The contact form builds its fallback link with DOM nodes, not `innerHTML`.
-- No secrets, no analytics, no cookies. The form stores nothing; it opens the visitor's mail app.
-
-**Limitation:** GitHub Pages cannot send response headers, so the CSP lives in the document and cannot use `frame-ancestors` or `report-uri`, and HSTS/X-Content-Type-Options can't be set at all. A host with header control (Cloudflare, Netlify) would be needed for those.
-
-## Performance
-
-Measured at deploy time, uncompressed → gzip:
+## Motion, and what it costs
 
 | Asset | Size | gzip |
 | --- | --- | --- |
-| `index.html` | 18.6 KB | 5.1 KB |
-| `styles.css` | 24.0 KB | 5.3 KB |
-| `script.js` | 6.1 KB | 2.2 KB |
-| `motion-reveal.js` | 3.3 KB | 1.6 KB |
-| `anime-fx.js` | 2.7 KB | 1.1 KB |
+| `index.html` | 20.8 KB | 5.5 KB |
+| `styles.css` | 30.5 KB | 6.3 KB |
+| `app.js` | 9.9 KB | 3.2 KB |
+| `hero.js` | 7.0 KB | 2.6 KB |
+| `wireframes.js` | 5.5 KB | 1.9 KB |
+| `motion.js` | 4.2 KB | 1.7 KB |
+| `anime.js` | 3.5 KB | 1.4 KB |
+| `portfolio.js` | 2.8 KB | 1.3 KB |
 | `vendor/motion-14.6.0.js` | 8.4 KB | 3.4 KB |
 | `vendor/anime-4.5.0.js` | 43.1 KB | 17.2 KB |
 | `logo-mark.png` | 11.1 KB | — |
 
-Same-origin requests only, plus the font stylesheet and font files. The animation modules are deferred, so they never block the first paint, and the hero (the LCP region) is never hidden behind a reveal. Images carry explicit dimensions and fonts load with `display=swap`.
+The page's own code is ~21 KB gzipped; the vendored animation engines add ~21 KB
+more, three quarters of which is Anime.js. All animation modules are deferred
+ES modules, so none of it blocks the first paint, and the hero `<h1>` is never
+hidden behind an animation, so the LCP text paints immediately.
 
-Not measured: real Core Web Vitals. That needs a browser and Lighthouse against the deployed URL.
+## Security
+
+- A **Content-Security-Policy** in a `<meta>` tag: `default-src 'self'`, with
+  Google Fonts allowed only for styles and font files. No third-party scripts.
+- `referrer` is `strict-origin-when-cross-origin`.
+- The contact form builds its fallback link with DOM nodes, not `innerHTML`.
+- No secrets, no analytics, no cookies. The form stores nothing; it opens the
+  visitor's mail app.
+
+**Limitation:** GitHub Pages cannot send response headers, so the CSP lives in
+the document and cannot use `frame-ancestors` or `report-uri`, and HSTS /
+X-Content-Type-Options can't be set at all. A host with header control
+(Cloudflare, Netlify) would be needed for those.
 
 ## Accessibility
 
-Semantic landmarks and one `h1`; heading levels never skip. A skip link, visible focus styles, `aria-current="location"` on the active nav item, 44px menu button, labelled fields with inline errors tied through `aria-describedby`, `role="list"` where `list-style: none` would strip semantics, and full `prefers-reduced-motion` support — including a CSS rule that forces `[data-reveal]` visible, so a motion preference can never leave content hidden. All text passes WCAG AA contrast (lowest measured pair: 4.57:1).
+Semantic landmarks and one `h1`; heading levels never skip. A skip link, visible
+focus styles, `aria-current="location"` on the active nav item, 44px menu button
+and form controls, labelled fields with inline errors tied through
+`aria-describedby`, `role="list"` where `list-style: none` would strip
+semantics, and full `prefers-reduced-motion` support — including a CSS rule that
+forces every `[data-reveal]` element visible, so a motion preference can never
+leave content hidden. All text passes WCAG AA contrast (lowest measured pair
+clears 4.5:1).
+
+The hero stage, the wireframe thumbnails and the decorative ticker are
+`aria-hidden`; everything they convey is also stated in text.
 
 ## Contact form
 
-Validates in the browser, then opens the visitor's email app with a prefilled brief to `hello@jayodstudios.com`. Works on any static host with no backend.
+Validates in the browser, then opens the visitor's email app with a prefilled
+brief to `hello@jayodstudios.com`. Works on any static host with no backend.
 
-For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the `const CONTACT_EMAIL` / `window.location.href = mailto:...` block at the bottom of `script.js` with a `fetch()` POST — and add the endpoint to the CSP's `connect-src`.
+For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the
+`const CONTACT_EMAIL` / `window.location.href = mailto:...` block near the end of
+`app.js` with a `fetch()` POST — and add the endpoint to the CSP's `connect-src`.
 
 ## Things to fill in
 
@@ -113,7 +177,8 @@ For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the `con
 - GitHub link in the footer
 - The canonical / `og:url` / `og:image` values, plus `robots.txt` and `sitemap.xml`, if a custom domain replaces the Pages URL
 - The specifics in the founding-client offer, reply time and support period
-- Real case studies in the Work section as projects ship
+- Real projects in `portfolio.js` as they ship
+- `sitemap.xml`'s `lastmod` whenever the page changes
 
 ## Running locally
 
@@ -121,12 +186,19 @@ For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the `con
 python3 -m http.server 3000
 ```
 
-Then open <http://localhost:3000>.
+Then open <http://localhost:3000>. Serve it over HTTP rather than opening the
+file directly — ES modules and the CSP both need an origin.
 
 ## Hosting
 
-GitHub Pages serves `main` from the repository root; `.nojekyll` keeps it a plain static build.
+GitHub Pages serves `main` from the repository root; `.nojekyll` keeps it a plain
+static build.
 
-Live at <https://jayod-studios.github.io/JayOd-Studios/>.
+When a custom domain is added, update the canonical, `og:url` and `og:image`
+values in `index.html`, plus `robots.txt` and `sitemap.xml`.
 
-When a custom domain is added, update the canonical, `og:url` and `og:image` values in `index.html`, plus `robots.txt` and `sitemap.xml`.
+## History
+
+The previous navy-and-paper editorial design is still in git at `8ac69f9`, and
+the dark edition was developed in `v2/` before being promoted to the root in the
+commit that moved these files up.

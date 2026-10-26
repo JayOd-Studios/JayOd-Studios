@@ -1,0 +1,5 @@
+/freebuff-sites-build/
+
+# Locally installed agent skills — not part of the published site
+/.agents/
+/skills-lock.json
