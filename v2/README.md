@@ -48,6 +48,8 @@ section copy. Replace them as real projects ship.
 | `index.html` | The page |
 | `styles.css` | Tokens, layout, components, responsive and reduced-motion rules |
 | `portfolio.js` | Work section data — the only file to edit for projects |
+| `wireframes.js` | Generated wireframe art, shared by the work cards and the hero |
+| `hero.js` | The hero stage: assembles, tours, dissolves and cycles five layouts |
 | `app.js` | Nav, header state, section tracking, card rendering, contact form |
 | `motion.js` | Motion: scroll reveals, reading progress, hero spotlight |
 | `anime.js` | Anime.js: arrow redraw, availability pulse, card hover, form bump |
@@ -55,6 +57,33 @@ section copy. Replace them as real projects ship.
 
 Core behaviour (`app.js`) does not import either library, so a failed module
 never breaks navigation, the form or the grid.
+
+## The hero stage
+
+The homepage opens on a browser frame that builds itself. Each cycle: the
+wireframe's blocks fade in on a stagger, a ghost pointer tours the layout and
+"clicks", everything dissolves, and the next of five layouts is drawn — a
+dashboard, an editorial journal, a storefront, documentation and a studio
+portfolio. It is the studio's pitch made literal instead of a decorative
+gradient behind a headline.
+
+- The drawings come from `wireframes.js`, the same definitions the work cards
+  use, so there is one source of truth for the art.
+- `app.js` paints the first frame before `hero.js` loads, so the stage is never
+  empty while the module arrives — or if it never does.
+- Under reduced motion the stage renders one static frame, the pointer effect is
+  off and the live dot stops pulsing. The stage is `aria-hidden`: it is
+  decoration, and no information exists only inside it.
+- The loop pauses when the tab is hidden and resumes on return.
+
+### Two traps if you edit this
+
+`animate(rect, { y: 12 })` on an SVG `<rect>` animates the **geometry
+attribute**, not a transform — it resets every rectangle to `y="0"` and collapses
+the drawing. Animate `opacity` on shapes and keep `x`/`y` for HTML elements.
+
+`hero.js` removes only the old `<svg>` when switching layouts; the ghost cursor
+lives in the same box, so `replaceChildren` there would delete it.
 
 ## Motion, and what it costs
 
@@ -83,9 +112,11 @@ be stranded behind an animation that will not run.
 
 ## Verified
 
-Headless Chromium, 1440 / 768 / 390 / 320 px: no console, CSP or 404 errors; six
-cards render from `portfolio.js` with badges and no links; reveals interpolate
-and settle; reading progress tracks scroll; arrow redraw completes; card hover
-animates the wireframe and settles; invalid submit marks three fields; no
-horizontal overflow at any width; under reduced motion nothing is hidden, the
-ticker is static and the spotlight is off; every sampled text pair clears 4.5:1.
+Headless Chromium, 1440 / 1080 / 768 / 390 / 320 px, 41 checks: no console, CSP
+or 404 errors; six cards render from `portfolio.js` with badges and no links;
+the stage builds, tours, cycles to the next layout and changes its caption;
+reveals interpolate and settle; reading progress tracks scroll; arrow redraw
+completes; card hover animates the wireframe and settles; invalid submit marks
+three fields; no horizontal overflow at any width; under reduced motion nothing
+is hidden, the stage holds one static frame, the ticker is static and the
+spotlight is off; every sampled text pair clears 4.5:1.

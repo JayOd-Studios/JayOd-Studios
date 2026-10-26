@@ -93,9 +93,9 @@ function setUpCards() {
       if (now - last < 500) return; // Ignore the flicker of a fast pointer.
       last = now;
 
+      // Opacity only: "y" would be read as the rect's SVG y attribute.
       animate(shapes, {
         opacity: [0.25, 1],
-        y: [4, 0],
         duration: 420,
         delay: stagger(12),
         ease: EASE_OUT,

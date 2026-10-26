@@ -66,29 +66,49 @@
       </div>
 
       <div class="wrap hero-inner">
-        <p class="eyebrow">
-          <span class="dot" aria-hidden="true"></span>
-          Independent web development studio
-          <span class="sep" aria-hidden="true">·</span>
-          Est. 2026
-        </p>
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="dot" aria-hidden="true"></span>
+            Independent web development studio
+            <span class="sep" aria-hidden="true">·</span>
+            Est. 2026
+          </p>
 
-        <h1 class="hero-title">
-          Good websites,
-          <em>built properly.</em>
-        </h1>
+          <h1 class="hero-title">
+            Good websites,
+            <em>built properly.</em>
+          </h1>
 
-        <p class="hero-lede">
-          JayOd Studios designs and builds fast, accessible websites and web apps for a small number of
-          clients at a time. You work directly with the developer writing the code.
-        </p>
+          <p class="hero-lede">
+            JayOd Studios designs and builds fast, accessible websites and web apps for a small number of
+            clients at a time. You work directly with the developer writing the code.
+          </p>
 
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="#contact">
-            Start a project
-            <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a class="btn btn-ghost" href="#work">See the work</a>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="#contact">
+              Start a project
+              <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#work">See the work</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="stage" id="stage">
+            <div class="stage-frame" id="stageFrame">
+              <div class="stage-bar">
+                <span class="stage-dots"><i></i><i></i><i></i></span>
+                <span class="stage-url" id="stageUrl">northwind.app/ledger</span>
+              </div>
+              <div class="stage-canvas" id="stageCanvas">
+                <span class="stage-cursor" id="stageCursor"></span>
+              </div>
+            </div>
+            <p class="stage-caption">
+              <span class="stage-live"></span>
+              <span id="stageLabel">Ledger dashboard — React, TypeScript</span>
+            </p>
+          </div>
         </div>
 
         <dl class="facts">
@@ -418,8 +438,10 @@
     </div>
   </footer>
 
+  <script src="wireframes.js"></script>
   <script src="portfolio.js"></script>
   <script src="app.js"></script>
+  <script type="module" src="hero.js"></script>
   <script type="module" src="motion.js"></script>
   <script type="module" src="anime.js"></script>
 </body>

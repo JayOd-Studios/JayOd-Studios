@@ -41,10 +41,10 @@
   /* generated wireframe previews */
   --pv-bg: #0a0f15;
   --pv-chrome: #131c26;
-  --pv-block: rgba(245, 241, 232, 0.09);
-  --pv-line: rgba(245, 241, 232, 0.2);
+  --pv-block: rgba(245, 241, 232, 0.13);
+  --pv-line: rgba(245, 241, 232, 0.26);
   --pv-head: rgba(245, 241, 232, 0.55);
-  --pv-panel: rgba(245, 241, 232, 0.05);
+  --pv-panel: rgba(245, 241, 232, 0.07);
   --pv-rule: rgba(245, 241, 232, 0.14);
   --pv-code: #0e1620;
   --pv-accent: var(--terracotta);
@@ -458,8 +458,15 @@ button {
 
 .hero-inner {
   display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(var(--space-8), 4vw, var(--space-16));
+  align-items: center;
+}
+
+.hero-copy {
+  display: grid;
   justify-items: start;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
 .eyebrow {
@@ -489,8 +496,8 @@ button {
 .hero-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(3rem, 8.6vw, 6.6rem);
-  line-height: 0.94;
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  line-height: 0.96;
   letter-spacing: -0.02em;
   text-wrap: balance;
   max-width: 18ch;
@@ -515,9 +522,139 @@ button {
   margin-top: var(--space-2);
 }
 
+/* ---------- Hero stage ---------- */
+
+.hero-visual {
+  position: relative;
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: -14% -10% -16%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 55%, var(--accent-soft), transparent 68%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+.stage-frame {
+  position: relative;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  overflow: hidden;
+  box-shadow: 0 40px 90px -56px var(--bg), 0 0 0 1px var(--border);
+  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.35s var(--ease), border-color var(--dur-base) var(--ease);
+}
+
+.stage-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 36px;
+  padding-inline: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-3);
+}
+
+.stage-dots {
+  display: inline-flex;
+  gap: 6px;
+  flex: none;
+}
+
+.stage-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pv-dot);
+}
+
+.stage-url {
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-canvas {
+  position: relative;
+  aspect-ratio: 320 / 178;
+  background: var(--pv-bg);
+  overflow: hidden;
+}
+
+/* A ghost pointer that tours the layout, so the stage reads as a live build
+   rather than a static screenshot. Purely decorative. */
+.stage-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2; /* above the SVG, whose background is opaque */
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.stage-canvas svg {
+  width: 100%;
+  height: 100%;
+}
+
+.stage-caption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  min-height: 20px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.stage-live {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  animation: stage-live 2.4s var(--ease) infinite;
+}
+
+@keyframes stage-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.82);
+  }
+}
+
 /* ---------- Fact strips ---------- */
 
 .facts {
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-6);
@@ -1318,6 +1455,25 @@ button {
 
 /* ---------- Responsive ---------- */
 
+@media (max-width: 1080px) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-visual {
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .hero-copy {
+    max-width: 640px;
+  }
+
+  .facts {
+    margin-top: var(--space-6);
+  }
+}
+
 @media (max-width: 1040px) {
   .steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1456,6 +1612,18 @@ button {
   }
 
   .hero-spot {
+    display: none;
+  }
+
+  .stage-frame {
+    transform: none;
+  }
+
+  .stage-live {
+    animation: none;
+  }
+
+  .stage-cursor {
     display: none;
   }
 
