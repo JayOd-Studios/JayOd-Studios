@@ -1,56 +1,37 @@
-/* JayOd Studios — night edition
+/* JayOd Studios
  *
- * One rule: every colour, space and radius below comes from a token. Raw values
- * live in :root only. Spacing is a 4px scale (--space-1 = 4px).
+ * Two themes, one token set. Every colour, space and radius below comes from a
+ * token; raw values live under "primitives" only. Spacing is a 4px scale.
+ *
+ * Dark is the default (it is what the site shipped as); theme-boot.js sets
+ * data-theme before first paint from the visitor's stored or system choice, and
+ * [data-theme="light"] below re-points every semantic token at the paper deck.
+ *
+ * The accent is the studio's own navy, #19224d, lifted from the logo mark.
  */
 
-/* ---------- Tokens ---------- */
+/* ---------- Primitives ---------- */
 
 :root {
-  /* primitives (brand) */
-  --ink-1000: #05070a;
-  --ink-900: #080c11;
-  --ink-800: #0c1218;
-  --ink-700: #111a23;
-  --ink-600: #18232f;
-  --paper: #f5f1e8;
-  --terracotta: #e2603f;
-  --terracotta-bright: #f4795a;
+  /* The logo's blue, and a ramp built from it. */
+  --blue-950: #0e1430;
+  --blue-900: #19224d;
+  --blue-800: #1f2b63;
+  --blue-700: #26357a;
+  --blue-600: #33449b;
+  --blue-500: #4157bd;
+  --blue-400: #4f63d8;
+  --blue-300: #8b9ef0;
+  --blue-200: #b9c5f8;
+  --blue-100: #dfe5fe;
 
-  /* semantic colour */
-  --bg: var(--ink-1000);
-  --surface: var(--ink-900);
-  --surface-2: var(--ink-800);
-  --surface-3: var(--ink-700);
-  --surface-4: var(--ink-600);
-  --border: rgba(245, 241, 232, 0.1);
-  --border-strong: rgba(245, 241, 232, 0.22);
-  --text: var(--paper);
-  --text-muted: #b9b4aa;
-  --text-subtle: #928d85;
-  --accent: var(--terracotta);
-  --accent-bright: var(--terracotta-bright);
-  --accent-soft: rgba(226, 96, 63, 0.14);
-  --accent-line: rgba(226, 96, 63, 0.45);
-  --on-accent: #0a0d12;
-  --focus: var(--terracotta-bright);
-  --hero-glow: rgba(226, 96, 63, 0.12);
-  --hero-spot: rgba(245, 241, 232, 0.06);
-  --header-bg: rgba(5, 7, 10, 0.72);
+  --paper: #f6f5f1;
+  --paper-2: #fffefb;
 
-  /* generated wireframe previews */
-  --pv-bg: #0a0f15;
-  --pv-chrome: #131c26;
-  --pv-block: rgba(245, 241, 232, 0.13);
-  --pv-line: rgba(245, 241, 232, 0.26);
-  --pv-head: rgba(245, 241, 232, 0.55);
-  --pv-panel: rgba(245, 241, 232, 0.07);
-  --pv-rule: rgba(245, 241, 232, 0.14);
-  --pv-code: #0e1620;
-  --pv-accent: var(--terracotta);
-  --pv-outline: rgba(245, 241, 232, 0.26);
-  --pv-dot: rgba(245, 241, 232, 0.28);
-  --pv-url: rgba(245, 241, 232, 0.08);
+  /* Both decks' page colours, readable from JS whatever theme is active. The
+     theme switch floods the page with the incoming one. */
+  --theme-dark-bg: #141824;
+  --theme-light-bg: #f6f5f1;
 
   /* spacing: 4px scale */
   --space-1: 0.25rem;
@@ -71,6 +52,7 @@
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 14px;
+  --radius-lg: 22px;
   --radius-pill: 999px;
 
   /* type */
@@ -80,10 +62,116 @@
 
   /* motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur-fast: 0.18s;
   --dur-base: 0.3s;
 
   --wrap: 1180px;
+}
+
+/* ---------- Dark theme (default) ---------- */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #141824;
+  --surface: #191e2c;
+  --surface-2: #1f2434;
+  --surface-3: #262c3e;
+  --surface-4: #2e3549;
+
+  --border: rgba(196, 206, 240, 0.14);
+  --border-strong: rgba(196, 206, 240, 0.3);
+
+  --text: #eef1f9;
+  --text-muted: #b6bed3;
+  --text-subtle: #929bb3;
+  --text-invert: #101528;
+
+  --accent: var(--blue-400);
+  --accent-bright: var(--blue-300);
+  --accent-text: #9aabf5;
+  --accent-soft: rgba(79, 99, 216, 0.2);
+  --accent-line: rgba(139, 158, 240, 0.46);
+  --on-accent: #ffffff;
+  --focus: var(--blue-200);
+
+  /* The mark is navy #19224d: 1.3:1 against any dark surface, so on the night
+     deck it is drawn in a pale tint of the same blue. It stays backgroundless
+     in both themes — no chip, no plate. */
+  --logo-ink: #cfd8fb;
+  --brand-chip: transparent;
+
+  --header-bg: rgba(20, 24, 36, 0.76);
+  --hero-glow: rgba(79, 99, 216, 0.26);
+  --hero-spot: rgba(185, 197, 248, 0.07);
+  --shadow-lg: 0 40px 90px -50px rgba(4, 6, 14, 0.95);
+  --shadow-sm: 0 18px 40px -32px rgba(4, 6, 14, 0.9);
+
+  /* generated wireframe previews */
+  --pv-bg: #111625;
+  --pv-chrome: #1b2233;
+  --pv-block: rgba(226, 233, 255, 0.15);
+  --pv-line: rgba(226, 233, 255, 0.32);
+  --pv-head: rgba(226, 233, 255, 0.6);
+  --pv-panel: rgba(226, 233, 255, 0.08);
+  --pv-rule: rgba(226, 233, 255, 0.17);
+  --pv-code: #161d2e;
+  --pv-accent: var(--blue-300);
+  --pv-outline: rgba(226, 233, 255, 0.32);
+  --pv-dot: rgba(226, 233, 255, 0.3);
+  --pv-url: rgba(226, 233, 255, 0.1);
+}
+
+/* ---------- Light theme ---------- */
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: var(--paper);
+  --surface: var(--paper-2);
+  --surface-2: #ffffff;
+  --surface-3: #f1efe9;
+  --surface-4: #e8e5dc;
+
+  --border: rgba(18, 24, 48, 0.14);
+  --border-strong: rgba(18, 24, 48, 0.32);
+
+  --text: #101528;
+  --text-muted: #444c63;
+  --text-subtle: #626a7d;
+  --text-invert: var(--paper);
+
+  --accent: var(--blue-900);
+  --accent-bright: var(--blue-700);
+  --accent-text: var(--blue-900);
+  --accent-soft: rgba(25, 34, 77, 0.1);
+  --accent-line: rgba(25, 34, 77, 0.36);
+  --on-accent: #ffffff;
+  --focus: var(--blue-900);
+
+  --logo-ink: #19224d;
+  --brand-chip: transparent;
+
+  --header-bg: rgba(246, 245, 241, 0.82);
+  --hero-glow: rgba(79, 99, 216, 0.12);
+  --hero-spot: rgba(25, 34, 77, 0.055);
+  --shadow-lg: 0 40px 90px -55px rgba(25, 34, 77, 0.38);
+  --shadow-sm: 0 18px 40px -30px rgba(25, 34, 77, 0.28);
+
+  --pv-bg: #fbfaf6;
+  --pv-chrome: #efece4;
+  --pv-block: rgba(16, 21, 40, 0.17);
+  --pv-line: rgba(16, 21, 40, 0.36);
+  --pv-head: rgba(16, 21, 40, 0.62);
+  --pv-panel: rgba(25, 34, 77, 0.06);
+  --pv-rule: rgba(16, 21, 40, 0.19);
+  --pv-code: #f4f2ec;
+  --pv-accent: var(--blue-600);
+  --pv-outline: rgba(16, 21, 40, 0.34);
+  --pv-dot: rgba(16, 21, 40, 0.3);
+  --pv-url: rgba(16, 21, 40, 0.08);
 }
 
 /* ---------- Reset ---------- */
@@ -97,6 +185,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  background: var(--bg);
 }
 
 body {
@@ -167,6 +256,30 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* The theme change is revealed as a circle of the new page growing from the
+   switch, so the default cross-fade between snapshots must not also run. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* While the theme is swapped, element transitions are off. Otherwise the new
+   snapshot catches every colour mid-fade and freezes it that way. */
+html.is-theming *,
+html.is-theming *::before,
+html.is-theming *::after {
+  transition: none !important;
 }
 
 .skip-link {
@@ -250,13 +363,27 @@ button {
   letter-spacing: -0.005em;
 }
 
+/* Backgroundless in both themes: the PNG's alpha is used as a mask and the
+   colour comes from --logo-ink. */
+.brand-mark,
+.footer-mark {
+  display: block;
+  aspect-ratio: 653 / 491;
+  background-color: var(--logo-ink);
+  -webkit-mask: url(logo-mark.png) no-repeat center / contain;
+  mask: url(logo-mark.png) no-repeat center / contain;
+  transition: background-color var(--dur-base) var(--ease);
+}
+
 .brand-mark {
-  width: 34px;
-  height: 34px;
-  padding: 3px;
-  border-radius: var(--radius-sm);
-  /* The monogram is navy, so it needs a light chip to read on the dark canvas. */
-  background: var(--paper);
+  height: 30px;
+  width: auto;
+}
+
+.footer-mark {
+  height: 36px;
+  width: auto;
+  margin-bottom: var(--space-4);
 }
 
 .brand-word {
@@ -267,10 +394,16 @@ button {
   color: var(--text-muted);
 }
 
+.masthead-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--space-6);
 }
 
 .nav-list {
@@ -294,7 +427,8 @@ button {
   content: "";
   position: absolute;
   inset: auto 0 -2px;
-  height: 1px;
+  height: 2px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: 0 50%;
@@ -309,6 +443,131 @@ button {
 .nav-list a:hover::after,
 .nav-list a.is-active::after {
   transform: scaleX(1);
+}
+
+/* ---------- Theme switch ---------- */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+.theme-track {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  transition: background-color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+
+.theme-toggle:hover .theme-track {
+  border-color: var(--accent-line);
+  background: var(--surface-4);
+}
+
+/* Night has two stars in its track. */
+.theme-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(circle at 14px 9px, var(--accent-bright) 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 22px 19px, var(--accent-bright) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 9px 20px, var(--accent-line) 0 0.9px, transparent 1.4px);
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+:root[data-theme="dark"] .theme-track::after {
+  opacity: 0.9;
+}
+
+.theme-orb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  translate: 0 -50%;
+  rotate: 0deg;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 0 0 var(--accent-soft);
+  transition: translate 0.42s var(--ease-spring), background-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+:root[data-theme="dark"] .theme-orb {
+  translate: 28px -50%;
+}
+
+.theme-toggle:hover .theme-orb {
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+.theme-icon {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  transition: opacity 0.24s var(--ease), rotate 0.42s var(--ease), scale 0.42s var(--ease);
+}
+
+.theme-sun {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+.theme-moon {
+  opacity: 0;
+  rotate: -90deg;
+  scale: 0.4;
+}
+
+:root[data-theme="dark"] .theme-sun {
+  opacity: 0;
+  rotate: 90deg;
+  scale: 0.4;
+}
+
+:root[data-theme="dark"] .theme-moon {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+/* The flourish on click: the knob spins round and overshoots. Its position is
+   held by `translate`, which this animation never touches. */
+.theme-toggle.is-flipping .theme-orb {
+  animation: orb-flip 0.7s var(--ease);
+}
+
+@keyframes orb-flip {
+  0% {
+    rotate: 0deg;
+    scale: 1;
+  }
+  45% {
+    rotate: 200deg;
+    scale: 1.32;
+  }
+  100% {
+    rotate: 360deg;
+    scale: 1;
+  }
 }
 
 .nav-toggle {
@@ -346,6 +605,7 @@ button {
 /* ---------- Buttons ---------- */
 
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -353,26 +613,49 @@ button {
   min-height: 44px;
   padding: var(--space-3) var(--space-5);
   border: 1px solid transparent;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
   font-size: 0.92rem;
   font-weight: 500;
   letter-spacing: -0.005em;
   cursor: pointer;
+  overflow: hidden;
   transition: background-color var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease),
-    transform var(--dur-base) var(--ease);
+    transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+
+/* A sheen that crosses the button on hover — blue, like everything else. */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
+  transform: translateX(-110%);
+  transition: transform 0.6s var(--ease);
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  transform: translateX(110%);
 }
 
 .btn-solid {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--on-accent);
+  box-shadow: 0 10px 24px -18px var(--accent);
 }
 
 .btn-solid:hover {
   background: var(--accent-bright);
   border-color: var(--accent-bright);
-  transform: translateY(-1px);
+  color: var(--on-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px -20px var(--accent);
+}
+
+:root[data-theme="dark"] .btn-solid:hover {
+  color: var(--text-invert);
 }
 
 .btn-ghost {
@@ -381,14 +664,15 @@ button {
 }
 
 .btn-ghost:hover {
-  border-color: var(--text);
-  background: var(--surface-2);
-  transform: translateY(-1px);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  transform: translateY(-2px);
 }
 
 .btn-sm {
-  min-height: 40px;
-  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
   font-size: 0.85rem;
 }
 
@@ -414,8 +698,7 @@ button {
   isolation: isolate;
   display: flex;
   align-items: center;
-  min-height: 100svh;
-  padding-block: clamp(var(--space-24), 18vh, var(--space-32)) var(--space-16);
+  padding-block: clamp(var(--space-24), 14vh, var(--space-32)) var(--space-16);
   overflow: hidden;
 }
 
@@ -432,24 +715,28 @@ button {
   background-image: linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(circle at 50% 40%, var(--text) 0%, transparent 78%);
-  -webkit-mask-image: radial-gradient(circle at 50% 40%, var(--text) 0%, transparent 78%);
-  opacity: 0.55;
+  mask-image: radial-gradient(circle at 50% 34%, var(--text) 0%, transparent 74%);
+  -webkit-mask-image: radial-gradient(circle at 50% 34%, var(--text) 0%, transparent 74%);
+  opacity: 0.5;
+}
+
+:root[data-theme="light"] .hero-grid {
+  opacity: 0.42;
 }
 
 .hero-glow {
   position: absolute;
-  inset: auto -10% 40% -10%;
+  inset: auto -10% 30% -10%;
   height: 60vh;
-  background: radial-gradient(ellipse at 50% 50%, var(--hero-glow), transparent 65%);
-  filter: blur(20px);
+  background: radial-gradient(ellipse at 50% 40%, var(--hero-glow), transparent 66%);
+  filter: blur(24px);
 }
 
 .hero-spot {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    320px circle at var(--mx, 50%) var(--my, 40%),
+    320px circle at var(--mx, 50%) var(--my, 38%),
     var(--hero-spot),
     transparent 70%
   );
@@ -458,20 +745,22 @@ button {
 
 .hero-inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-  gap: clamp(var(--space-8), 4vw, var(--space-16));
-  align-items: center;
+  justify-items: center;
+  gap: clamp(var(--space-8), 3.6vw, var(--space-12));
+  text-align: center;
 }
 
 .hero-copy {
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: var(--space-5);
+  max-width: 64ch;
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
   flex-wrap: wrap;
   font-size: 0.72rem;
@@ -496,28 +785,38 @@ button {
 .hero-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
-  line-height: 0.96;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.7rem, 7vw, 5.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
   text-wrap: balance;
-  max-width: 18ch;
+}
+
+.hero-title .line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.04em;
+}
+
+.hero-title .line-inner {
+  display: block;
 }
 
 .hero-title em {
-  display: block;
   font-style: italic;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .hero-lede {
-  max-width: 54ch;
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  max-width: 56ch;
+  font-size: clamp(1rem, 1.35vw, 1.12rem);
   color: var(--text-muted);
+  text-wrap: pretty;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-3);
   margin-top: var(--space-2);
 }
@@ -526,7 +825,8 @@ button {
 
 .hero-visual {
   position: relative;
-  min-width: 0;
+  width: min(100%, 780px);
+  perspective: 1400px;
 }
 
 .stage {
@@ -549,9 +849,14 @@ button {
   border-radius: var(--radius-md);
   background: var(--surface-2);
   overflow: hidden;
-  box-shadow: 0 40px 90px -56px var(--bg), 0 0 0 1px var(--border);
-  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  transition: transform 0.35s var(--ease), border-color var(--dur-base) var(--ease);
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.35s var(--ease), border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.stage-frame:hover {
+  border-color: var(--accent-line);
 }
 
 .stage-bar {
@@ -575,6 +880,10 @@ button {
   height: 6px;
   border-radius: 50%;
   background: var(--pv-dot);
+}
+
+.stage-dots i:first-child {
+  background: var(--accent);
 }
 
 .stage-url {
@@ -604,7 +913,7 @@ button {
   height: 9px;
   margin: -4.5px 0 0 -4.5px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-bright);
   box-shadow: 0 0 0 5px var(--accent-soft);
   opacity: 0;
   pointer-events: none;
@@ -619,6 +928,7 @@ button {
 .stage-caption {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
   margin-top: var(--space-4);
   min-height: 20px;
@@ -634,7 +944,7 @@ button {
   height: 6px;
   flex: none;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-bright);
   box-shadow: 0 0 0 3px var(--accent-soft);
   animation: stage-live 2.4s var(--ease) infinite;
 }
@@ -646,8 +956,8 @@ button {
     transform: scale(1);
   }
   50% {
-    opacity: 0.5;
-    transform: scale(0.82);
+    opacity: 0.45;
+    transform: scale(0.8);
   }
 }
 
@@ -659,9 +969,14 @@ button {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-6);
   width: 100%;
-  margin-top: var(--space-10);
-  padding-top: var(--space-5);
+  padding-top: var(--space-6);
   border-top: 1px solid var(--border);
+}
+
+.fact {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
 }
 
 .fact dt {
@@ -670,7 +985,6 @@ button {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-subtle);
-  margin-bottom: var(--space-1);
 }
 
 .fact dd {
@@ -684,7 +998,7 @@ button {
   height: 7px;
   margin-right: var(--space-2);
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-bright);
   box-shadow: 0 0 0 3px var(--accent-soft);
   vertical-align: 0.1em;
 }
@@ -695,6 +1009,14 @@ button {
   border-block: 1px solid var(--border);
   background: var(--surface);
   overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, var(--text) 8%, var(--text) 92%, transparent);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--text) 8%,
+    var(--text) 92%,
+    transparent
+  );
 }
 
 .ticker-track {
@@ -746,8 +1068,29 @@ button {
 /* ---------- Sections ---------- */
 
 .section {
+  position: relative;
   padding-block: clamp(var(--space-16), 9vw, var(--space-24));
   border-top: 1px solid var(--border);
+}
+
+/* The section rule draws itself in as the section arrives. */
+.section::before {
+  content: "";
+  position: absolute;
+  inset: -1px auto auto 0;
+  width: min(100%, var(--wrap));
+  left: 50%;
+  translate: -50% 0;
+  height: 1px;
+  opacity: 0.6;
+  background: linear-gradient(90deg, var(--accent), transparent 42%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.9s var(--ease);
+}
+
+.section.is-entered::before {
+  transform: scaleX(1);
 }
 
 .section-head {
@@ -757,11 +1100,27 @@ button {
 }
 
 .index {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-subtle);
+}
+
+/* A short tick that grows out of the index, in the logo's blue. */
+.index::after {
+  content: "";
+  width: 0;
+  height: 1px;
+  background: var(--accent-bright);
+  transition: width 0.7s var(--ease) 0.1s;
+}
+
+.index.is-visible::after {
+  width: 48px;
 }
 
 .section-head-body {
@@ -780,7 +1139,7 @@ button {
 
 .section h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .section-lede {
@@ -805,6 +1164,7 @@ button {
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--surface-2);
@@ -812,14 +1172,15 @@ button {
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: border-color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease),
-    background-color var(--dur-base) var(--ease);
+    background-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
 .card:hover,
 .card:focus-within {
-  border-color: var(--border-strong);
+  border-color: var(--accent-line);
   background: var(--surface-3);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-media {
@@ -838,7 +1199,7 @@ button {
 
 .card:hover .preview,
 .card:focus-within .preview {
-  transform: scale(1.025);
+  transform: scale(1.03);
 }
 
 .pv-bg {
@@ -903,7 +1264,7 @@ button {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 .card-body {
@@ -939,7 +1300,7 @@ button {
 }
 
 .card-title a:hover {
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 .card-summary {
@@ -962,6 +1323,12 @@ button {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
+  transition: border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+
+.card:hover .card-tags li {
+  border-color: var(--accent-line);
+  color: var(--text);
 }
 
 .card-foot {
@@ -977,7 +1344,7 @@ button {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 .card-cta.is-placeholder {
@@ -1002,7 +1369,7 @@ button {
 
 .work-fallback code {
   font-size: 0.85em;
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 /* ---------- Ship list ---------- */
@@ -1047,7 +1414,7 @@ button {
 .ship-list li > span {
   font-family: var(--font-display);
   font-size: 0.95rem;
-  color: var(--accent);
+  color: var(--accent-text);
   padding-top: 1px;
 }
 
@@ -1071,29 +1438,51 @@ button {
 
 .row {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: var(--space-12) minmax(0, 1fr) auto;
   gap: var(--space-5);
   align-items: start;
   padding-block: var(--space-6);
   border-bottom: 1px solid var(--border);
-  transition: background-color var(--dur-base) var(--ease), padding-inline var(--dur-base) var(--ease);
+  transition: transform var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+
+/* The hover wash sweeps in from the left, so the row lights up as it is read. */
+.row::after {
+  content: "";
+  position: absolute;
+  inset: -1px -1px -1px -1px;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--accent-soft), transparent 65%);
+  opacity: 0;
+  transform: scaleX(0.6);
+  transform-origin: 0 50%;
+  transition: opacity var(--dur-base) var(--ease), transform 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.row:hover::after,
+.row:focus-within::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .row:hover {
-  background: var(--surface-2);
-  padding-inline: var(--space-3);
+  transform: translateX(4px);
+  border-color: var(--accent-line);
 }
 
 .row-index {
   font-family: var(--font-display);
   font-size: 1.1rem;
   color: var(--text-subtle);
-  transition: color var(--dur-base) var(--ease);
+  transition: color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
 }
 
 .row:hover .row-index {
-  color: var(--accent);
+  color: var(--accent-text);
+  transform: translateY(-1px);
 }
 
 .row-main {
@@ -1129,6 +1518,30 @@ button {
 
 /* ---------- Approach ---------- */
 
+.steps-track {
+  position: relative;
+  padding-top: var(--space-6);
+}
+
+.steps-rail {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.steps-rail-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1139,29 +1552,39 @@ button {
   position: relative;
   display: grid;
   gap: var(--space-2);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--border);
+  align-content: start;
 }
 
+/* The node on the rail for this step. */
 .step::before {
   content: "";
   position: absolute;
-  inset: -1px 0 auto;
-  height: 1px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.5s var(--ease);
+  top: calc(-1 * var(--space-6) - 3.5px);
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-2);
+  transition: background-color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
-.step.is-visible::before {
-  transform: scaleX(1);
+.step.is-passed::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .step-num {
   font-family: var(--font-display);
   font-size: 1.1rem;
-  color: var(--accent);
+  color: var(--text-subtle);
+  transition: color var(--dur-base) var(--ease);
+}
+
+.step.is-passed .step-num {
+  color: var(--accent-text);
 }
 
 .step h3 {
@@ -1191,6 +1614,12 @@ button {
   text-wrap: balance;
 }
 
+/* Each word is wrapped at runtime so the statement can rise word by word. */
+.statement .word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
 .studio-copy {
   display: grid;
   gap: var(--space-4);
@@ -1200,6 +1629,10 @@ button {
 
 .facts-studio {
   margin-top: clamp(var(--space-10), 5vw, var(--space-16));
+}
+
+.facts-studio .fact {
+  justify-items: start;
 }
 
 /* ---------- Contact ---------- */
@@ -1246,16 +1679,139 @@ button {
 .contact-list dd {
   font-size: 0.92rem;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .contact-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border-bottom: 1px solid var(--accent-line);
   transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 
 .contact-list a:hover {
-  color: var(--accent-bright);
+  color: var(--accent-text);
   border-color: var(--accent-bright);
+}
+
+/* ---------- Instagram ---------- */
+
+.social-block {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-2) var(--space-5) var(--space-2) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  transition: border-color var(--dur-base) var(--ease),
+    background-color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.social:hover,
+.social:focus-visible {
+  border-color: var(--accent-line);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.social-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent-soft);
+}
+
+.social-icon {
+  position: relative;
+  z-index: 2;
+  width: 21px;
+  height: 21px;
+  color: var(--accent-text);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.social:hover .social-icon {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+/* Two rings orbit the icon in opposite directions. The gradient is masked to a
+   2px ring, so it reads as a drawn circle rather than a filled disc. */
+.social-ring {
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 40deg,
+    var(--accent-bright) 130deg,
+    var(--accent-text) 200deg,
+    transparent 300deg 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: orbit 3.6s linear infinite;
+}
+
+.social-ring--slow {
+  inset: -5px;
+  padding: 1px;
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg 120deg,
+    var(--accent-line) 200deg,
+    transparent 300deg 360deg
+  );
+  animation-duration: 7s;
+  animation-direction: reverse;
+}
+
+.social:hover .social-ring {
+  animation-duration: 1.4s;
+}
+
+.social:hover .social-ring--slow {
+  animation-duration: 2.6s;
+}
+
+@keyframes orbit {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.social-copy {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.social-handle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.social-note {
+  font-size: 0.76rem;
+  color: var(--text-subtle);
 }
 
 /* ---------- Form ---------- */
@@ -1300,6 +1856,11 @@ button {
   transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
+.field textarea::placeholder {
+  color: var(--text-subtle);
+  opacity: 1;
+}
+
 .field select {
   appearance: none;
   background-image: linear-gradient(45deg, transparent 50%, var(--text-subtle) 50%),
@@ -1330,8 +1891,8 @@ button {
 .field select:focus-visible,
 .field textarea:focus-visible {
   outline: none;
-  border-bottom-color: var(--accent);
-  box-shadow: 0 1px 0 0 var(--accent);
+  border-bottom-color: var(--accent-bright);
+  box-shadow: 0 1px 0 0 var(--accent-bright);
 }
 
 .field.has-error input,
@@ -1341,7 +1902,7 @@ button {
 
 .field-error {
   font-size: 0.78rem;
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 .form-note {
@@ -1360,7 +1921,7 @@ button {
 }
 
 .form-status.is-error {
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 
 .form-status.is-success {
@@ -1384,15 +1945,6 @@ button {
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr);
   gap: var(--space-10);
   padding-bottom: var(--space-12);
-}
-
-.footer-mark {
-  width: 44px;
-  height: 44px;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  background: var(--paper);
-  margin-bottom: var(--space-4);
 }
 
 .footer-word {
@@ -1424,7 +1976,8 @@ button {
 .footer-contact a {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  gap: var(--space-2);
+  min-height: 44px;
   font-size: 0.9rem;
   color: var(--text-muted);
   transition: color var(--dur-fast) var(--ease);
@@ -1432,13 +1985,34 @@ button {
 
 .footer-nav a:hover,
 .footer-contact a:hover {
-  color: var(--text);
+  color: var(--accent-text);
 }
 
 .footer-contact {
   display: grid;
   align-content: start;
   gap: var(--space-2);
+}
+
+.footer-social-orb {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-line);
+  color: var(--accent-text);
+  transition: background-color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+
+.footer-social-orb svg {
+  width: 13px;
+  height: 13px;
+}
+
+.footer-social:hover .footer-social-orb {
+  background: var(--accent-soft);
+  transform: rotate(-8deg) scale(1.08);
 }
 
 .footer-bottom {
@@ -1453,30 +2027,52 @@ button {
   color: var(--text-subtle);
 }
 
+/* ---------- Hero intro, held until motion.js runs the timeline ---------- */
+
+html.motion-ok:not(.intro-done) .hero-copy > * {
+  opacity: 0;
+}
+
+html.motion-ok:not(.intro-done) .hero-title .line-inner {
+  transform: translateY(108%);
+}
+
+html.motion-ok:not(.intro-done) .hero-visual {
+  opacity: 0;
+  transform: translateY(18px) scale(0.99);
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1080px) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .hero-visual {
-    max-width: 640px;
-    width: 100%;
-  }
-
-  .hero-copy {
-    max-width: 640px;
-  }
-
-  .facts {
-    margin-top: var(--space-6);
+    width: min(100%, 640px);
   }
 }
 
 @media (max-width: 1040px) {
   .steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) var(--space-6);
+  }
+
+  /* A single horizontal rail cannot track two columns, so each step carries
+     its own rule instead. */
+  .steps-rail {
+    display: none;
+  }
+
+  .steps-track {
+    padding-top: 0;
+  }
+
+  .step {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+
+  .step::before {
+    top: -5px;
   }
 
   .facts {
@@ -1492,14 +2088,14 @@ button {
 
   .nav {
     position: fixed;
-    inset: 65px var(--space-5) auto;
+    inset: 68px var(--space-5) auto;
     display: grid;
     gap: var(--space-4);
     padding: var(--space-5);
     background: var(--surface-2);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
-    box-shadow: 0 var(--space-6) var(--space-12) rgba(5, 7, 10, 0.55);
+    box-shadow: 0 var(--space-6) var(--space-12) rgba(5, 7, 10, 0.35);
     transform: translateY(calc(-1 * var(--space-3)));
     opacity: 0;
     visibility: hidden;
@@ -1565,8 +2161,8 @@ button {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .hero-title {
-    max-width: 100%;
+  .hero-visual {
+    width: 100%;
   }
 }
 
@@ -1581,6 +2177,10 @@ button {
 
   .brand-word-light {
     display: none;
+  }
+
+  .social {
+    width: 100%;
   }
 }
 
@@ -1627,7 +2227,32 @@ button {
     display: none;
   }
 
-  .step::before {
+  .section::before,
+  .index::after {
+    transform: none;
+    width: 48px;
+  }
+
+  .section::before {
     transform: scaleX(1);
+  }
+
+  .steps-rail-fill {
+    transform: scaleX(1);
+  }
+
+  .step.is-passed::before,
+  .step::before {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .social-ring,
+  .social-ring--slow {
+    animation: none;
+  }
+
+  .btn::before {
+    display: none;
   }
 }

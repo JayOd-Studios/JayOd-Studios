@@ -6,9 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
+  <script src="theme-boot.js"></script>
+
   <title>JayOd Studios — Independent web development studio</title>
   <meta name="description" content="JayOd Studios is a new independent web development studio building fast, accessible websites and web apps. Now taking on its first founding client projects." />
-  <meta name="theme-color" content="#05070A" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#141824" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f5f1" />
   <link rel="canonical" href="https://jayod-studios.github.io/JayOd-Studios/" />
 
   <meta property="og:type" content="website" />
@@ -19,7 +22,7 @@
   <meta property="og:image" content="https://jayod-studios.github.io/JayOd-Studios/logo.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314213D'/%3E%3Ctext x='33' y='45' font-family='Georgia,serif' font-size='34' fill='%23F5F1E8' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2319224D'/%3E%3Ctext x='33' y='45' font-family='Georgia,serif' font-size='34' fill='%23F6F5F1' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,24 +37,44 @@
   <header class="masthead" id="siteHeader">
     <div class="wrap masthead-inner">
       <a class="brand" href="#top" aria-label="JayOd Studios — home">
-        <img class="brand-mark" src="logo-mark.png" alt="" width="34" height="34" />
+        <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-word">JayOd <span class="brand-word-light">Studios</span></span>
       </a>
 
-      <nav class="nav" id="primaryNav" aria-label="Primary">
-        <ul role="list" class="nav-list">
-          <li><a href="#work">Work</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#approach">Approach</a></li>
-          <li><a href="#studio">Studio</a></li>
-        </ul>
-        <a class="btn btn-solid btn-sm nav-cta" href="#contact">Start a project</a>
-      </nav>
+      <div class="masthead-tools">
+        <nav class="nav" id="primaryNav" aria-label="Primary">
+          <ul role="list" class="nav-list">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#approach">Approach</a></li>
+            <li><a href="#studio">Studio</a></li>
+          </ul>
+          <a class="btn btn-solid btn-sm nav-cta" href="#contact">Start a project</a>
+        </nav>
 
-      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav">
-        <span class="sr-only">Open menu</span>
-        <span class="nav-bars" aria-hidden="true"><i></i><i></i></span>
-      </button>
+        <button class="theme-toggle" id="themeToggle" type="button">
+          <span class="theme-track" aria-hidden="true">
+            <span class="theme-orb">
+              <svg class="theme-icon theme-sun" viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7" />
+                <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                  <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2" />
+                  <path d="M5.4 5.4 7 7M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
+                </g>
+              </svg>
+              <svg class="theme-icon theme-moon" viewBox="0 0 24 24" focusable="false">
+                <path d="M20.4 14.6A8.6 8.6 0 0 1 9.4 3.6a8.6 8.6 0 1 0 11 11Z" fill="currentColor" />
+              </svg>
+            </span>
+          </span>
+          <span class="sr-only" id="themeToggleLabel">Switch to light mode</span>
+        </button>
+
+        <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav">
+          <span class="sr-only">Open menu</span>
+          <span class="nav-bars" aria-hidden="true"><i></i><i></i></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -74,8 +97,8 @@
           </p>
 
           <h1 class="hero-title">
-            Good websites,
-            <em>built properly.</em>
+            <span class="line"><span class="line-inner">Good websites,</span></span>
+            <span class="line"><em class="line-inner">built properly.</em></span>
           </h1>
 
           <p class="hero-lede">
@@ -156,7 +179,7 @@
     </div>
 
     <!-- Work -->
-    <section class="section" id="work">
+    <section class="section section-work" id="work">
       <div class="wrap">
         <header class="section-head">
           <p class="index" data-reveal>01 <span aria-hidden="true">—</span> Selected work</p>
@@ -196,7 +219,7 @@
     </section>
 
     <!-- Services -->
-    <section class="section" id="services">
+    <section class="section section-services" id="services">
       <div class="wrap">
         <header class="section-head">
           <p class="index" data-reveal>02 <span aria-hidden="true">—</span> Services</p>
@@ -260,7 +283,7 @@
     </section>
 
     <!-- Approach -->
-    <section class="section" id="approach">
+    <section class="section section-approach" id="approach">
       <div class="wrap">
         <header class="section-head">
           <p class="index" data-reveal>03 <span aria-hidden="true">—</span> Approach</p>
@@ -270,33 +293,36 @@
           </div>
         </header>
 
-        <ol role="list" class="steps">
-          <li class="step" data-reveal>
-            <span class="step-num" aria-hidden="true">01</span>
-            <h3>Scope</h3>
-            <p>A short call, then a written scope: pages, features, timeline and a fixed price. If the brief isn’t a fit, we say so.</p>
-          </li>
-          <li class="step" data-reveal>
-            <span class="step-num" aria-hidden="true">02</span>
-            <h3>Design</h3>
-            <p>Structure first, then a designed direction in the browser — not a static mockup that falls apart once it’s real.</p>
-          </li>
-          <li class="step" data-reveal>
-            <span class="step-num" aria-hidden="true">03</span>
-            <h3>Build</h3>
-            <p>Hand-written, responsive front-end with accessible components. A staging link from week one so you watch it come together.</p>
-          </li>
-          <li class="step" data-reveal>
-            <span class="step-num" aria-hidden="true">04</span>
-            <h3>Launch &amp; care</h3>
-            <p>Hosting, analytics, redirects and a handover you can follow. Then thirty days of support while things settle.</p>
-          </li>
-        </ol>
+        <div class="steps-track">
+          <div class="steps-rail" aria-hidden="true"><span class="steps-rail-fill" id="stepsRail"></span></div>
+          <ol role="list" class="steps">
+            <li class="step" data-reveal>
+              <span class="step-num" aria-hidden="true">01</span>
+              <h3>Scope</h3>
+              <p>A short call, then a written scope: pages, features, timeline and a fixed price. If the brief isn’t a fit, we say so.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step-num" aria-hidden="true">02</span>
+              <h3>Design</h3>
+              <p>Structure first, then a designed direction in the browser — not a static mockup that falls apart once it’s real.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step-num" aria-hidden="true">03</span>
+              <h3>Build</h3>
+              <p>Hand-written, responsive front-end with accessible components. A staging link from week one so you watch it come together.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step-num" aria-hidden="true">04</span>
+              <h3>Launch &amp; care</h3>
+              <p>Hosting, analytics, redirects and a handover you can follow. Then thirty days of support while things settle.</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
     <!-- Studio -->
-    <section class="section studio" id="studio">
+    <section class="section section-studio studio" id="studio">
       <div class="wrap">
         <header class="section-head">
           <p class="index" data-reveal>04 <span aria-hidden="true">—</span> Studio</p>
@@ -306,7 +332,7 @@
         </header>
 
         <div class="studio-split">
-          <p class="statement" data-reveal>
+          <p class="statement" id="studioStatement">
             JayOd Studios is an independent web development studio founded in 2026. No account managers,
             no hand-off to a team you never meet — the person who scopes your project is the person who
             builds it.
@@ -327,7 +353,7 @@
     </section>
 
     <!-- Contact -->
-    <section class="section contact" id="contact">
+    <section class="section section-contact contact" id="contact">
       <div class="wrap">
         <header class="section-head">
           <p class="index" data-reveal>05 <span aria-hidden="true">—</span> Contact</p>
@@ -343,10 +369,31 @@
               answer on whether we’re the right studio for it.
             </p>
             <dl class="contact-list">
-              <div><dt>Email</dt><dd><a href="mailto:hello@jayodstudios.com">hello@jayodstudios.com</a></dd></div>
+              <div><dt>Email</dt><dd><a href="mailto:jayodstudios@gmail.com">jayodstudios@gmail.com</a></dd></div>
               <div><dt>Where</dt><dd>Remote — working worldwide</dd></div>
               <div><dt>Availability</dt><dd><span class="status-dot" aria-hidden="true"></span>Booking first projects</dd></div>
             </dl>
+
+            <div class="social-block">
+              <p class="list-label">Elsewhere</p>
+              <a class="social" href="https://www.instagram.com/jayodstudios/" target="_blank" rel="noopener noreferrer">
+                <span class="social-orb" aria-hidden="true">
+                  <span class="social-ring"></span>
+                  <span class="social-ring social-ring--slow"></span>
+                  <span class="social-icon">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" />
+                    </svg>
+                  </span>
+                </span>
+                <span class="social-copy">
+                  <span class="social-handle">@jayodstudios</span>
+                  <span class="social-note">Follow the studio on Instagram</span>
+                </span>
+              </a>
+            </div>
           </div>
 
           <form class="form" id="projectForm" novalidate data-reveal>
@@ -397,7 +444,7 @@
               Send project brief
               <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <p class="form-note">This form opens your email app with the brief filled in — nothing is stored on this site. Prefer to write directly? <a href="mailto:hello@jayodstudios.com">Email us</a>.</p>
+            <p class="form-note">This form opens your email app with the brief filled in — nothing is stored on this site. Prefer to write directly? <a href="mailto:jayodstudios@gmail.com">Email us</a>.</p>
             <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -408,7 +455,7 @@
   <footer class="site-footer">
     <div class="wrap footer-inner">
       <div class="footer-brand">
-        <img class="footer-mark" src="logo-mark.png" alt="" width="44" height="44" />
+        <span class="footer-mark" aria-hidden="true"></span>
         <p class="footer-word">JayOd Studios</p>
         <p class="footer-tag">Independent web development studio.<br />Websites and web apps, built properly.</p>
       </div>
@@ -426,7 +473,17 @@
 
       <div class="footer-contact">
         <p class="footer-heading">Get in touch</p>
-        <a class="footer-email" href="mailto:hello@jayodstudios.com">hello@jayodstudios.com</a>
+        <a class="footer-email" href="mailto:jayodstudios@gmail.com">jayodstudios@gmail.com</a>
+        <a class="footer-social" href="https://www.instagram.com/jayodstudios/" target="_blank" rel="noopener noreferrer">
+          <span class="footer-social-orb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.7" />
+              <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7" />
+              <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" />
+            </svg>
+          </span>
+          @jayodstudios
+        </a>
         <a class="footer-github" href="https://github.com/JayOd-Studios" target="_blank" rel="noopener noreferrer">github.com/JayOd-Studios</a>
       </div>
     </div>
@@ -440,6 +497,7 @@
   <script src="wireframes.js"></script>
   <script src="portfolio.js"></script>
   <script src="app.js"></script>
+  <script type="module" src="theme.js"></script>
   <script type="module" src="hero.js"></script>
   <script type="module" src="motion.js"></script>
   <script type="module" src="anime.js"></script>

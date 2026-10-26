@@ -1,0 +1,35 @@
+/* JayOd Studios — theme boot.
+ *
+ * Runs synchronously in <head>, before the stylesheet is parsed, so the page
+ * never paints the wrong theme and then flips. Deliberately a classic script:
+ * an inline one would be blocked by the Content-Security-Policy, and a module
+ * would run too late to prevent the flash.
+ */
+(function () {
+  var html = document.documentElement;
+  var THEME_KEY = "jayod-theme";
+
+  var stored = null;
+  try {
+    stored = window.localStorage.getItem(THEME_KEY);
+  } catch (error) {
+    /* Storage can be blocked; the page still works, it just will not remember. */
+  }
+
+  var systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+  var theme = stored === "light" || stored === "dark" ? stored : systemLight ? "light" : "dark";
+
+  html.setAttribute("data-theme", theme);
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) {
+    html.classList.add("intro-done");
+  } else {
+    /* The hero intro hides its own copy until motion.js runs the timeline.
+       This fail-safe releases it even if that module never loads. */
+    html.classList.add("motion-ok");
+    window.setTimeout(function () {
+      html.classList.add("intro-done");
+    }, 2800);
+  }
+})();

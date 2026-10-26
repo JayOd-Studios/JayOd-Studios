@@ -68,16 +68,50 @@ markup to touch. Add, remove or reorder objects; the grid reflows on its own
 - **`preview`** picks the wireframe drawn behind the badge; an unknown value
   falls back to `editorial`.
 
+## Light and dark
+
+The site ships both themes. `theme-boot.js` runs in `<head>` (before the
+stylesheet is parsed, so nothing flashes) and sets `data-theme` from the
+visitor's saved choice, or from `prefers-color-scheme` on a first visit. The
+switch in the masthead flips between them and remembers the choice in
+`localStorage`.
+
+- **Every colour is a token**, so the whole page re-renders from one attribute.
+  `:root` holds the dark deck; `:root[data-theme="light"]` re-points every
+  semantic token at paper.
+- **The switch animates.** The change runs inside a View Transition and is
+  revealed as a circle of the new page growing out of the button. Element
+  transitions are disabled for the duration (`html.is-theming`) — otherwise the
+  new snapshot catches every colour halfway through its fade and freezes it
+  there. The knob's own spin plays *after* the wipe, because a snapshot would
+  freeze it mid-click.
+- **Browsers without View Transitions** switch instantly; the control still
+  works. So does reduced motion, which also skips the wipe.
+- The switch is a `<button>` whose `sr-only` label reads "Switch to light mode"
+  or "Switch to dark mode", and the `theme-color` meta is rewritten so mobile
+  browser chrome matches.
+
+### The logo, backgroundless
+
+The monogram is navy `#19224D` — 1.3:1 against any dark surface, so on a dark
+background it is effectively invisible whatever the shade. Both marks therefore
+use the PNG's alpha as a **CSS mask** and take their colour from `--logo-ink`:
+the exact logo navy in the light theme, a pale tint of the same blue on the dark
+deck. No white chip behind it in either theme. The dark deck itself is a lifted
+navy-black (`#141824`), not pure black, so the whole page reads softer.
+
 ## Design
 
-An editorial index on a near-black canvas, not a card stack:
+An editorial index, not a card stack:
 
 - A sticky numbered index for each section (`01 — Selected work` … `05 — Contact`).
 - Services and the process are hairline-ruled rows, not a uniform card grid.
-- Instrument Serif for display, Inter for everything else, on ink `#05070A` with
-  paper `#F5F1E8` and terracotta `#E2603F`.
-- Motion is used for meaning: builds, reveals, and feedback — not decoration
-  loops behind text.
+- Instrument Serif for display, Inter for everything else, on the studio's own
+  navy `#19224D` with paper `#F6F5F1`.
+- Motion is used for meaning, and each section gets the motion its job needs:
+  the hero assembles line by line, work previews draw themselves in, the
+  approach rail fills as you scroll past the four steps, the studio statement
+  rises word by word, contact fields lift into place.
 
 ### Tokens
 
@@ -85,13 +119,17 @@ Everything visual is a custom property at the top of `styles.css`:
 
 | Group | Examples |
 | --- | --- |
-| Primitives | `--ink-1000`, `--paper`, `--terracotta` |
+| Primitives | `--blue-950` … `--blue-100` (a ramp anchored on the logo), `--paper` |
 | Semantic colour | `--bg`, `--surface`, `--text`, `--text-muted`, `--border`, `--accent` |
+| Text accent | `--accent-text` — the same blue, lightened in dark mode until it clears 4.5:1 |
+| Brand | `--logo-ink`, `--theme-dark-bg`, `--theme-light-bg` |
 | Wireframe art | `--pv-block`, `--pv-panel`, `--pv-accent`, `--pv-rule` |
 | Spacing | `--space-1` … `--space-32`, named by px/4 (4px steps) |
-| Radius | `--radius-xs`, `--radius-sm`, `--radius-md` |
+| Radius | `--radius-xs` … `--radius-lg` |
 
-No raw hex or rgba appears in any rule — only in the token definitions.
+No raw hex or rgba appears in any rule — only in the token definitions. Both
+themes are sampled for contrast: body copy clears 4.5:1 and accent text clears
+3:1 in each.
 
 ## Files
 
@@ -103,7 +141,9 @@ No raw hex or rgba appears in any rule — only in the token definitions.
 | `wireframes.js` | Generated wireframe art, shared by the work cards and the hero |
 | `hero.js` | The hero stage: assembles, tours, dissolves and cycles five layouts |
 | `app.js` | Nav, header state, section tracking, card rendering, contact form |
-| `motion.js` | Motion: scroll reveals, reading progress, hero spotlight |
+| `theme-boot.js` | Sets the theme in `<head>`, before first paint. Classic script — an inline one would be blocked by the CSP |
+| `theme.js` | The theme switch: persists the choice, runs the wipe, updates the label and `theme-color` |
+| `motion.js` | Scroll choreography: hero intro, reveals, card draw, approach rail, studio words, reading progress |
 | `anime.js` | Anime.js: arrow redraw, availability pulse, card hover, form bump |
 | `vendor/` | Tree-shaken Motion and Anime.js builds, licences, rebuild notes |
 | `logo.jpg` | Full logo lockup on white (social previews only) |
@@ -117,22 +157,25 @@ breaks navigation, the form or the work grid.
 
 | Asset | Size | gzip |
 | --- | --- | --- |
-| `index.html` | 20.8 KB | 5.5 KB |
-| `styles.css` | 30.5 KB | 6.3 KB |
-| `app.js` | 9.9 KB | 3.2 KB |
-| `hero.js` | 7.0 KB | 2.6 KB |
-| `wireframes.js` | 5.5 KB | 1.9 KB |
-| `motion.js` | 4.2 KB | 1.7 KB |
-| `anime.js` | 3.5 KB | 1.4 KB |
+| `index.html` | 23.7 KB | 5.9 KB |
+| `styles.css` | 43.6 KB | 9.2 KB |
+| `motion.js` | 10.1 KB | 3.2 KB |
+| `app.js` | 9.7 KB | 3.1 KB |
+| `hero.js` | 6.9 KB | 2.5 KB |
+| `wireframes.js` | 5.4 KB | 1.9 KB |
+| `theme.js` | 5.1 KB | 2.1 KB |
+| `anime.js` | 3.4 KB | 1.4 KB |
 | `portfolio.js` | 2.8 KB | 1.3 KB |
-| `vendor/motion-14.6.0.js` | 8.4 KB | 3.4 KB |
-| `vendor/anime-4.5.0.js` | 43.1 KB | 17.2 KB |
-| `logo-mark.png` | 11.1 KB | — |
+| `theme-boot.js` | 1.2 KB | 0.6 KB |
+| `vendor/motion-14.6.0.js` | 8.2 KB | 3.3 KB |
+| `vendor/anime-4.5.0.js` | 42.1 KB | 16.8 KB |
+| `logo-mark.png` | 10.9 KB | — |
 
-The page's own code is ~21 KB gzipped; the vendored animation engines add ~21 KB
-more, three quarters of which is Anime.js. All animation modules are deferred
-ES modules, so none of it blocks the first paint, and the hero `<h1>` is never
-hidden behind an animation, so the LCP text paints immediately.
+The page's own code is ~31 KB gzipped; the vendored animation engines add ~20 KB,
+six sevenths of which is Anime.js. All animation modules are deferred ES modules
+and `theme-boot.js` is 1.2 KB, so nothing meaningfully blocks the first paint.
+The hero `<h1>` is never hidden behind an animation: the intro holds its copy for
+at most 2.8 s and a fail-safe releases it even if `motion.js` never loads.
 
 ## Security
 
@@ -151,13 +194,18 @@ X-Content-Type-Options can't be set at all. A host with header control
 ## Accessibility
 
 Semantic landmarks and one `h1`; heading levels never skip. A skip link, visible
-focus styles, `aria-current="location"` on the active nav item, 44px menu button
-and form controls, labelled fields with inline errors tied through
-`aria-describedby`, `role="list"` where `list-style: none` would strip
-semantics, and full `prefers-reduced-motion` support — including a CSS rule that
-forces every `[data-reveal]` element visible, so a motion preference can never
-leave content hidden. All text passes WCAG AA contrast (lowest measured pair
-clears 4.5:1).
+focus styles, `aria-current="location"` on the active nav item, 44px targets on
+every control and link (inline links inside a sentence excepted), labelled
+fields with inline errors tied through `aria-describedby`, `role="list"` where
+`list-style: none` would strip semantics, and full `prefers-reduced-motion`
+support — including a CSS rule that forces every `[data-reveal]` element visible,
+so a motion preference can never leave content hidden. All text passes WCAG AA
+contrast in **both** themes (lowest measured pair clears 4.5:1).
+
+The theme switch announces its next action ("Switch to light mode") rather than
+its current state, and the studio statement is split into words at runtime
+without `aria-hidden` or a duplicate label, so screen readers still read it as
+one sentence.
 
 The hero stage, the wireframe thumbnails and the decorative ticker are
 `aria-hidden`; everything they convey is also stated in text.
@@ -165,7 +213,9 @@ The hero stage, the wireframe thumbnails and the decorative ticker are
 ## Contact form
 
 Validates in the browser, then opens the visitor's email app with a prefilled
-brief to `hello@jayodstudios.com`. Works on any static host with no backend.
+brief to `jayodstudios@gmail.com`. Works on any static host with no backend.
+Every enquiry route — the form, the contact list, the footer and the "Email us"
+fallback — points at that one address (`CONTACT_EMAIL` in `app.js`).
 
 For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the
 `const CONTACT_EMAIL` / `window.location.href = mailto:...` block near the end of
@@ -173,7 +223,6 @@ For a real form endpoint (Formspree, Web3Forms, Netlify Forms), replace the
 
 ## Things to fill in
 
-- Email address `hello@jayodstudios.com` (masthead CTA target, contact section, footer, `CONTACT_EMAIL`)
 - GitHub link in the footer
 - The canonical / `og:url` / `og:image` values, plus `robots.txt` and `sitemap.xml`, if a custom domain replaces the Pages URL
 - The specifics in the founding-client offer, reply time and support period
@@ -201,4 +250,5 @@ values in `index.html`, plus `robots.txt` and `sitemap.xml`.
 
 The previous navy-and-paper editorial design is still in git at `8ac69f9`, and
 the dark edition was developed in `v2/` before being promoted to the root in the
-commit that moved these files up.
+commit that moved these files up. The light theme and the centred hero arrived
+after that, along with the blue accent taken from the logo.

@@ -5,7 +5,7 @@
  * still reads.
  */
 
-const CONTACT_EMAIL = "hello@jayodstudios.com";
+const CONTACT_EMAIL = "jayodstudios@gmail.com";
 
 const header = document.getElementById("siteHeader");
 const nav = document.getElementById("primaryNav");
