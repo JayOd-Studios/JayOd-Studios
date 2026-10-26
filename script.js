@@ -6,7 +6,6 @@ const header = document.getElementById("siteHeader");
 const nav = document.getElementById("primaryNav");
 const navToggle = document.getElementById("navToggle");
 const navLinks = Array.from(document.querySelectorAll(".nav-list a"));
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ---------- Mobile navigation ---------- */
 
@@ -84,28 +83,6 @@ if ("IntersectionObserver" in window && sections.length) {
   sections.forEach((section) => navObserver.observe(section));
 }
 
-/* ---------- Scroll reveal (progressive enhancement) ---------- */
-
-if (!reduceMotion && "IntersectionObserver" in window) {
-  const targets = document.querySelectorAll("[data-reveal]");
-
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
-
-  targets.forEach((target) => {
-    target.classList.add("reveal");
-    revealObserver.observe(target);
-  });
-}
-
 /* ---------- Year ---------- */
 
 const yearEl = document.getElementById("year");
@@ -173,6 +150,8 @@ if (form) {
       statusEl.textContent = "Almost there — please check the highlighted fields.";
       statusEl.className = "form-status is-error";
       firstInvalid.focus();
+      // Picked up by anime-fx.js for the error bump; no-op if that module is absent.
+      form.dispatchEvent(new CustomEvent("jayod:invalid", { bubbles: true }));
       return;
     }
 

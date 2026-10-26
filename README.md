@@ -2,7 +2,7 @@
 
 The studio website for **JayOd Studios**, an independent web development studio.
 
-A single-page static site: no build step, no framework, no runtime dependencies.
+A single-page static site: no build step, no framework, and no third-party requests at runtime. The two animation libraries are vendored locally, so the page still loads nothing it does not serve itself.
 
 ## The honest bit
 
@@ -36,11 +36,38 @@ Dark sections opt into the inverse palette by adding `.on-dark`, which re-points
 | --- | --- |
 | `index.html` | The whole page |
 | `styles.css` | Tokens, layout, components, responsive rules |
-| `script.js` | Mobile nav, header state, active-section tracking, reveals, contact form |
+| `script.js` | Mobile nav, header state, active-section tracking, contact form |
+| `motion-reveal.js` | Scroll reveals, animated with Motion |
+| `anime-fx.js` | Arrow redraw, availability pulse, invalid-form bump, animated with Anime.js |
+| `vendor/` | Locally built copies of Motion and Anime.js, their licences and rebuild instructions |
 | `logo.jpg` | Full logo lockup on white (social previews only) |
 | `logo-mark.png` | Transparent JO monogram for the masthead and footer |
 | `robots.txt` | Crawl rules and sitemap pointer |
 | `sitemap.xml` | Single-URL sitemap |
+
+## Motion
+
+Two animation libraries, each given a job rather than both doing everything:
+
+- **Motion** (`motion/mini`, 3.4 KB gzipped) runs the scroll reveals. Observation stays with a plain `IntersectionObserver` in the module, so the animation engine is never a precondition for content appearing — Motion only supplies the tween, through the Web Animations API.
+- **Anime.js** (17.2 KB gzipped) runs the interactive moments: the CTA arrow redrawing itself on hover and keyboard focus, the slow pulse on the availability dot, and a short bump on the fields of an invalid form.
+
+Both are deferred ES modules and both are optional. Without JavaScript the page is fully readable; if the modules fail to load, the CSS leaves every `[data-reveal]` element visible. `motion-reveal.js` never hides content in the first viewport, only animates what is still below the fold, clears its inline styles when a tween finishes, and keeps a timed failsafe so an animation that silently fails to run can never leave a section invisible. Reduced-motion is read live, not once at load: switching it on mid-session settles everything immediately and stops the pulse.
+
+`vendor/README.md` records the pinned versions, the esbuild commands that produced each file, and why Kokonut UI and Bklit UI are not vendored — both are shadcn registries of React components, so they need a React + Tailwind build rather than a script tag.
+
+### What the animation layer costs
+
+It is the largest weight the page carries, and worth knowing before keeping it:
+
+| Layer | Raw | gzip |
+| --- | --- | --- |
+| `motion-reveal.js` + `anime-fx.js` | 6.0 KB | 2.7 KB |
+| `vendor/motion-14.6.0.js` | 8.4 KB | 3.4 KB |
+| `vendor/anime-4.5.0.js` | 43.1 KB | 17.2 KB |
+| **Total** | **57.6 KB** | **23.3 KB** |
+
+That is roughly triple the 12.6 KB gzipped the rest of the page ships, and Anime.js is three quarters of it. Its jobs could be done with ~40 lines of CSS and `requestAnimationFrame`, but the library was requested. `anime-fx.js` is self-contained: deleting it, its script tag and `vendor/anime-4.5.0.js` removes every trace without touching the reveals.
 
 ## Security
 
@@ -57,18 +84,22 @@ Measured at deploy time, uncompressed → gzip:
 
 | Asset | Size | gzip |
 | --- | --- | --- |
-| `index.html` | 18.5 KB | 5.1 KB |
-| `styles.css` | 23.8 KB | 5.3 KB |
-| `script.js` | 6.7 KB | 2.3 KB |
+| `index.html` | 18.6 KB | 5.1 KB |
+| `styles.css` | 24.0 KB | 5.3 KB |
+| `script.js` | 6.1 KB | 2.2 KB |
+| `motion-reveal.js` | 3.3 KB | 1.6 KB |
+| `anime-fx.js` | 2.7 KB | 1.1 KB |
+| `vendor/motion-14.6.0.js` | 8.4 KB | 3.4 KB |
+| `vendor/anime-4.5.0.js` | 43.1 KB | 17.2 KB |
 | `logo-mark.png` | 11.1 KB | — |
 
-Three same-origin requests plus the font stylesheet and font files. The CSS is ~13% smaller than the previous build. Images carry explicit dimensions, the hero (the LCP region) is never hidden behind a reveal animation, and fonts load with `display=swap`.
+Same-origin requests only, plus the font stylesheet and font files. The animation modules are deferred, so they never block the first paint, and the hero (the LCP region) is never hidden behind a reveal. Images carry explicit dimensions and fonts load with `display=swap`.
 
 Not measured: real Core Web Vitals. That needs a browser and Lighthouse against the deployed URL.
 
 ## Accessibility
 
-Semantic landmarks and one `h1`; heading levels never skip. A skip link, visible focus styles, `aria-current="location"` on the active nav item, 44px menu button, labelled fields with inline errors tied through `aria-describedby`, `role="list"` where `list-style: none` would strip semantics, and full `prefers-reduced-motion` support. All text passes WCAG AA contrast (lowest measured pair: 4.57:1).
+Semantic landmarks and one `h1`; heading levels never skip. A skip link, visible focus styles, `aria-current="location"` on the active nav item, 44px menu button, labelled fields with inline errors tied through `aria-describedby`, `role="list"` where `list-style: none` would strip semantics, and full `prefers-reduced-motion` support — including a CSS rule that forces `[data-reveal]` visible, so a motion preference can never leave content hidden. All text passes WCAG AA contrast (lowest measured pair: 4.57:1).
 
 ## Contact form
 
