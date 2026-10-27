@@ -1,8 +1,9 @@
 # Vendored animation libraries
 
-Both files are pre-built ES modules, committed so the site keeps working without a
-build step and without a CDN. Neither uses `eval` or `new Function`, so they run
-under the page's `script-src 'self'` Content-Security-Policy unchanged.
+The two animation bundles are pre-built ES modules, committed so the site keeps
+working without a build step and without a CDN. Neither uses `eval` or
+`new Function`, so they run under the page's `script-src 'self'`
+Content-Security-Policy unchanged.
 
 | File | Package | Version | Minified | Gzipped |
 | --- | --- | --- | --- | --- |
@@ -55,3 +56,43 @@ utility components. This site is hand-written HTML, CSS and vanilla JavaScript w
 no framework or build step, so there is no component tree for either to render
 into. Using them means converting the site to React + Tailwind first, which is a
 rewrite rather than a dependency install.
+
+## Preline UI
+
+`preline-5.0.0/accordion.js` is the accordion plugin from
+[Preline UI](https://preline.co) 5.0.0, released 21 August 2026. It is the per-plugin
+UMD build rather than `dist/preline.js`, because the full bundle is 428 KB and
+carries every component where this one is 10.7 KB raw, 3.2 KB gzipped. Checksum
+matches the published tarball.
+
+Preline is HTML plus Tailwind, but **its plugins do not need Tailwind**. Verified by
+running this bundle in a DOM harness against hand-written CSS: clicking a
+`.hs-accordion-toggle` adds `active` to its `.hs-accordion`, sets
+`aria-expanded="true"`, applies `display: block` to the content, and closes its
+siblings. The behaviour and the ARIA state are Preline's; every visual state is ours.
+
+Markup it expects:
+
+```html
+<div class="hs-accordion-group">
+  <div class="hs-accordion">
+    <button class="hs-accordion-toggle" aria-expanded="false" aria-controls="faq-1">
+      Question
+    </button>
+    <div id="faq-1" class="hs-accordion-content">Answer</div>
+  </div>
+</div>
+```
+
+It auto-initialises on load. For markup inserted later, call
+`window.HSStaticMethods.autoInit()`.
+
+**Licence is dual: MIT *and* the Preline UI Fair Use License** — see `LICENSE.txt`.
+Free for personal and commercial sites; the Fair Use terms restrict building a
+competing UI kit out of it. Preline Pro is a separate paid product.
+
+**Nothing references this file yet.** It is vendored so a component can be wired in
+without adding a build step; the page does not load it, so page weight, CSP and the
+deployed output are all unchanged. The other plugins are siblings in the same
+release (`dropdown.js`, `carousel.js`, `tooltip.js`, …) — copy the one you need into
+this folder alongside it.

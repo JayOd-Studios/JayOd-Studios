@@ -1,0 +1,7 @@
+{
+  "registries": {
+    "@react-bits": "https://reactbits.dev/r/{name}.json",
+    "@uiarc": "https://uiarc.dev/r/{name}.json",
+    "@planes": "https://useplanes.com/r/{name}.json"
+  }
+}
