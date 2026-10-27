@@ -3,3 +3,6 @@
 # Locally installed agent skills — not part of the published site
 /.agents/
 /skills-lock.json
+
+# Deploy staging folder — rebuilt from source when publishing
+/public/

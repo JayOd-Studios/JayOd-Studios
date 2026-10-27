@@ -153,6 +153,7 @@ themes are sampled for contrast: body copy clears 4.5:1 and accent text clears
 | `logo.jpg` | Full logo lockup on white (social previews only) |
 | `logo-mark.png` | Transparent JO monogram for the masthead and footer |
 | `robots.txt` / `sitemap.xml` | Crawl rules and the single-URL sitemap |
+| `manifest.json` / `index.js` | Freebuff Sites deploy manifest and its assets-only Worker — see Publishing |
 
 Core behaviour (`app.js`) imports neither library, so a failed module never
 breaks navigation, the form or the work grid.
@@ -259,6 +260,36 @@ static build.
 
 When a custom domain is added, update the canonical, `og:url` and `og:image`
 values in `index.html`, plus `robots.txt` and `sitemap.xml`.
+
+### Publishing to Freebuff Sites
+
+The Freebuff site is deployed from a **curated staging folder**, never the repo
+root: `README.md`, `artifacts/`, `tooling/` and the dev configs are not part of the
+site and 404 from the live origin.
+
+```sh
+mkdir -p public/vendor/preline-5.0.0
+cp index.html styles.css app.js motion.js hero.js anime.js portfolio.js \
+   wireframes.js theme.js theme-boot.js logo-mark.png logo.jpg robots.txt \
+   sitemap.xml public/
+cp vendor/{anime-4.5.0,motion-14.6.0,lenis-1.3.27,gsap-3.15.0}.js public/vendor/
+cp vendor/preline-5.0.0/accordion.js public/vendor/preline-5.0.0/
+# then deploy with manifest.json, which points at ./public
+```
+
+Two things that cost hours to find, both worth knowing before touching this:
+
+1. **The deploy manifest must be named `manifest.json`.** The same bytes in a file
+   called `deploy.json` are rejected with `invalid_site_request: invalid_type` —
+   no field name, no useful message. A public bug report (#1529) describes the
+   same failure with nine different manifest shapes, so the filename is the
+   thing that actually matters.
+2. **`spa` must be `false`.** With SPA fallback on, every missing path returns
+   `index.html` with a 200 — so `/README.md` looks exposed and mistyped URLs
+   soft-404. Off, they return a real 404.
+
+`manifest.json` and `index.js` (an assets-only Worker) are committed for this
+reason. `public/` is a build artefact and is gitignored.
 
 ## History
 
