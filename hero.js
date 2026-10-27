@@ -1,263 +1,239 @@
-/* JayOd Studios — hero stage.
+/* JayOd Studios — the hero lab.
  *
- * The homepage's centrepiece: a browser frame whose contents assemble
- * themselves, hold, dissolve, and rebuild as a different kind of site. It is
- * the studio's pitch made literal — websites being built properly — rather than
- * a decorative gradient behind text.
+ * The homepage centrepiece is a working-looking editor: real markup on the left,
+ * the page it produces on the right, and a build strip underneath. Three things
+ * make it interactive rather than decorative:
  *
- * All four drawings come from wireframes.js, the same source the work cards
- * use. The stage is decorative (aria-hidden), so it never carries information
- * that only motion reveals.
+ *   1. hovering anything in the preview highlights the code that made it, and
+ *      hovering a line of code highlights what it renders — the same affordance
+ *      as a browser's element inspector;
+ *   2. the build runs on load and can be re-run with the Rebuild control, with
+ *      each stage lighting up as it passes;
+ *   3. the whole panel tilts towards the pointer.
+ *
+ * Everything is content, not lorem ipsum: the mock page is a real (fictional)
+ * product with real copy, numbers and a chart, and the code beside it is the
+ * code that would produce it.
+ *
+ * The panel is aria-hidden, because it is a demonstration of the studio's work
+ * rather than information the page depends on — screen readers get the copy and
+ * the buttons above it instead of a maze of fake UI.
  */
 
-import { animate, stagger, utils, cubicBezier } from "./vendor/anime-4.5.0.js";
+import { gsap } from "./vendor/gsap-3.15.0.js";
 
-const EASE = cubicBezier(0.22, 0.61, 0.36, 1);
-const HOLD = 1100;
-const TOUR_STEP = 430;
-const BUILD = 620;
-const DISSOLVE = 320;
+const lab = document.getElementById("lab");
+const lines = Array.from(document.querySelectorAll("#codeLines li"));
+const caret = document.getElementById("codeCaret");
+const state = document.getElementById("labState");
+const caption = document.getElementById("labCaption");
+const rebuild = document.getElementById("labRebuild");
+const steps = Array.from(document.querySelectorAll("#labSteps li"));
+const bars = Array.from(document.querySelectorAll(".mock-bars i"));
 
-const LAYOUTS = [
-  { kind: "dashboard", url: "northwind.app/ledger", label: "Ledger dashboard — React, TypeScript" },
-  { kind: "editorial", url: "fieldnotes.co", label: "Editorial journal — Next.js, MDX" },
-  { kind: "commerce", url: "marrowsupply.com", label: "Storefront — Shopify, custom theme" },
-  { kind: "documentation", url: "docs.atlas.dev", label: "Documentation — search, versioning" },
-  { kind: "studio", url: "halden.studio", label: "Studio portfolio — HTML, CSS" },
-];
-
-const stage = document.getElementById("stage");
-const frame = document.getElementById("stageFrame");
-const canvas = document.getElementById("stageCanvas");
-const urlEl = document.getElementById("stageUrl");
-const labelEl = document.getElementById("stageLabel");
-const cursor = document.getElementById("stageCursor");
-
-const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const CAPTIONS = {
+  idle: "built, checked and shipped in one pass",
+  compile: "compiling the stylesheet — nothing above 30 KB",
+  bundle: "bundling the script, one module at a time",
+  audit: "checking contrast, focus order and landmarks",
+  deploy: "shipping to the edge in under a second",
+  done: "live — 41 ms to first paint on a cold cache",
+};
 
 let running = false;
-let generation = 0;
-let index = 0;
-// app.js paints the first frame before this module runs, so start in sync.
-let rendered = 0;
+let timer = 0;
 
-/* `documentation` is the real layout key; keep the data readable above. */
-function kindOf(layout) {
-  return layout.kind === "documentation" ? "docs" : layout.kind;
-}
-
-function paint(layout) {
-  if (!canvas || !window.buildWireframe) return [];
-  const svg = window.buildWireframe(kindOf(layout), {
-    chrome: false,
-    className: "preview preview--stage",
+const wait = (ms) =>
+  new Promise((resolve) => {
+    timer = window.setTimeout(resolve, reduceQuery.matches ? 0 : ms);
   });
-  // Replace only the drawing: the ghost cursor lives in the same box.
-  canvas.querySelectorAll("svg").forEach((old) => old.remove());
-  canvas.append(svg);
 
-  if (urlEl) urlEl.textContent = layout.url;
-  if (labelEl) labelEl.textContent = layout.label;
-
-  return Array.from(svg.children);
+function setCaption(text) {
+  if (caption) caption.textContent = text;
 }
 
-function shapesNow() {
-  const svg = canvas?.querySelector("svg");
-  return svg ? Array.from(svg.children) : [];
+function setState(text, building) {
+  if (!state) return;
+  state.textContent = text;
+  state.classList.toggle("is-building", Boolean(building));
 }
 
-function svgRoot() {
-  return canvas?.querySelector("svg") || null;
+/* ---------- Hover linking ---------- */
+
+function highlight(selector, on) {
+  if (!selector) return;
+  lab?.querySelectorAll(`[data-sel="${selector}"]`).forEach((node) => {
+    node.classList.toggle("is-lit", on);
+  });
 }
 
-function show(shapes) {
-  try {
-    utils.set(shapes, { opacity: 1 });
-  } catch {
-    /* Nothing to settle. */
-  }
-}
+function setUpInspector() {
+  if (!lab) return;
 
-async function build(shapes) {
-  // Only opacity is animated per shape. On an SVG <rect>, "y" is the geometry
-  // attribute — animating it would reset every rectangle to y=0 and collapse
-  // the drawing. The scale lives on the <svg> root instead.
-  utils.set(shapes, { opacity: 0 });
+  lab.querySelectorAll("[data-sel]").forEach((node) => {
+    const selector = node.getAttribute("data-sel");
 
-  const root = svgRoot();
-  if (root) {
-    animate(root, { scale: [0.992, 1], duration: BUILD + 160, ease: EASE });
-  }
-
-  try {
-    await animate(shapes, {
-      opacity: [0, 1],
-      duration: BUILD,
-      delay: stagger(16),
-      ease: EASE,
+    node.addEventListener("pointerenter", (event) => {
+      event.stopPropagation();
+      highlight(selector, true);
     });
-  } catch {
-    show(shapes);
-  }
-}
 
-/* The pointer visits a few points of the layout and "clicks" once. On an HTML
-   element x/y are transforms, so this is safe — unlike on an SVG rect. */
-async function cursorTour() {
-  if (!cursor || !canvas || motionQuery.matches) return;
-
-  const box = canvas.getBoundingClientRect();
-  const route = [
-    [0.14, 0.32],
-    [0.42, 0.2],
-    [0.68, 0.58],
-    [0.46, 0.78],
-  ];
-
-  try {
-    utils.set(cursor, { x: 0, y: 0, scale: 0.6, opacity: 0 });
-    await animate(cursor, { opacity: [0, 1], scale: [0.6, 1], duration: 240, ease: EASE });
-
-    for (const [x, y] of route) {
-      await animate(cursor, {
-        x: box.width * x,
-        y: box.height * y,
-        duration: TOUR_STEP,
-        ease: EASE,
-      });
-    }
-
-    await animate(cursor, { scale: [1, 1.6, 1], duration: 300, ease: EASE });
-    await animate(cursor, { opacity: [1, 0], duration: 220, ease: EASE });
-  } catch {
-    utils.set(cursor, { opacity: 0 });
-  }
-}
-
-async function dissolve(shapes) {
-  try {
-    await animate(shapes, {
-      opacity: [1, 0],
-      duration: DISSOLVE,
-      delay: stagger(5, { from: "last" }),
-      ease: EASE,
-    });
-  } catch {
-    show(shapes);
-  }
-}
-
-async function run() {
-  const mine = ++generation;
-  running = true;
-
-  while (running && mine === generation) {
-    if (rendered !== index) {
-      paint(LAYOUTS[index]);
-      rendered = index;
-    }
-
-    const shapes = shapesNow();
-    if (!shapes.length) {
-      running = false;
-      return;
-    }
-
-    await build(shapes);
-    if (!running || mine !== generation) {
-      show(shapes);
-      return;
-    }
-
-    await cursorTour();
-    if (!running || mine !== generation) {
-      show(shapes);
-      return;
-    }
-
-    await sleep(HOLD);
-    if (!running || mine !== generation) {
-      show(shapes);
-      return;
-    }
-
-    await dissolve(shapes);
-    if (!running || mine !== generation) {
-      show(shapes);
-      return;
-    }
-
-    index = (index + 1) % LAYOUTS.length;
-    rendered = -1;
-  }
+    node.addEventListener("pointerleave", () => highlight(selector, false));
+  });
 }
 
 /* ---------- Pointer tilt ---------- */
 
 function setUpTilt() {
-  if (!stage || !frame || !canHover) return;
+  if (!lab || !canHover) return;
 
-  let frameRequest = 0;
-  let tiltX = 0;
-  let tiltY = 0;
+  let frame = 0;
+  let nextX = 0;
+  let nextY = 0;
 
-  frame.addEventListener(
+  lab.addEventListener(
     "pointermove",
     (event) => {
-      if (motionQuery.matches) return;
-      const rect = frame.getBoundingClientRect();
-      tiltY = ((event.clientX - rect.left) / rect.width - 0.5) * 7;
-      tiltX = -((event.clientY - rect.top) / rect.height - 0.5) * 6;
+      if (reduceQuery.matches) return;
+      const rect = lab.getBoundingClientRect();
+      nextY = ((event.clientX - rect.left) / rect.width - 0.5) * 6;
+      nextX = -((event.clientY - rect.top) / rect.height - 0.5) * 5;
 
-      if (frameRequest) return;
-      frameRequest = window.requestAnimationFrame(() => {
-        frame.style.setProperty("--tilt-x", `${tiltX.toFixed(2)}deg`);
-        frame.style.setProperty("--tilt-y", `${tiltY.toFixed(2)}deg`);
-        frameRequest = 0;
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        lab.style.setProperty("--tilt-x", `${nextX.toFixed(2)}deg`);
+        lab.style.setProperty("--tilt-y", `${nextY.toFixed(2)}deg`);
+        frame = 0;
       });
     },
     { passive: true }
   );
 
-  frame.addEventListener("pointerleave", () => {
-    frame.style.setProperty("--tilt-x", "0deg");
-    frame.style.setProperty("--tilt-y", "0deg");
+  lab.addEventListener("pointerleave", () => {
+    lab.style.setProperty("--tilt-x", "0deg");
+    lab.style.setProperty("--tilt-y", "0deg");
   });
+}
+
+/* ---------- The build ---------- */
+
+async function typeCode() {
+  if (!lines.length) return;
+
+  if (reduceQuery.matches) {
+    gsap.set(lines, { opacity: 1, x: 0 });
+    return;
+  }
+
+  caret?.classList.add("is-typing");
+  gsap.set(lines, { opacity: 0, x: -8 });
+
+  await new Promise((resolve) => {
+    gsap.to(lines, {
+      opacity: 1,
+      x: 0,
+      duration: 0.26,
+      ease: "power1.out",
+      stagger: 0.035,
+      onComplete: resolve,
+    });
+  });
+
+  caret?.classList.remove("is-typing");
+}
+
+async function runBuild() {
+  if (running) return;
+  running = true;
+
+  // Reset the strip, then walk it: each stage marks itself active, then done.
+  steps.forEach((step) => step.classList.remove("is-active", "is-done"));
+
+  if (rebuild) rebuild.style.pointerEvents = "none";
+
+  setState("building", true);
+
+  for (const step of steps) {
+    const name = step.dataset.step;
+
+    step.classList.add("is-active");
+    setCaption(CAPTIONS[name] || CAPTIONS.idle);
+    setState(name, true);
+
+    // Each stage does something visible, so the strip is not the only feedback.
+    if (name === "compile") {
+      gsap.fromTo(
+        bars,
+        { scaleY: 0.06 },
+        {
+          scaleY: 1,
+          duration: reduceQuery.matches ? 0 : 0.5,
+          ease: "power2.out",
+          stagger: reduceQuery.matches ? 0 : 0.03,
+          transformOrigin: "50% 100%",
+        }
+      );
+    }
+
+    if (name === "bundle") {
+      gsap.fromTo(
+        ".mock-hero h3, .mock-hero p",
+        { opacity: 0.3 },
+        { opacity: 1, duration: reduceQuery.matches ? 0 : 0.45, stagger: 0.06 }
+      );
+    }
+
+    if (name === "audit") {
+      gsap.fromTo(
+        ".mock-stat",
+        { opacity: 0.35 },
+        { opacity: 1, duration: reduceQuery.matches ? 0 : 0.4, stagger: 0.07 }
+      );
+    }
+
+    await wait(520);
+
+    step.classList.remove("is-active");
+    step.classList.add("is-done");
+  }
+
+  setState("live", false);
+  setCaption(CAPTIONS.done);
+
+  if (rebuild) rebuild.style.pointerEvents = "";
+  running = false;
 }
 
 /* ---------- Boot ---------- */
 
-if (canvas && window.buildWireframe) {
-  if (motionQuery.matches) {
-    // One static frame, no loop.
-    const layout = LAYOUTS[index];
-    if (!canvas.querySelector("svg")) paint(layout);
-    show(shapesNow());
+if (lab) {
+  setUpInspector();
+  setUpTilt();
+
+  if (!reduceQuery.matches) {
+    typeCode().then(runBuild);
   } else {
-    setUpTilt();
-    run();
+    setCaption(CAPTIONS.idle);
   }
+
+  rebuild?.addEventListener("click", () => {
+    if (running) return;
+    setCaption(CAPTIONS.idle);
+    typeCode().then(runBuild);
+  });
 }
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    running = false;
-    generation += 1;
-  } else if (!motionQuery.matches) {
-    run();
-  }
-});
-
-motionQuery.addEventListener("change", (event) => {
-  if (event.matches) {
-    running = false;
-    generation += 1;
-    show(shapesNow());
-  } else if (!document.hidden) {
-    run();
+reduceQuery.addEventListener("change", (event) => {
+  if (!event.matches) return;
+  window.clearTimeout(timer);
+  running = false;
+  caret?.classList.remove("is-typing");
+  lines.forEach((line) => line.classList.remove("is-lit"));
+  if (lab) {
+    lab.style.setProperty("--tilt-x", "0deg");
+    lab.style.setProperty("--tilt-y", "0deg");
   }
 });

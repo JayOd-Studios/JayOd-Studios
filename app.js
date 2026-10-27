@@ -108,6 +108,23 @@ function buildCard(project, index) {
   media.className = "card-media";
   media.append(buildPreview(project.preview));
 
+  // Real text over the line art: the card previews read as sites rather than as
+  // empty boxes with rectangles in them.
+  const overlay = document.createElement("div");
+  overlay.className = "preview-overlay";
+  overlay.setAttribute("aria-hidden", "true");
+
+  const domain = document.createElement("span");
+  domain.className = "preview-domain";
+  domain.textContent = project.domain || "sample.studio";
+
+  const word = document.createElement("span");
+  word.className = "preview-word";
+  word.textContent = project.word || project.title || "";
+
+  overlay.append(domain, word);
+  media.append(overlay);
+
   const live = Boolean(project.url);
 
   if (!live) {
@@ -198,18 +215,6 @@ if (grid) {
   } else {
     projects.forEach((project, index) => grid.append(buildCard(project, index)));
   }
-}
-
-/* ---------- Hero stage first frame ---------- */
-
-/* Painted here, not in the module, so the stage is never empty while (or if)
-   hero.js loads. The animation picks this frame up and continues from it. */
-const stageCanvas = document.getElementById("stageCanvas");
-
-if (stageCanvas && !stageCanvas.querySelector("svg") && window.buildWireframe) {
-  stageCanvas.append(
-    window.buildWireframe("dashboard", { chrome: false, className: "preview preview--stage" })
-  );
 }
 
 /* ---------- Year ---------- */

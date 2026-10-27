@@ -87,19 +87,22 @@ function setUpCards() {
 
     let last = 0;
 
+    const media = card.querySelector(".card-media");
+
     card.addEventListener("pointerenter", () => {
       if (motionQuery.matches) return;
       const now = performance.now();
       if (now - last < 500) return; // Ignore the flicker of a fast pointer.
       last = now;
 
-      // Opacity only: "y" would be read as the rect's SVG y attribute.
-      animate(shapes, {
-        opacity: [0.25, 1],
-        duration: 420,
-        delay: stagger(12),
-        ease: EASE_OUT,
-      });
+      // Scale the frame, not the shapes: ScrollTrigger already owns the shapes'
+      // opacity, and two engines on one property would leave them stuck.
+      if (media) animate(media, { scale: [1, 1.015], duration: 480, ease: EASE_OUT });
+    });
+
+    card.addEventListener("pointerleave", () => {
+      if (motionQuery.matches || !media) return;
+      animate(media, { scale: [1.015, 1], duration: 420, ease: EASE_OUT });
     });
   });
 }

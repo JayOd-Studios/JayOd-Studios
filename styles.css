@@ -821,29 +821,15 @@ html.is-theming *::after {
   margin-top: var(--space-2);
 }
 
-/* ---------- Hero stage ---------- */
+/* ---------- Hero lab ---------- */
 
 .hero-visual {
   position: relative;
-  width: min(100%, 780px);
-  perspective: 1400px;
+  width: min(100%, 900px);
+  perspective: 1500px;
 }
 
-.stage {
-  position: relative;
-}
-
-.stage::before {
-  content: "";
-  position: absolute;
-  inset: -14% -10% -16%;
-  z-index: -1;
-  background: radial-gradient(ellipse at 50% 55%, var(--accent-soft), transparent 68%);
-  filter: blur(28px);
-  pointer-events: none;
-}
-
-.stage-frame {
+.lab {
   position: relative;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
@@ -851,105 +837,463 @@ html.is-theming *::after {
   overflow: hidden;
   box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
   transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  transition: transform 0.35s var(--ease), border-color var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
+  transition: transform 0.4s var(--ease), border-color var(--dur-base) var(--ease);
+  text-align: left;
 }
 
-.stage-frame:hover {
-  border-color: var(--accent-line);
+.lab::before {
+  content: "";
+  position: absolute;
+  inset: -16% -8% -18%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 50%, var(--accent-soft), transparent 68%);
+  filter: blur(30px);
+  pointer-events: none;
 }
 
-.stage-bar {
+.lab-head {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  height: 36px;
+  height: 38px;
   padding-inline: var(--space-3);
   border-bottom: 1px solid var(--border);
   background: var(--surface-3);
 }
 
-.stage-dots {
+.lab-dots {
   display: inline-flex;
   gap: 6px;
   flex: none;
 }
 
-.stage-dots i {
+.lab-dots i {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--pv-dot);
 }
 
-.stage-dots i:first-child {
+.lab-dots i:first-child {
   background: var(--accent);
 }
 
-.stage-url {
-  font-size: 0.7rem;
-  letter-spacing: 0.03em;
+.lab-file {
+  flex: 1;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.68rem;
   color: var(--text-subtle);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.stage-canvas {
+.lab-state {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-pill);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.lab-state.is-building {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.lab-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  min-height: 320px;
+}
+
+/* ---- code pane ---- */
+
+.lab-code {
   position: relative;
-  aspect-ratio: 320 / 178;
+  padding: var(--space-4) var(--space-3) var(--space-4) var(--space-2);
+  border-right: 1px solid var(--border);
+  background: var(--surface-3);
+  overflow: hidden;
+  counter-reset: line;
+}
+
+.code-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.63rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.code-lines li {
+  position: relative;
+  padding-left: var(--space-6);
+  border-radius: var(--radius-xs);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  counter-increment: line;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.code-lines li::before {
+  content: counter(line);
+  position: absolute;
+  left: 0;
+  width: var(--space-5);
+  text-align: right;
+  color: var(--text-subtle);
+  opacity: 0.55;
+}
+
+.code-lines li.is-nest {
+  padding-left: var(--space-8);
+}
+
+.code-lines li.is-gap {
+  margin-top: 0.55em;
+}
+
+.code-lines li.is-lit {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.tok-tag {
+  color: var(--accent-text);
+}
+
+.tok-attr {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.tok-str {
+  color: var(--accent-bright);
+}
+
+.code-caret {
+  display: inline-block;
+  width: 6px;
+  height: 12px;
+  margin-top: var(--space-2);
+  margin-left: var(--space-6);
+  background: var(--accent);
+  opacity: 0;
+}
+
+.code-caret.is-typing {
+  opacity: 1;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---- preview pane ---- */
+
+.lab-preview {
+  position: relative;
+  padding: var(--space-4);
   background: var(--pv-bg);
   overflow: hidden;
 }
 
-/* A ghost pointer that tours the layout, so the stage reads as a live build
-   rather than a static screenshot. Purely decorative. */
-.stage-cursor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2; /* above the SVG, whose background is opaque */
-  width: 9px;
-  height: 9px;
-  margin: -4.5px 0 0 -4.5px;
-  border-radius: 50%;
-  background: var(--accent-bright);
-  box-shadow: 0 0 0 5px var(--accent-soft);
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-
-.stage-canvas svg {
-  width: 100%;
+.mock {
+  display: grid;
+  gap: var(--space-3);
   height: 100%;
+  align-content: start;
 }
 
-.stage-caption {
+.mock-node {
+  position: relative;
+  border-radius: var(--radius-sm);
+  outline: 1px dashed transparent;
+  outline-offset: 3px;
+  transition: outline-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.mock-node.is-lit {
+  outline-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.mock-node.is-lit::after {
+  content: attr(data-sel);
+  position: absolute;
+  top: -1.35em;
+  right: 0;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--accent);
+  color: var(--paper-2);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.mock-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-brand {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: var(--text);
+}
+
+.mock-nav {
+  display: inline-flex;
+  gap: var(--space-3);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  font-style: normal;
+}
+
+.mock-nav i {
+  font-style: normal;
+}
+
+.mock-hero h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.mock-hero p {
+  margin-top: var(--space-2);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.mock-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.mock-stat {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.mock-stat span {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.mock-stat strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.mock-stat em {
+  font-size: 0.55rem;
+  font-style: normal;
+  color: var(--accent-text);
+}
+
+.mock-stat em.is-warn {
+  color: var(--text-muted);
+}
+
+.mock-chart {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.mock-chart-label {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.mock-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 62px;
+  margin-top: var(--space-2);
+}
+
+/* Heights live here, not in style attributes: the CSP forbids inline styles. */
+.mock-bars i:nth-child(1) {
+  --h: 38%;
+}
+.mock-bars i:nth-child(2) {
+  --h: 54%;
+}
+.mock-bars i:nth-child(3) {
+  --h: 44%;
+}
+.mock-bars i:nth-child(4) {
+  --h: 66%;
+}
+.mock-bars i:nth-child(5) {
+  --h: 58%;
+}
+.mock-bars i:nth-child(6) {
+  --h: 78%;
+}
+.mock-bars i:nth-child(7) {
+  --h: 70%;
+}
+.mock-bars i:nth-child(8) {
+  --h: 92%;
+}
+.mock-bars i:nth-child(9) {
+  --h: 84%;
+}
+
+.mock-bars i {
+  flex: 1;
+  height: var(--h, 40%);
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(to top, var(--accent), var(--accent-bright));
+  transform-origin: bottom;
+  opacity: 0.85;
+}
+
+/* ---- build strip ---- */
+
+.lab-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-3);
+  border-top: 1px solid var(--border);
+  background: var(--surface-3);
+}
+
+.lab-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.6rem;
+  color: var(--text-subtle);
+}
+
+.lab-steps li {
+  position: relative;
+  padding-left: 14px;
+  transition: color var(--dur-base) var(--ease);
+}
+
+.lab-steps li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+
+.lab-steps li.is-active {
+  color: var(--accent-text);
+}
+
+.lab-steps li.is-done {
+  color: var(--text-muted);
+}
+
+.lab-steps li.is-done::before {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.lab-rebuild {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-pill);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent-text);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.lab-rebuild:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.lab-caption {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   margin-top: var(--space-4);
-  min-height: 20px;
   font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-subtle);
 }
 
-.stage-live {
+.lab-live {
   width: 6px;
   height: 6px;
   flex: none;
   border-radius: 50%;
   background: var(--accent-bright);
   box-shadow: 0 0 0 3px var(--accent-soft);
-  animation: stage-live 2.4s var(--ease) infinite;
+  animation: lab-live 2.4s var(--ease) infinite;
 }
 
-@keyframes stage-live {
+@keyframes lab-live {
   0%,
   100% {
     opacity: 1;
@@ -958,6 +1302,202 @@ html.is-theming *::after {
   50% {
     opacity: 0.45;
     transform: scale(0.8);
+  }
+}
+
+/* ---------- FAQ (Preline accordion) ---------- */
+
+.faq {
+  border-top: 1px solid var(--border-strong);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-heading {
+  margin: 0;
+  font: inherit;
+}
+
+.faq-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-5) 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), padding-left var(--dur-base) var(--ease);
+}
+
+.faq-toggle:hover {
+  color: var(--accent-text);
+  padding-left: var(--space-2);
+}
+
+.faq-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.faq-icon {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--accent-text);
+  transform: translate(-50%, -50%);
+  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+
+.faq-icon::before {
+  width: 8px;
+  height: 1px;
+}
+
+.faq-icon::after {
+  width: 1px;
+  height: 8px;
+}
+
+.faq-toggle[aria-expanded="true"] .faq-icon {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.faq-toggle[aria-expanded="true"] .faq-icon::after {
+  opacity: 0;
+}
+
+.faq-panel {
+  display: none;
+  padding-bottom: var(--space-6);
+}
+
+.faq-item.active .faq-panel {
+  animation: faq-rise 0.45s var(--ease) both;
+}
+
+.faq-panel p {
+  max-width: 68ch;
+  color: var(--text-muted);
+}
+
+@keyframes faq-rise {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Card preview overlay ---------- */
+
+.card-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-3);
+  pointer-events: none;
+}
+
+.preview-domain {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--text-subtle);
+}
+
+.preview-word {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  align-self: flex-end;
+}
+
+/* ---------- Split-text lines ---------- */
+
+.split-line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.02em;
+}
+
+.split-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---------- Scroll states ---------- */
+
+html.motion-ready [data-reveal] {
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  .lab-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lab-code {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    max-height: 210px;
+  }
+
+  .code-lines li {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .lab-stats,
+  .mock-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lab-foot {
+    gap: var(--space-2);
+  }
+
+  .lab-caption {
+    font-size: 0.6rem;
+    text-align: center;
   }
 }
 

@@ -12,6 +12,8 @@
  *             url renders without a link and carries the "sample" badge.
  *   preview   Which wireframe to draw: dashboard | editorial | commerce |
  *             landing | docs | studio
+ *   domain    The address shown over the preview, e.g. "northwind.app"
+ *   word      The large word set over the preview, e.g. "Ledger"
  *
  * The previews are generated line art, not screenshots, so a placeholder never
  * claims to be a real product. When you add a real project with a real url,
@@ -28,6 +30,8 @@ window.PORTFOLIO = [
     tags: ["React", "TypeScript", "Charts"],
     url: "",
     preview: "dashboard",
+    domain: "northwind.app",
+    word: "Ledger",
   },
   {
     title: "Field Notes",
@@ -38,6 +42,8 @@ window.PORTFOLIO = [
     tags: ["Next.js", "MDX", "Typography"],
     url: "",
     preview: "editorial",
+    domain: "fieldnotes.co",
+    word: "Field Notes",
   },
   {
     title: "Marrow Supply",
@@ -48,6 +54,8 @@ window.PORTFOLIO = [
     tags: ["Shopify", "Liquid", "CRO"],
     url: "",
     preview: "commerce",
+    domain: "marrowsupply.com",
+    word: "Marrow",
   },
   {
     title: "Signal Nine",
@@ -58,6 +66,8 @@ window.PORTFOLIO = [
     tags: ["React", "Motion", "GSAP"],
     url: "",
     preview: "landing",
+    domain: "signalnine.io",
+    word: "Signal Nine",
   },
   {
     title: "Atlas Docs",
@@ -68,6 +78,8 @@ window.PORTFOLIO = [
     tags: ["TypeScript", "Search", "A11y"],
     url: "",
     preview: "docs",
+    domain: "docs.atlas.dev",
+    word: "Atlas",
   },
   {
     title: "Studio Halden",
@@ -78,5 +90,7 @@ window.PORTFOLIO = [
     tags: ["HTML", "CSS", "Imagery"],
     url: "",
     preview: "studio",
+    domain: "halden.studio",
+    word: "Halden",
   },
 ];
