@@ -53,12 +53,14 @@
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
+  --radius-xl: 28px;
   --radius-pill: 999px;
 
   /* type */
   --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -103,13 +105,24 @@
   --logo-ink: #cfd8fb;
   --brand-chip: transparent;
 
+  /* The floating glyph field around the hero frame. Six tones out of the studio's
+     own palette — the blue ramp, plus the two hues the lab demos — so the field
+     reads as part of the page rather than as decoration dropped on top of it. */
+  --chip-1: var(--blue-300);
+  --chip-2: var(--blue-500);
+  --chip-3: #9aabf5;
+  --chip-4: #6fb583;
+  --chip-5: #e08a5a;
+  --chip-6: var(--blue-200);
+
   --header-bg: rgba(20, 24, 36, 0.76);
   --hero-glow: rgba(79, 99, 216, 0.26);
   --hero-spot: rgba(185, 197, 248, 0.07);
   --shadow-lg: 0 40px 90px -50px rgba(4, 6, 14, 0.95);
   --shadow-sm: 0 18px 40px -32px rgba(4, 6, 14, 0.9);
 
-  /* generated wireframe previews */
+  /* The drawn previews on the work cards. Photographs are three tonal plates, so
+     every card's artwork comes out of the same small palette as the page. */
   --pv-bg: #111625;
   --pv-chrome: #1b2233;
   --pv-block: rgba(226, 233, 255, 0.15);
@@ -122,6 +135,50 @@
   --pv-outline: rgba(226, 233, 255, 0.32);
   --pv-dot: rgba(226, 233, 255, 0.3);
   --pv-url: rgba(226, 233, 255, 0.1);
+
+  /* Text and surfaces inside a drawing */
+  --pv-ink: #e9edfb;
+  --pv-ink-soft: rgba(226, 233, 255, 0.55);
+  --pv-card: rgba(226, 233, 255, 0.09);
+  --pv-side: #1b2233;
+  --pv-grid-line: rgba(226, 233, 255, 0.1);
+
+  /* A dark feature band: a launch page's hero, a shop's promo strip */
+  --pv-band: #1d2a55;
+  --pv-band-ink: #f2f5ff;
+  --pv-band-soft: rgba(226, 233, 255, 0.66);
+  --pv-band-btn: rgba(226, 233, 255, 0.16);
+  --pv-btn-ink: #101528;
+
+  /* A chip: the soft accent behind an avatar, an icon button, a highlight */
+  --pv-accent-soft: rgba(139, 158, 240, 0.22);
+
+  /* Photographs: a plate, a light, a slope, a caption over the image */
+  --pv-img-a: #3b4d9c;
+  --pv-img-b: #2f6f74;
+  --pv-img-c: #7a5a6b;
+  --pv-fig: rgba(12, 16, 32, 0.45);
+  --pv-fig-light: rgba(240, 244, 255, 0.34);
+  --pv-fig-soft: rgba(240, 244, 255, 0.1);
+  --pv-fig-note: rgba(240, 244, 255, 0.9);
+
+  /* Avatars, and the two statuses a dashboard needs */
+  --pv-av-a: var(--blue-700);
+  --pv-av-b: #2f6f74;
+  --pv-av-c: #7a5a6b;
+  --pv-av-ink: #101528;
+  --pv-live: #6fb583;
+  --pv-warn: #e0a15a;
+  --pv-warn-ink: #2a1a08;
+  --pv-star: #e0b25a;
+  --pv-star-off: rgba(226, 233, 255, 0.2);
+
+  /* A chart, and the tokens in a code sample */
+  --pv-area: rgba(139, 158, 240, 0.24);
+  --pv-stroke: #9aabf5;
+  --pv-tok-1: #b9c5f8;
+  --pv-tok-2: #8fd0a2;
+  --pv-tok-3: #e0a15a;
 }
 
 /* ---------- Light theme ---------- */
@@ -154,6 +211,13 @@
   --logo-ink: #19224d;
   --brand-chip: transparent;
 
+  --chip-1: var(--blue-700);
+  --chip-2: var(--blue-900);
+  --chip-3: var(--blue-500);
+  --chip-4: #3f7a4f;
+  --chip-5: #b2603a;
+  --chip-6: var(--blue-600);
+
   --header-bg: rgba(246, 245, 241, 0.82);
   --hero-glow: rgba(79, 99, 216, 0.12);
   --hero-spot: rgba(25, 34, 77, 0.055);
@@ -172,6 +236,43 @@
   --pv-outline: rgba(16, 21, 40, 0.34);
   --pv-dot: rgba(16, 21, 40, 0.3);
   --pv-url: rgba(16, 21, 40, 0.08);
+
+  --pv-ink: #101528;
+  --pv-ink-soft: #5b6376;
+  --pv-card: rgba(25, 34, 77, 0.05);
+  --pv-side: #efece4;
+  --pv-grid-line: rgba(16, 21, 40, 0.09);
+
+  --pv-band: #19224d;
+  --pv-band-ink: #f6f5f1;
+  --pv-band-soft: rgba(246, 245, 241, 0.72);
+  --pv-band-btn: rgba(246, 245, 241, 0.18);
+  --pv-btn-ink: #101528;
+
+  --pv-accent-soft: rgba(25, 34, 77, 0.12);
+  --pv-img-a: #4f63d8;
+  --pv-img-b: #3f8a86;
+  --pv-img-c: #9a6f82;
+  --pv-fig: rgba(12, 16, 32, 0.34);
+  --pv-fig-light: rgba(255, 254, 251, 0.46);
+  --pv-fig-soft: rgba(255, 254, 251, 0.18);
+  --pv-fig-note: rgba(250, 250, 255, 0.94);
+
+  --pv-av-a: var(--blue-700);
+  --pv-av-b: #2f6f74;
+  --pv-av-c: #7a5a6b;
+  --pv-av-ink: #ffffff;
+  --pv-live: #2f7a4f;
+  --pv-warn: #b2603a;
+  --pv-warn-ink: #fffefb;
+  --pv-star: #b2603a;
+  --pv-star-off: rgba(16, 21, 40, 0.18);
+
+  --pv-area: rgba(79, 99, 216, 0.2);
+  --pv-stroke: var(--blue-600);
+  --pv-tok-1: var(--blue-900);
+  --pv-tok-2: #2f7a4f;
+  --pv-tok-3: #b2603a;
 }
 
 /* ---------- Reset ---------- */
@@ -766,9 +867,9 @@ html.is-theming *::after {
   justify-content: center;
   gap: var(--space-2);
   flex-wrap: wrap;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -790,8 +891,11 @@ html.is-theming *::after {
   font-weight: 400;
   /* Sized so the docked panel, not the headline, owns the screen: the copy has
      to clear a 900×480 frame and still leave room for the caption. */
-  font-size: clamp(2.7rem, 5.2vw, 3.9rem);
-  line-height: 0.95;
+  font-size: clamp(2.8rem, 5.4vw, 4.05rem);
+  /* 0.95 clipped the descenders of the italic line — the "p" and "y" of "built
+     properly." — because each line is also a mask for the reveal. A hair more
+     leading, and room inside the mask, keeps them whole. */
+  line-height: 1.04;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
@@ -799,7 +903,8 @@ html.is-theming *::after {
 .hero-title .line {
   display: block;
   overflow: hidden;
-  padding-block: 0.04em;
+  padding-block: 0.14em;
+  margin-block: -0.06em;
 }
 
 .hero-title .line-inner {
@@ -812,8 +917,9 @@ html.is-theming *::after {
 }
 
 .hero-lede {
-  max-width: 62ch;
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
+  max-width: 58ch;
+  font-size: clamp(1.05rem, 1.45vw, 1.18rem);
+  line-height: 1.62;
   color: var(--text-muted);
   text-wrap: pretty;
 }
@@ -935,8 +1041,8 @@ html.is-theming *::after {
   padding: 0;
   list-style: none;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.63rem;
-  line-height: 1.85;
+  font-size: 0.66rem;
+  line-height: 1.8;
   color: var(--text-muted);
 }
 
@@ -1799,6 +1905,165 @@ html.motion-ready [data-reveal] {
 
 .pv-url {
   fill: var(--pv-url);
+}
+
+/* ---------- What a drawn preview is made of ---------- */
+
+/* Text in a drawing. The fill classes say what colour, the `pv-display` and
+   `pv-mono` classes say what face; `font-size` is set on the element in the
+   drawing's own 320 x 200 units, so one drawing works at any size. */
+.pv-ink {
+  fill: var(--pv-ink);
+}
+
+.pv-ink-soft {
+  fill: var(--pv-ink-soft);
+}
+
+.pv-display {
+  font-family: var(--font-display);
+}
+
+.pv-mono {
+  font-family: var(--font-mono);
+}
+
+.pv-card {
+  fill: var(--pv-card);
+}
+
+.pv-side {
+  fill: var(--pv-side);
+}
+
+.pv-chip {
+  fill: var(--pv-accent-soft);
+}
+
+.pv-grid-line {
+  fill: var(--pv-grid-line);
+}
+
+/* The dark band a launch page or a promo strip sits on. */
+.pv-band {
+  fill: var(--pv-band);
+}
+
+.pv-band-ink {
+  fill: var(--pv-band-ink);
+}
+
+.pv-band-soft {
+  fill: var(--pv-band-soft);
+}
+
+.pv-band-btn {
+  fill: var(--pv-band-btn);
+}
+
+.pv-outline-btn {
+  fill: var(--pv-band-btn);
+}
+
+.pv-btn-ink {
+  fill: var(--pv-btn-ink);
+}
+
+/* Photographs. The plate is the picture; the figures are the light and the
+   shapes inside it, and the note reads over the image the way a caption does. */
+.pv-img-a {
+  fill: var(--pv-img-a);
+}
+
+.pv-img-b {
+  fill: var(--pv-img-b);
+}
+
+.pv-img-c {
+  fill: var(--pv-img-c);
+}
+
+.pv-fig {
+  fill: var(--pv-fig);
+}
+
+.pv-fig-light {
+  fill: var(--pv-fig-light);
+}
+
+.pv-fig-soft {
+  fill: var(--pv-fig-soft);
+}
+
+.pv-fig-note {
+  fill: var(--pv-fig-note);
+}
+
+/* Avatars and statuses. Status is never colour alone: each pill carries a word. */
+.pv-av-a {
+  fill: var(--pv-av-a);
+}
+
+.pv-av-b {
+  fill: var(--pv-av-b);
+}
+
+.pv-av-c {
+  fill: var(--pv-av-c);
+}
+
+.pv-av-ink {
+  fill: var(--pv-av-ink);
+}
+
+.pv-live {
+  fill: var(--pv-live);
+}
+
+.pv-warn {
+  fill: var(--pv-warn);
+}
+
+.pv-warn-ink {
+  fill: var(--pv-warn-ink);
+}
+
+.pv-star {
+  fill: var(--pv-star);
+}
+
+.pv-star-off {
+  fill: var(--pv-star-off);
+}
+
+/* Charts and code samples. */
+.pv-area {
+  fill: var(--pv-area);
+}
+
+.pv-stroke {
+  stroke: var(--pv-stroke);
+  stroke-width: 1.6;
+}
+
+.pv-acc-stroke {
+  fill: none;
+  stroke: var(--pv-accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pv-tok-1 {
+  fill: var(--pv-tok-1);
+}
+
+.pv-tok-2 {
+  fill: var(--pv-tok-2);
+}
+
+.pv-tok-3 {
+  fill: var(--pv-tok-3);
 }
 
 .card-badge {
@@ -2843,6 +3108,23 @@ html.hero-mega .hero {
   height: 170svh;
 }
 
+/* The opening frame is drawn here rather than computed in motion.js, for two
+   reasons. The panel is then the right size on the very first paint, with no
+   module having had to run first; and the glyph field, which is placed before
+   that paint, is measuring the frame itself instead of a second copy of the
+   arithmetic that produced it. motion.js reads this box back and morphs away
+   from it. */
+html.hero-mega {
+  --frame-inset-x: clamp(28px, 7.5vw, 140px);
+  --frame-inset-y: clamp(20px, 6vh, 88px);
+}
+
+@media (max-width: 759px) {
+  html.hero-mega {
+    --frame-inset-x: 4vw;
+  }
+}
+
 .hero-stage {
   position: static;
   padding-block: var(--space-20) var(--space-12);
@@ -2857,8 +3139,12 @@ html.hero-mega .hero-stage {
   overflow: clip;
 }
 
+/* `relative` plus a z-index keeps the copy above the glyph field in the stacked
+   layout as well as the full-screen one: the field is positioned, so without a
+   stacking order of its own the copy would paint underneath it. */
 .hero-copy {
-  position: static;
+  position: relative;
+  z-index: 2;
   padding-inline: var(--space-4);
 }
 
@@ -2871,7 +3157,7 @@ html.hero-mega .hero-stage {
 html.hero-mega .hero-copy {
   position: absolute;
   inset-inline: 0;
-  top: calc(var(--masthead-h, 61px) + var(--space-4));
+  top: calc(var(--masthead-h, 61px) + var(--space-6));
   z-index: 2;
   opacity: 0;
   pointer-events: none;
@@ -2890,28 +3176,25 @@ html.hero-mega .hero-copy {
   margin: var(--space-10) auto 0;
 }
 
-/* Starts flush with the viewport: no transform, no margin, full size. These
-   are the same numbers motion.js measures, so the panel's first paint and its
-   first animation frame agree and there is nothing to settle. */
+/* The bubble: inset from the viewport on all four sides, under the measured
+   masthead, so it floats on the page instead of bleeding to its edges. That
+   margin is not decoration — it is where the glyph field lives.
 
+   `--masthead-h` is set by icons-boot.js (before the first paint) and again by
+   motion.js (after fonts and on every measure). motion.js animates width, height
+   and top from this box down to the docked one; nothing here needs to be hidden
+   while it waits, because the frame is already where it belongs. */
 html.hero-mega .lab-shell {
   position: absolute;
   left: 50%;
-  top: 0;
+  top: calc(var(--masthead-h, 61px) + var(--frame-inset-y));
   transform: translateX(-50%);
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 2 * var(--frame-inset-x));
+  height: calc(100% - var(--masthead-h, 61px) - 2 * var(--frame-inset-y));
   margin: 0;
   z-index: 1;
   contain: layout;
   will-change: width, height, top;
-}
-
-/* The masthead is fixed, so the frame's top edge has to be measured against it
-   rather than assumed. Until that measurement exists, stay invisible: better one
-   blank frame than a panel painted over the site's own navigation. */
-html.hero-mega:not(.hero-live) .lab-shell {
-  visibility: hidden;
 }
 
 /* A fixed 320px minimum inside a full-screen panel overflows short viewports
@@ -2963,10 +3246,13 @@ html.hero-mega .lab-shell .lab {
 
 /* Parked below the panel, so it slides in with the dock and is clipped off the
    stage while the panel is full-screen. */
+/* The bubble leaves the stage's bottom edge clear, so the caption has to sit
+   further down than it did below the old flush frame — otherwise its first line
+   peeks in under the panel while the frame is open. */
 html.hero-mega .lab-caption {
   position: absolute;
   inset-inline: 0;
-  bottom: calc(-1 * var(--space-8));
+  bottom: calc(-1 * var(--space-16));
 }
 
 /* ---------- Lab controls ---------- */
@@ -2993,7 +3279,7 @@ html.hero-mega .lab-caption {
 }
 
 .tool-label {
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -3088,7 +3374,7 @@ html.hero-mega .lab-caption {
 .lab-css {
   margin-left: auto;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.6rem;
+  font-size: 0.64rem;
   color: var(--text-subtle);
   white-space: nowrap;
 }
@@ -3205,5 +3491,459 @@ html.hero-mega .lab-caption {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+/* ---------- Hero: the bubble and the glyph field ---------- */
+
+/* Widescreen no longer bleeds the frame to the edges: it opens as a card
+   floating on the page, which is also what gives the glyph field a margin to
+   live in. The inset is measured in motion.js — geometry and look are one
+   decision, so the numbers are there and the appearance is here.
+
+   Scoped to a class theme-boot only adds when motion is on *and* there is height
+   for both states, so the reduced-motion and no-JS layouts never see any of it. */
+
+html.hero-mega .lab-shell .lab {
+  border-radius: var(--lab-radius, var(--radius-xl));
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--border-strong);
+}
+
+/* The field sits behind the frame and the copy. Its top inset is the measured
+   masthead: the stage starts at the document top, under the fixed header, so a
+   slot at 0% would otherwise sit behind the nav. */
+.icon-field {
+  position: absolute;
+  inset: var(--masthead-h, 61px) 0 0 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Until the glyphs have been placed, don't paint them. icons-boot.js runs while
+   the parser is still at the hero, so in practice this is never visible; without
+   it, a failed download would show the fallback slots and then jump — which is
+   exactly the migration this replaced. No `js` class (scripting off) means no
+   hiding: the slots above are a legitimate arrangement for that visitor. */
+html.js:not(.icons-ready) .icon-field {
+  visibility: hidden;
+}
+
+/* Home slots come from CSS, so the field still reads correctly with no
+   JavaScript at all. icons.js takes over by writing a transform on each glyph;
+   `--x`/`--y` stay as the spring's target either way. */
+/* `left`/`top` are the no-JavaScript arrangement, from the slots below. The
+   moment scripting is on, icons-boot.js zeroes both and positions each glyph with
+   its own transform: a transform does not add to `left`, it replaces the
+   centring, so leaving the slot in place would displace every glyph by its own
+   fallback position — hundreds of pixels, for the ones down the right. */
+.ip {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  display: grid;
+  place-items: center;
+  width: var(--sz, 36px);
+  height: var(--sz, 36px);
+  border-radius: var(--radius-md);
+  color: var(--chip, var(--chip-1));
+  opacity: 0.46;
+  transform: translate(-50%, -50%);
+}
+
+.ip svg {
+  display: block;
+  width: 62%;
+  height: 62%;
+}
+
+/* Four sizes, all on the 4px scale. The strips above and below the frame are
+   about 30px tall once it is open, so nothing larger than 32px stands in them. */
+.ip--xs {
+  --sz: 28px;
+}
+
+.ip--s {
+  --sz: 32px;
+}
+
+.ip--l {
+  --sz: 44px;
+}
+
+/* The marks — `</>`, `=>`, `;` — are set in the monospace face instead of drawn. */
+.ip--mark {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: -0.04em;
+}
+
+.ip[data-tone="1"] {
+  --chip: var(--chip-1);
+}
+
+.ip[data-tone="2"] {
+  --chip: var(--chip-2);
+}
+
+.ip[data-tone="3"] {
+  --chip: var(--chip-3);
+}
+
+.ip[data-tone="4"] {
+  --chip: var(--chip-4);
+}
+
+.ip[data-tone="5"] {
+  --chip: var(--chip-5);
+}
+
+.ip[data-tone="6"] {
+  --chip: var(--chip-6);
+}
+
+/* Slots. These place the field for a visitor with no JavaScript, where the hero
+   is the stacked layout and the field covers the whole of it — so the scatter is
+   two columns beside the copy, a row across the top and a row along the bottom,
+   which is the same shape the measured layout produces without measuring
+   anything. With scripting on, icons-boot.js places every glyph itself and these
+   are never seen. **Generated** by tooling/build-icons.cjs from the glyph table:
+   re-run that rather than nudging one of these by hand. */
+/* ip-slots:start — generated by tooling/build-icons.cjs from the glyph table.
+ * The no-JavaScript arrangement, and what a visitor sees for the moment before
+ * icons-boot.js runs. Do not hand-edit: re-run the generator. */
+.ip:nth-child(1) {
+  --x: 5.8%;
+  --y: 3.3%;
+}
+
+.ip:nth-child(2) {
+  --x: 3.4%;
+  --y: 8.4%;
+}
+
+.ip:nth-child(3) {
+  --x: 11.1%;
+  --y: 17.4%;
+}
+
+.ip:nth-child(4) {
+  --x: 8.7%;
+  --y: 22.4%;
+}
+
+.ip:nth-child(5) {
+  --x: 6.3%;
+  --y: 27.5%;
+}
+
+.ip:nth-child(6) {
+  --x: 3.9%;
+  --y: 32.5%;
+}
+
+.ip:nth-child(7) {
+  --x: 11.5%;
+  --y: 41.6%;
+}
+
+.ip:nth-child(8) {
+  --x: 9.1%;
+  --y: 46.6%;
+}
+
+.ip:nth-child(9) {
+  --x: 6.7%;
+  --y: 51.7%;
+}
+
+.ip:nth-child(10) {
+  --x: 4.3%;
+  --y: 56.7%;
+}
+
+.ip:nth-child(11) {
+  --x: 11.9%;
+  --y: 65.7%;
+}
+
+.ip:nth-child(12) {
+  --x: 9.5%;
+  --y: 70.8%;
+}
+
+.ip:nth-child(13) {
+  --x: 7.2%;
+  --y: 75.8%;
+}
+
+.ip:nth-child(14) {
+  --x: 4.8%;
+  --y: 80.9%;
+}
+
+.ip:nth-child(15) {
+  --x: 12.4%;
+  --y: 89.9%;
+}
+
+.ip:nth-child(16) {
+  --x: 10%;
+  --y: 95%;
+}
+
+.ip:nth-child(17) {
+  --x: 91.6%;
+  --y: 4%;
+}
+
+.ip:nth-child(18) {
+  --x: 89.2%;
+  --y: 9.1%;
+}
+
+.ip:nth-child(19) {
+  --x: 96.8%;
+  --y: 14.1%;
+}
+
+.ip:nth-child(20) {
+  --x: 94.4%;
+  --y: 23.1%;
+}
+
+.ip:nth-child(21) {
+  --x: 92%;
+  --y: 28.2%;
+}
+
+.ip:nth-child(22) {
+  --x: 89.6%;
+  --y: 33.2%;
+}
+
+.ip:nth-child(23) {
+  --x: 87.3%;
+  --y: 38.3%;
+}
+
+.ip:nth-child(24) {
+  --x: 94.9%;
+  --y: 47.3%;
+}
+
+.ip:nth-child(25) {
+  --x: 92.5%;
+  --y: 52.4%;
+}
+
+.ip:nth-child(26) {
+  --x: 90.1%;
+  --y: 57.4%;
+}
+
+.ip:nth-child(27) {
+  --x: 87.7%;
+  --y: 62.5%;
+}
+
+.ip:nth-child(28) {
+  --x: 95.3%;
+  --y: 71.5%;
+}
+
+.ip:nth-child(29) {
+  --x: 92.9%;
+  --y: 76.5%;
+}
+
+.ip:nth-child(30) {
+  --x: 90.5%;
+  --y: 81.6%;
+}
+
+.ip:nth-child(31) {
+  --x: 88.1%;
+  --y: 86.6%;
+}
+
+.ip:nth-child(32) {
+  --x: 95.7%;
+  --y: 95.7%;
+}
+
+.ip:nth-child(33) {
+  --x: 8%;
+  --y: 2.8%;
+}
+
+.ip:nth-child(34) {
+  --x: 15.6%;
+  --y: 6.6%;
+}
+
+.ip:nth-child(35) {
+  --x: 23.3%;
+  --y: 5.4%;
+}
+
+.ip:nth-child(36) {
+  --x: 30.9%;
+  --y: 4.2%;
+}
+
+.ip:nth-child(37) {
+  --x: 38.5%;
+  --y: 3%;
+}
+
+.ip:nth-child(38) {
+  --x: 46.2%;
+  --y: 6.8%;
+}
+
+.ip:nth-child(39) {
+  --x: 53.8%;
+  --y: 5.6%;
+}
+
+.ip:nth-child(40) {
+  --x: 61.5%;
+  --y: 4.4%;
+}
+
+.ip:nth-child(41) {
+  --x: 69.1%;
+  --y: 3.2%;
+}
+
+.ip:nth-child(42) {
+  --x: 76.7%;
+  --y: 2%;
+}
+
+.ip:nth-child(43) {
+  --x: 84.4%;
+  --y: 5.8%;
+}
+
+.ip:nth-child(44) {
+  --x: 92%;
+  --y: 4.6%;
+}
+
+.ip:nth-child(45) {
+  --x: 8%;
+  --y: 94.4%;
+}
+
+.ip:nth-child(46) {
+  --x: 15.6%;
+  --y: 93.3%;
+}
+
+.ip:nth-child(47) {
+  --x: 23.3%;
+  --y: 97.1%;
+}
+
+.ip:nth-child(48) {
+  --x: 30.9%;
+  --y: 95.9%;
+}
+
+.ip:nth-child(49) {
+  --x: 38.5%;
+  --y: 94.7%;
+}
+
+.ip:nth-child(50) {
+  --x: 46.2%;
+  --y: 93.5%;
+}
+
+.ip:nth-child(51) {
+  --x: 53.8%;
+  --y: 97.3%;
+}
+
+.ip:nth-child(52) {
+  --x: 61.5%;
+  --y: 96.1%;
+}
+
+.ip:nth-child(53) {
+  --x: 69.1%;
+  --y: 94.9%;
+}
+
+.ip:nth-child(54) {
+  --x: 76.7%;
+  --y: 93.7%;
+}
+
+.ip:nth-child(55) {
+  --x: 84.4%;
+  --y: 97.5%;
+}
+
+.ip:nth-child(56) {
+  --x: 92%;
+  --y: 96.3%;
+}
+
+/* ip-slots:end */
+
+/* ---------- The demo's wireframe mode ---------- */
+
+/* The same mock page, drawn the way the work cards are drawn: type becomes
+   bars, the accent goes grey. The bars take their width from the text they
+   replace — which is the point of a wireframe — so the copy stays in the markup
+   and only its colour goes. No second set of placeholder blocks to keep in step
+   with the first. */
+
+.lab-preview[data-wire="on"] .mock-brand,
+.lab-preview[data-wire="on"] .mock-hero h3,
+.lab-preview[data-wire="on"] .mock-hero p,
+.lab-preview[data-wire="on"] .mock-nav i,
+.lab-preview[data-wire="on"] .mock-stat span,
+.lab-preview[data-wire="on"] .mock-stat strong,
+.lab-preview[data-wire="on"] .mock-stat em,
+.lab-preview[data-wire="on"] .mock-chart-label {
+  color: transparent;
+  background: var(--pv-block);
+  border-radius: var(--radius-xs);
+}
+
+.lab-preview[data-wire="on"] .mock-bars i {
+  background: var(--pv-line);
+}
+
+/* ---------- Field fallbacks ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ip {
+    opacity: 0.62;
+  }
+}
+
+/* Below 1024px there is no margin to float in. Once the frame docks it is
+   `min(900px, 100% - 32px)` wide, so at 900–1000px of viewport the card is
+   within 34px of both edges and the side bands collapse to nothing: all 22
+   glyphs would be pinned half out of frame rather than surrounding it. The
+   field is a widescreen effect and says so, instead of crowding the frame on a
+   phone. Measured, not guessed — the bands were checked at 900, 960, 1024, 1280,
+   1440 and 2560 wide in both frame states. */
+@media (max-width: 1023px) {
+  .icon-field {
+    display: none;
+  }
+}
+
+/* Between 1024px and 1100px the bands are real but tight, so the large glyphs
+   step down a size. */
+@media (max-width: 1100px) {
+  .ip--l {
+    --sz: 36px;
   }
 }

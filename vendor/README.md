@@ -126,6 +126,41 @@ recorded in [`tooling/shadcn/README.md`](../tooling/shadcn/README.md).
 Preline is the exception and is vendored above: its plugins are plain UMD bundles,
 so they work here without React or Tailwind.
 
+## Considered and not vendored: a physics engine
+
+The hero's floating glyph field (`icons.js` at the repo root) needed mutual
+repulsion between 22 bodies, a soft spring home, a pointer repulsor and a
+rectangle push-out. That is a physics problem, so it was searched rather than
+assumed, and the candidates were measured rather than guessed at:
+
+| Candidate | Licence | Measured | Verdict |
+| --- | --- | --- | --- |
+| `matter-js` 0.20.0 | MIT | 84.7 KB raw, **27.6 KB gzipped**, with only `Engine`, `Composite`, `Bodies`, `Body`, `Constraint`, `Vector`, `Events` and `Common` bundled and tree-shaken | Solves it — and would be the second-largest asset on a page whose own code is 51 KB gzipped, carrying Euler integration |
+| `particles.js` | MIT | ~10 KB gzipped | Canvas particles with a pointer *repulse* mode, but **no particle-to-particle repulsion** — the effect that was actually asked for |
+| `tsParticles` v3 | MIT | modular, ~40 KB+ | Same gap: `attract` and `collide` modes, no mutual repulsion |
+| Chipmunk2D, LittleJS, Box2D-as-WASM | MIT / zlib | C, or a whole game engine | Not a fit for 22 glyphs of DOM |
+
+Every force the field needs is custom, so an engine would only be carrying the
+integrator. One thing was worth checking before even considering `matter-js`:
+the server bundle contains **no `eval` and no `new Function`**, so it runs under
+the page's `script-src 'self'` policy (no `unsafe-eval`) unchanged — which is
+what made it the realistic candidate rather than one of the others.
+
+**If the field ever needs real rigid bodies** — collisions, stacking, joints —
+coming back to `matter-js` is one command:
+
+```sh
+npm install matter-js@0.20.0 esbuild
+echo 'export { Engine, Composite, Bodies, Body, Constraint, Vector, Events } from "matter-js";' > entry-matter.js
+npx esbuild entry-matter.js --bundle --format=esm --minify --target=es2022 \
+  --outfile=vendor/matter-0.20.0.js
+```
+
+Then add it to the deploy copy step in the README, and put its licence
+(`LICENSE-matterjs.txt`) here beside the others. Nothing needs it yet, so it is
+not committed — 27.6 KB gzipped of unused engine is exactly the kind of weight
+this file exists to keep out.
+
 ## Preline UI
 
 `preline-5.0.0/accordion.js` is the accordion plugin from

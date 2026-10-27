@@ -164,8 +164,9 @@ function heroIntro() {
 
 /* ---------- Hero: full-screen to docked ---------- */
 
-/* The lab opens covering the whole screen and steps back into its slot once the
-   visitor has actually started reading — not the instant the wheel moves. A hold
+/* The lab opens filling the screen — inset from the edges, so it reads as a
+   bubble on the page rather than a bleed — and steps back into its slot once the
+   visitor has actually started reading, not the instant the wheel moves. A hold
    zone at the start does that: the first 14% of the hero's scroll changes
    nothing, so the opening frame sits still, and the remaining 86% carries the
    whole morph.
@@ -175,7 +176,8 @@ function heroIntro() {
    which is unreadable, and upscaling blurs the type in the opening state. The
    cost is a reflow per frame on one element for ~55svh of scroll; `contain:
    layout` on the shell keeps that reflow inside the panel, and the writes are
-   skipped when the value has not moved.
+   skipped when the value has not moved. It starts from the box the stylesheet
+   drew for the opening state, which is why the panel is correct at first paint.
 
    Nothing here is one-shot: the scrub runs both ways, so scrolling back up
    returns the panel to full-screen and scrolls down again docks it, for as many
@@ -220,6 +222,23 @@ function heroMorph() {
     // so its own height measure below accounts for the real header.
     if (top) html.style.setProperty("--masthead-h", `${top}px`);
 
+    /* The opening frame is not computed here — it is drawn by the stylesheet and
+       read back from the element. That is what lets the panel be the right size
+       on the very first paint without any module having run, and what lets
+       icons-boot.js place the glyph field against the real frame rather than
+       against a second copy of the same arithmetic.
+
+       Clearing the inline geometry is what makes this read the *opening* box
+       while the frame is docked, and it costs nothing: the change only takes
+       effect at the next layout, and render() writes the morphed values back in
+       this same turn. */
+    shell.style.width = "";
+    shell.style.height = "";
+    shell.style.top = "";
+
+    const stageRect = stage.getBoundingClientRect();
+    const shellRect = shell.getBoundingClientRect();
+
     // The docked frame is fitted to what is actually left: under the copy, and
     // above the caption. Measuring the copy means a longer headline shortens the
     // panel instead of sliding underneath it.
@@ -234,6 +253,9 @@ function heroMorph() {
       vw,
       vh: vh - top,
       top,
+      openTop: shellRect.top - stageRect.top,
+      openW: shellRect.width,
+      openH: shellRect.height,
       dockTop,
       w: Math.min(900, vw - 32),
       h: Math.max(300, Math.round(dockH)),
@@ -249,15 +271,16 @@ function heroMorph() {
     const p = q * q * (3 - 2 * q);
 
     if (Math.abs(p - painted.p) > 0.0005) {
-      const w = metrics.vw + (metrics.w - metrics.vw) * p;
-      const h = metrics.vh + (metrics.h - metrics.vh) * p;
-      const y = metrics.top + (metrics.dockTop - metrics.top) * p;
+      const w = metrics.openW + (metrics.w - metrics.openW) * p;
+      const h = metrics.openH + (metrics.h - metrics.openH) * p;
+      const y = metrics.openTop + (metrics.dockTop - metrics.openTop) * p;
 
       shell.style.width = `${w.toFixed(1)}px`;
       shell.style.height = `${h.toFixed(1)}px`;
       shell.style.top = `${y.toFixed(1)}px`;
-      // Drives the frame's own radius, so the corners open out to the bleed.
-      shell.style.setProperty("--lab-radius", `${(14 * p).toFixed(1)}px`);
+      // Drives the frame's own radius. It closes from the bubble's corner
+      // (`--radius-xl`) to the docked card's (`--radius-md`) as the frame shrinks.
+      shell.style.setProperty("--lab-radius", `${(28 - 14 * p).toFixed(1)}px`);
       painted.p = p;
     }
 
@@ -308,14 +331,6 @@ function heroMorph() {
   // Tells theme-boot's fail-safe the morph is alive, so the full-screen hero is
   // not pulled out from under it.
   html.classList.add("hero-live");
-
-  // A resize while parked at the top has to restore the opening geometry.
-  ScrollTrigger.addEventListener("refreshInit", () => {
-    shell.style.width = "";
-    shell.style.height = "";
-    shell.style.top = "";
-    painted.p = -1;
-  });
 }
 
 /* ---------- Work ---------- */

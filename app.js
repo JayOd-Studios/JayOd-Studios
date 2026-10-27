@@ -90,12 +90,16 @@ if ("IntersectionObserver" in window && sections.length) {
 
 /* ---------- Work grid ---------- */
 
-/* Wireframe art lives in wireframes.js so the work cards and the hero stage
-   draw from the same definitions. */
-function buildPreview(kind) {
-  return window.buildWireframe
-    ? window.buildWireframe(kind)
-    : document.createElement("svg");
+/* The drawn previews live in previews.js, so the artwork is one set of
+   definitions rather than markup per card. If it fails to load the card still
+   renders — with an empty frame rather than nothing.
+
+   Named `drawPreview` rather than `buildPreview`: a function declaration in a
+   classic script is a property of `window`, so naming this one after the global
+   it calls would overwrite that global with itself and recurse until the stack
+   ran out. */
+function drawPreview(kind) {
+  return window.buildPreview ? window.buildPreview(kind) : document.createElement("svg");
 }
 
 function buildCard(project, index) {
@@ -106,7 +110,7 @@ function buildCard(project, index) {
 
   const media = document.createElement("div");
   media.className = "card-media";
-  media.append(buildPreview(project.preview));
+  media.append(drawPreview(project.preview));
 
   // Real text over the line art: the card previews read as sites rather than as
   // empty boxes with rectangles in them.

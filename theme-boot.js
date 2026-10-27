@@ -21,6 +21,11 @@
 
   html.setAttribute("data-theme", theme);
 
+  /* Scripting is on. The stylesheet uses this to hold the glyph field back until
+     icons-boot.js has placed it — a visitor without JavaScript gets the slots
+     instead, which is a legitimate arrangement rather than a flash. */
+  html.classList.add("js");
+
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) {
     html.classList.add("intro-done");
@@ -47,6 +52,10 @@
       if (!html.classList.contains("hero-live")) {
         html.classList.remove("hero-mega");
       }
+      /* The same fail-safe for the field: icons-boot.js normally confirms in the
+         same tick it places the glyphs, so this only ever fires if that file is
+         missing or threw. Unhidden, the glyphs stand at the stylesheet's slots. */
+      html.classList.add("icons-ready");
     }, 2800);
   }
 })();

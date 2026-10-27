@@ -39,6 +39,7 @@ const themeButton = document.getElementById("mockTheme");
 const densityButton = document.getElementById("mockDensity");
 const statsButton = document.getElementById("mockStats");
 const chartButton = document.getElementById("mockChart");
+const wireButton = document.getElementById("mockWire");
 const statsNode = preview ? preview.querySelector(".mock-stats") : null;
 const chartNode = preview ? preview.querySelector(".mock-chart") : null;
 
@@ -52,7 +53,7 @@ const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches
  * up without being touched. The readout shows the declaration that changed.
  */
 
-const PREVIEW = { accent: "navy", dark: false, compact: false, stats: true, chart: true };
+const PREVIEW = { accent: "navy", dark: false, compact: false, stats: true, chart: true, wire: false };
 
 const ACCENT_LIGHT = { navy: "#19224d", clay: "#b2603a", moss: "#3f7a4f" };
 const ACCENT_DARK = { navy: "#8b9ef0", clay: "#e08a5a", moss: "#6fb583" };
@@ -85,6 +86,8 @@ function applyPreview(rule) {
     else delete preview.dataset.theme;
     if (PREVIEW.compact) preview.dataset.density = "compact";
     else delete preview.dataset.density;
+    if (PREVIEW.wire) preview.dataset.wire = "on";
+    else delete preview.dataset.wire;
   }
 
   accentButtons.forEach((button) => {
@@ -97,6 +100,7 @@ function applyPreview(rule) {
   densityButton?.setAttribute("aria-pressed", String(PREVIEW.compact));
   statsButton?.setAttribute("aria-pressed", String(PREVIEW.stats));
   chartButton?.setAttribute("aria-pressed", String(PREVIEW.chart));
+  wireButton?.setAttribute("aria-pressed", String(PREVIEW.wire));
 
   // `hidden` takes the section out of the layout and out of the a11y tree in one
   // move — the same thing `display: none` does, without a class to keep in sync.
@@ -143,6 +147,17 @@ chartButton?.addEventListener("click", () => {
   applyPreview(`.mock-chart { display: ${PREVIEW.chart ? "block" : "none"} }`);
   flashPreview();
   say(PREVIEW.chart ? "Chart section shown." : "Chart section hidden.");
+});
+
+/* Wireframe swaps the finished page for the way the studio draws work in
+   progress: type becomes bars, the accent goes grey. The bars take their width
+   from the text they replace, so the copy stays in the markup and only its
+   colour goes — there is no second set of placeholder blocks to keep in step. */
+wireButton?.addEventListener("click", () => {
+  PREVIEW.wire = !PREVIEW.wire;
+  applyPreview(`[data-wire] .mock :is(h3, p, span) { color: transparent }`);
+  flashPreview();
+  say(PREVIEW.wire ? "Demo switched to wireframe." : "Demo switched back to finished.");
 });
 
 const CAPTIONS = {
