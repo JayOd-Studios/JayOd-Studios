@@ -197,7 +197,10 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  /* `clip` rather than `hidden`: hidden turns the body into a scroll container,
+     which stops the sticky hero stage from sticking. clip trims the same
+     overflow without creating one. */
+  overflow-x: clip;
 }
 
 h1,
@@ -785,7 +788,9 @@ html.is-theming *::after {
 .hero-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.7rem, 7vw, 5.4rem);
+  /* Sized so the docked panel, not the headline, owns the screen: the copy has
+     to clear a 900×480 frame and still leave room for the caption. */
+  font-size: clamp(2.7rem, 5.2vw, 3.9rem);
   line-height: 0.95;
   letter-spacing: -0.025em;
   text-wrap: balance;
@@ -807,7 +812,7 @@ html.is-theming *::after {
 }
 
 .hero-lede {
-  max-width: 56ch;
+  max-width: 62ch;
   font-size: clamp(1rem, 1.35vw, 1.12rem);
   color: var(--text-muted);
   text-wrap: pretty;
@@ -1025,6 +1030,12 @@ html.is-theming *::after {
   outline: 1px dashed transparent;
   outline-offset: 3px;
   transition: outline-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+/* The section switches use the `hidden` attribute. A section with its own
+   display rule would otherwise beat the UA's `[hidden]` and stay visible. */
+.mock-node[hidden] {
+  display: none;
 }
 
 .mock-node.is-lit {
@@ -2794,5 +2805,405 @@ html.motion-ok:not(.intro-done) .hero-visual {
 
   .btn::before {
     display: none;
+  }
+}
+
+/* ---------- Hero: full-bleed lab that shrinks into place ---------- */
+
+/* The lab opens covering the viewport and steps back into its slot during the
+   first half-screen of scroll. Geometry is set from JS in px rather than by
+   scaling a transform: scaling would render the 13px labels at ~8px in the
+   compact state and blur the type in the full state. The cost is a reflow per
+   frame for one element over ~50vh of scroll.
+
+   Everything below `html.motion-ready` is the enhanced layout. Without it — no
+   JS, or reduced motion — the hero falls back to the plain vertical stack. */
+
+.hero {
+  position: relative;
+  display: block;
+  padding: 0;
+  min-height: 0;
+  overflow: visible;
+  align-items: initial;
+}
+
+/* Lenis owns smooth scrolling once it is running; the native rule would make
+   every anchor jump animate twice. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
+/* The full-screen opening. 170svh of hero buys 70svh of scroll: a hold, the
+   morph, then the copy. `svh` rather than `vh` so a mobile URL bar cannot make
+   the stage taller than the screen it is supposed to fill. */
+
+html.hero-mega .hero {
+  height: 170vh;
+  height: 170svh;
+}
+
+.hero-stage {
+  position: static;
+  padding-block: var(--space-20) var(--space-12);
+}
+
+html.hero-mega .hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding: 0;
+  overflow: clip;
+}
+
+.hero-copy {
+  position: static;
+  padding-inline: var(--space-4);
+}
+
+/* Hidden until the panel has stepped back. `pointer-events` is repeated on the
+   element rather than left to JS so the first paint cannot paint a clickable
+   area nobody can see; the module sets an inline `auto` when it fades in. */
+
+/* `--masthead-h` is measured by motion.js: the header is fixed, so a viewport-
+   relative offset put the eyebrow underneath it on a 900px-tall screen. */
+html.hero-mega .hero-copy {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--masthead-h, 61px) + var(--space-4));
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Four gaps in a fixed-height column: at 16px rather than 20px the copy clears
+   the docked frame by another 12px, which is height the frame gets instead. */
+html.hero-mega .hero-copy {
+  gap: var(--space-4);
+}
+
+.lab-shell {
+  position: relative;
+  width: min(900px, 100%);
+  height: auto;
+  margin: var(--space-10) auto 0;
+}
+
+/* Starts flush with the viewport: no transform, no margin, full size. These
+   are the same numbers motion.js measures, so the panel's first paint and its
+   first animation frame agree and there is nothing to settle. */
+
+html.hero-mega .lab-shell {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  z-index: 1;
+  contain: layout;
+  will-change: width, height, top;
+}
+
+/* The masthead is fixed, so the frame's top edge has to be measured against it
+   rather than assumed. Until that measurement exists, stay invisible: better one
+   blank frame than a panel painted over the site's own navigation. */
+html.hero-mega:not(.hero-live) .lab-shell {
+  visibility: hidden;
+}
+
+/* A fixed 320px minimum inside a full-screen panel overflows short viewports
+   (a landscape phone leaves ~235px for the body). */
+
+html.hero-mega .lab-body {
+  min-height: 0;
+}
+
+.lab-shell .lab {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  /* The morph drives this so the frame's corners open out to the full bleed. */
+  border-radius: var(--lab-radius, var(--radius-md));
+}
+
+html.hero-mega .lab-shell .lab {
+  height: 100%;
+}
+
+.lab-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.lab-code,
+.lab-preview {
+  min-height: 0;
+}
+
+.lab-caption {
+  margin-top: var(--space-4);
+}
+
+/* The mock page is taller than the docked frame. Fading its last band instead
+   of cutting it mid-chart reads as "the page continues" rather than as a
+   clipped screenshot. */
+.lab-preview::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 72px;
+  background: linear-gradient(to top, var(--pv-bg) 18%, transparent);
+  pointer-events: none;
+}
+
+/* Parked below the panel, so it slides in with the dock and is clipped off the
+   stage while the panel is full-screen. */
+html.hero-mega .lab-caption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(-1 * var(--space-8));
+}
+
+/* ---------- Lab controls ---------- */
+
+.lab-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+  background: var(--surface-3);
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tool-group {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.tool-label {
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.swatches {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* 44px hit area, 18px dot. The dot is a pseudo-element so the target can be
+   thumb-sized without the control looking clumsy. */
+.swatch {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.swatch::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sw, var(--accent));
+  box-shadow: 0 0 0 1px var(--border-strong);
+  transition: box-shadow var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.swatch:hover::before {
+  transform: scale(1.1);
+}
+
+.swatch[aria-pressed="true"]::before {
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-soft);
+}
+
+.swatch--navy {
+  --sw: #19224d;
+}
+
+.swatch--clay {
+  --sw: #b2603a;
+}
+
+.swatch--moss {
+  --sw: #3f7a4f;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.chip:hover {
+  border-color: var(--accent-line);
+  color: var(--accent-text);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.swatch:focus-visible,
+.chip:focus-visible,
+.lab-rebuild:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lab-css {
+  margin-left: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.6rem;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+/* ---------- Preview: the demo site's own tokens ---------- */
+
+/* Overriding the page tokens inside the preview is what lets the controls
+   change the mock without touching a single mock rule. */
+
+.lab-preview[data-mock-accent="clay"] {
+  --accent: #b2603a;
+  --accent-text: #9a4d2a;
+  --accent-bright: #c4713f;
+  --accent-soft: rgba(178, 96, 58, 0.14);
+  --accent-line: rgba(178, 96, 58, 0.38);
+}
+
+.lab-preview[data-mock-accent="moss"] {
+  --accent: #3f7a4f;
+  --accent-text: #356a43;
+  --accent-bright: #4c8f5f;
+  --accent-soft: rgba(63, 122, 79, 0.14);
+  --accent-line: rgba(63, 122, 79, 0.38);
+}
+
+.lab-preview[data-theme="dark"] {
+  --pv-bg: #11162a;
+  --surface-2: #171e33;
+  --surface-3: #131a2c;
+  --text: #e9edf7;
+  --text-muted: #a8b2c9;
+  --text-subtle: #94a0ba;
+  --border: #28324d;
+  --border-strong: #354060;
+  --accent: #8b9ef0;
+  --accent-text: #b9c5f8;
+  --accent-bright: #a3b3f4;
+  --accent-soft: rgba(139, 158, 240, 0.18);
+  --accent-line: rgba(139, 158, 240, 0.4);
+}
+
+.lab-preview[data-theme="dark"][data-mock-accent="clay"] {
+  --accent: #e08a5a;
+  --accent-text: #f0a97f;
+  --accent-bright: #eda276;
+  --accent-soft: rgba(224, 138, 90, 0.18);
+  --accent-line: rgba(224, 138, 90, 0.4);
+}
+
+.lab-preview[data-theme="dark"][data-mock-accent="moss"] {
+  --accent: #6fb583;
+  --accent-text: #93cba3;
+  --accent-bright: #84c497;
+  --accent-soft: rgba(111, 181, 131, 0.18);
+  --accent-line: rgba(111, 181, 131, 0.4);
+}
+
+.lab-preview[data-density="compact"] {
+  --space-2: 0.375rem;
+  --space-3: 0.5rem;
+  --space-4: 0.75rem;
+}
+
+/* ---------- Hero fallbacks ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html.hero-mega .hero {
+    height: auto;
+  }
+
+  .hero-stage {
+    position: static;
+    height: auto;
+    padding-block: var(--space-20) var(--space-12);
+  }
+
+  .hero-copy {
+    position: static;
+    opacity: 1;
+    transform: none;
+  }
+
+  .lab-shell {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: min(900px, 100%);
+    height: auto;
+    margin: var(--space-10) auto 0;
+  }
+
+  .lab-shell .lab {
+    height: auto;
+  }
+
+  .lab {
+    transform: none;
+  }
+
+  .lab-caption {
+    position: static;
+    margin-top: var(--space-4);
+  }
+}
+
+@media (max-width: 720px) {
+  .lab-tools {
+    gap: var(--space-2);
+  }
+
+  .lab-css {
+    margin-left: 0;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -31,8 +31,119 @@ const rebuild = document.getElementById("labRebuild");
 const steps = Array.from(document.querySelectorAll("#labSteps li"));
 const bars = Array.from(document.querySelectorAll(".mock-bars i"));
 
+const preview = document.getElementById("labPreview");
+const cssOut = document.getElementById("labCss");
+const announce = document.getElementById("labAnnounce");
+const accentButtons = Array.from(document.querySelectorAll("[data-accent]"));
+const themeButton = document.getElementById("mockTheme");
+const densityButton = document.getElementById("mockDensity");
+const statsButton = document.getElementById("mockStats");
+const chartButton = document.getElementById("mockChart");
+const statsNode = preview ? preview.querySelector(".mock-stats") : null;
+const chartNode = preview ? preview.querySelector(".mock-chart") : null;
+
 const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+/* ---------- The demo's own settings ----------
+ *
+ * These change the preview, not the page: the accents and the dark variant are
+ * token overrides scoped to .lab-preview, so every mock rule picks the new value
+ * up without being touched. The readout shows the declaration that changed.
+ */
+
+const PREVIEW = { accent: "navy", dark: false, compact: false, stats: true, chart: true };
+
+const ACCENT_LIGHT = { navy: "#19224d", clay: "#b2603a", moss: "#3f7a4f" };
+const ACCENT_DARK = { navy: "#8b9ef0", clay: "#e08a5a", moss: "#6fb583" };
+
+function say(message) {
+  if (announce) announce.textContent = message;
+}
+
+/* The readout shows the declaration the last control actually changed, so the
+   panel is always demonstrating the CSS behind what just happened on screen. */
+function renderCss(rule) {
+  if (!cssOut) return;
+  if (rule) {
+    cssOut.textContent = rule;
+    return;
+  }
+  const palette = PREVIEW.dark ? ACCENT_DARK : ACCENT_LIGHT;
+  cssOut.textContent = `--accent: ${palette[PREVIEW.accent]};`;
+}
+
+function flashPreview() {
+  if (!preview || reduceQuery.matches) return;
+  gsap.fromTo(preview, { opacity: 0.55 }, { opacity: 1, duration: 0.42, ease: "power2.out" });
+}
+
+function applyPreview(rule) {
+  if (preview) {
+    preview.dataset.mockAccent = PREVIEW.accent;
+    if (PREVIEW.dark) preview.dataset.theme = "dark";
+    else delete preview.dataset.theme;
+    if (PREVIEW.compact) preview.dataset.density = "compact";
+    else delete preview.dataset.density;
+  }
+
+  accentButtons.forEach((button) => {
+    const on = button.dataset.accent === PREVIEW.accent;
+    button.setAttribute("aria-pressed", String(on));
+    button.classList.toggle("is-active", on);
+  });
+
+  themeButton?.setAttribute("aria-pressed", String(PREVIEW.dark));
+  densityButton?.setAttribute("aria-pressed", String(PREVIEW.compact));
+  statsButton?.setAttribute("aria-pressed", String(PREVIEW.stats));
+  chartButton?.setAttribute("aria-pressed", String(PREVIEW.chart));
+
+  // `hidden` takes the section out of the layout and out of the a11y tree in one
+  // move — the same thing `display: none` does, without a class to keep in sync.
+  if (statsNode) statsNode.hidden = !PREVIEW.stats;
+  if (chartNode) chartNode.hidden = !PREVIEW.chart;
+
+  renderCss(rule);
+}
+
+accentButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    PREVIEW.accent = button.dataset.accent || "navy";
+    applyPreview();
+    flashPreview();
+    say(`Demo accent set to ${button.querySelector(".sr-only")?.textContent || PREVIEW.accent}.`);
+  });
+});
+
+themeButton?.addEventListener("click", () => {
+  PREVIEW.dark = !PREVIEW.dark;
+  applyPreview();
+  flashPreview();
+  say(PREVIEW.dark ? "Demo preview switched to dark." : "Demo preview switched to light.");
+});
+
+densityButton?.addEventListener("click", () => {
+  PREVIEW.compact = !PREVIEW.compact;
+  applyPreview();
+  flashPreview();
+  say(PREVIEW.compact ? "Demo spacing set to compact." : "Demo spacing set to comfortable.");
+});
+
+/* The two section switches change the mock itself rather than its palette: turn
+   Stats off and the demo grey box is gone, along with its space in the page. */
+statsButton?.addEventListener("click", () => {
+  PREVIEW.stats = !PREVIEW.stats;
+  applyPreview(`.mock-stats { display: ${PREVIEW.stats ? "grid" : "none"} }`);
+  flashPreview();
+  say(PREVIEW.stats ? "Stats section shown." : "Stats section hidden.");
+});
+
+chartButton?.addEventListener("click", () => {
+  PREVIEW.chart = !PREVIEW.chart;
+  applyPreview(`.mock-chart { display: ${PREVIEW.chart ? "block" : "none"} }`);
+  flashPreview();
+  say(PREVIEW.chart ? "Chart section shown." : "Chart section hidden.");
+});
 
 const CAPTIONS = {
   idle: "built, checked and shipped in one pass",
@@ -210,6 +321,7 @@ async function runBuild() {
 /* ---------- Boot ---------- */
 
 if (lab) {
+  applyPreview();
   setUpInspector();
   setUpTilt();
 

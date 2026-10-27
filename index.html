@@ -87,8 +87,8 @@
         <span class="hero-spot"></span>
       </div>
 
-      <div class="wrap hero-inner">
-        <div class="hero-copy">
+      <div class="hero-stage" id="heroStage">
+        <div class="wrap hero-copy" id="heroCopy">
           <p class="eyebrow">
             <span class="dot" aria-hidden="true"></span>
             Independent web development studio
@@ -115,8 +115,8 @@
           </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="lab" id="lab" aria-hidden="true">
+        <div class="lab-shell" id="labShell">
+          <div class="lab" id="lab" role="group" aria-label="Live demo: a website being built">
             <div class="lab-head">
               <span class="lab-dots"><i></i><i></i><i></i></span>
               <span class="lab-file">northwind.app <span aria-hidden="true">/</span> index.html</span>
@@ -142,7 +142,7 @@
                 <span class="code-caret" id="codeCaret"></span>
               </div>
 
-              <div class="lab-preview">
+              <div class="lab-preview" id="labPreview" aria-hidden="true">
                 <div class="mock" id="mock">
                   <div class="mock-node mock-top" data-sel="header">
                     <span class="mock-brand" data-sel="brand">Northwind</span>
@@ -172,6 +172,34 @@
               </div>
             </div>
 
+            <div class="lab-tools">
+              <div class="tool">
+                <span class="tool-label" id="toolAccent">Accent</span>
+                <div class="swatches" role="group" aria-labelledby="toolAccent">
+                  <button class="swatch swatch--navy is-active" type="button" data-accent="navy" aria-pressed="true"><span class="sr-only">Navy</span></button>
+                  <button class="swatch swatch--clay" type="button" data-accent="clay" aria-pressed="false"><span class="sr-only">Clay</span></button>
+                  <button class="swatch swatch--moss" type="button" data-accent="moss" aria-pressed="false"><span class="sr-only">Moss</span></button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <span class="tool-label">Preview</span>
+                <button class="chip" type="button" id="mockTheme" aria-pressed="false">Dark</button>
+                <button class="chip" type="button" id="mockDensity" aria-pressed="false">Compact</button>
+              </div>
+
+              <div class="tool">
+                <span class="tool-label" id="toolSections">Sections</span>
+                <div class="tool-group" role="group" aria-labelledby="toolSections">
+                  <button class="chip" type="button" id="mockStats" aria-pressed="true">Stats</button>
+                  <button class="chip" type="button" id="mockChart" aria-pressed="true">Chart</button>
+                </div>
+              </div>
+
+              <code class="lab-css" id="labCss">--accent: #19224d;</code>
+              <p class="sr-only" id="labAnnounce" role="status" aria-live="polite"></p>
+            </div>
+
             <div class="lab-foot">
               <ol class="lab-steps" id="labSteps">
                 <li data-step="compile">Compile CSS</li>
@@ -179,17 +207,20 @@
                 <li data-step="audit">Audit a11y</li>
                 <li data-step="deploy">Deploy</li>
               </ol>
-              <span class="lab-rebuild" id="labRebuild">Rebuild <span aria-hidden="true">↻</span></span>
+              <button class="lab-rebuild" id="labRebuild" type="button">Rebuild <span aria-hidden="true">↻</span></button>
             </div>
           </div>
 
-          <p class="lab-caption" aria-hidden="true">
-            <span class="lab-live"></span>
+          <p class="lab-caption">
+            <span class="lab-live" aria-hidden="true"></span>
             Hover the page to inspect it — <span id="labCaption">built, checked and shipped in one pass</span>
           </p>
         </div>
+      </div>
+    </section>
 
-        <dl class="facts">
+    <div class="wrap hero-foot">
+      <dl class="facts">
           <div class="fact">
             <dt>Status</dt>
             <dd><span class="status-dot" aria-hidden="true"></span>Booking first projects</dd>
@@ -206,9 +237,8 @@
             <dt>Engagements</dt>
             <dd>Fixed scope or retainer</dd>
           </div>
-        </dl>
-      </div>
-    </section>
+      </dl>
+    </div>
 
     <!-- Tools ticker -->
     <div class="ticker" aria-label="Tools we build with">

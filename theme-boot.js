@@ -28,8 +28,25 @@
     /* The hero intro hides its own copy until motion.js runs the timeline.
        This fail-safe releases it even if that module never loads. */
     html.classList.add("motion-ok");
+
+    /* The hero opens as a full-screen stage, and this has to be on the <html>
+       before the first paint. Setting it from motion.js meant the page painted
+       the small stacked hero first and snapped to the full-bleed one once GSAP
+       had downloaded — a visible jump on every cold load. motion.js confirms
+       with `hero-live`; if it never arrives (blocked module, failed import, no
+       ScrollTrigger) the class is pulled and the hero falls back to the plain
+       stacked layout it ships without JS. */
+    /* Only when there is height for both a full-screen stage and a panel below
+       the copy. motion.js applies the same cut-off. */
+    if (window.innerHeight >= 620) {
+      html.classList.add("hero-mega");
+    }
+
     window.setTimeout(function () {
       html.classList.add("intro-done");
+      if (!html.classList.contains("hero-live")) {
+        html.classList.remove("hero-mega");
+      }
     }, 2800);
   }
 })();
