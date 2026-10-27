@@ -1,4 +1,4 @@
-# Component registries — React Bits, Arc UI, Planes
+# Component registries — React Bits, Arc UI, Planes, Watermelon UI, Motion Primitives
 
 Setup for three animated-component libraries, kept here so they can be pulled into a
 React project later. **Nothing in this folder is part of the published site**, and
@@ -19,6 +19,8 @@ be installed anywhere:
 | [React Bits](https://reactbits.dev) | 215+ animated React components, JS or TS, CSS or Tailwind variants | `npx shadcn@latest add @react-bits/<Name>-<JS\|TS>-<CSS\|TW>` |
 | [Arc UI](https://uiarc.dev) | Animated React 19 components, CSS modules, **no Tailwind required** | `npx shadcn@latest add @uiarc/button` |
 | [Planes](https://useplanes.com) | Animated React 19 components, requires **Tailwind v4** | `npx shadcn@latest add @planes/segmented-control` |
+| [Watermelon UI](https://ui.watermelon.sh) | React 19 + TS components, blocks and dashboards, **Tailwind v4** + shadcn, MIT | `npx shadcn@latest add @watermelon/card-split-accordian` |
+| [Motion Primitives](https://motion-primitives.com) | React components built on `motion`, Tailwind-styled, MIT, self-described beta | `npx motion-primitives@latest add text-effect` |
 | [Animos](https://animos.app) | Hosted browser tool for turning images/video into motion showcases | Nothing — it is a website |
 | [Swishy](https://swishy.ai) | Hosted AI motion-graphics app | Nothing — it is a website |
 
@@ -41,7 +43,9 @@ React project's `components.json`:
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json",
     "@uiarc": "https://uiarc.dev/r/{name}.json",
-    "@planes": "https://useplanes.com/r/{name}.json"
+    "@planes": "https://useplanes.com/r/{name}.json",
+    "@watermelon": "https://registry.watermelon.sh/r/{name}.json",
+    "@motion-primitives": "https://motion-primitives.com/c/{name}.json"
   }
 }
 ```
@@ -65,14 +69,22 @@ Tailwind v4.
 
 Checked against the live registries, not just the docs: the MCP server boots and
 lists all seven tools, `get_project_registries` enumerates `@shadcn`, `@react-bits`,
-`@uiarc` and `@planes`, and `https://reactbits.dev/r/SplitText-JS-CSS.json`,
-`https://uiarc.dev/r/button.json` and `https://useplanes.com/r/segmented-control.json`
-each return a real component manifest.
+`@uiarc`, `@planes`, `@watermelon` and `@motion-primitives`, and these five endpoints
+each return a real component manifest: `https://reactbits.dev/r/SplitText-JS-CSS.json`,
+`https://uiarc.dev/r/button.json`, `https://useplanes.com/r/segmented-control.json`,
+`https://registry.watermelon.sh/r/card-split-accordian.json` and
+`https://motion-primitives.com/c/text-effect.json`.
 
 ## Traps
 
 - **`npm install react-bits` installs the wrong thing.** That package is an unrelated
   2017 React Native kit by another author. There is no React Bits npm package.
+- **`npm install watermelon-ui` is also the wrong thing** — an old Vue 2-era package
+  by a different author. `@watermelon/ui` returns 404. Watermelon UI is registry-only.
+- **`motion-primitives` on npm is a CLI, not the components.** It adds component
+  source to your project; the animation dependency is the separate `motion` package.
+  Motion Primitives' own docs say CSS/Tailwind-free versions are only planned, so
+  there is nothing to use outside React today.
 - **Licences differ.** Arc's free library is MIT. React Bits is **MIT + Commons
   Clause**, so its components may be used in your site but not redistributed as a
   component library. Planes' free items publish no explicit open-source licence —

@@ -46,16 +46,28 @@ API rather than replacing the observer.
 To update a library, bump the version in the commands above, rename the output file
 and update the import in `motion.js`, `anime.js` or `hero.js`.
 
-## Kokonut UI and Bklit UI
+## The React-only registries
 
-Neither is vendored here because neither is a standalone library. Both are
+These are not vendored here because none is a standalone library. All are
 [shadcn/ui](https://ui.shadcn.com) registries that copy React components into a
-React + Tailwind project: Kokonut UI installs through the shadcn CLI and depends on
-React, Tailwind and Motion, and Bklit UI is the `@bklit` registry of chart and
-utility components. This site is hand-written HTML, CSS and vanilla JavaScript with
-no framework or build step, so there is no component tree for either to render
-into. Using them means converting the site to React + Tailwind first, which is a
-rewrite rather than a dependency install.
+React + Tailwind project:
+
+- **Kokonut UI** — installs through the shadcn CLI; React, Tailwind and Motion.
+- **Bklit UI** — the `@bklit` registry of chart and utility components.
+- **React Bits** — 215+ components; GSAP-based; MIT plus Commons Clause.
+- **Arc UI** — React 19, CSS modules, no Tailwind required; MIT.
+- **Planes** — React 19 plus Tailwind v4.
+- **Watermelon UI** — React 19, Tailwind v4 plus shadcn; MIT.
+- **Motion Primitives** — React plus `motion`, Tailwind-styled; MIT; beta.
+
+This site is hand-written HTML, CSS and vanilla JavaScript with no framework or
+build step, so there is no component tree for any of them to render into. Using
+them means converting the site to React plus Tailwind first, which is a rewrite
+rather than a dependency install. Registry endpoints and install commands are
+recorded in [`tooling/shadcn/README.md`](../tooling/shadcn/README.md).
+
+Preline is the exception and is vendored above: its plugins are plain UMD bundles,
+so they work here without React or Tailwind.
 
 ## Preline UI
 
