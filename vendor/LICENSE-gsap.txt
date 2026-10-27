@@ -1,0 +1,29 @@
+GSAP 3.15.0 — https://gsap.com
+Copyright (c) Webflow, Inc. and GreenSock, Inc.
+
+Full terms: https://gsap.com/standard-license
+This file is a summary. The GSAP npm package ships no licence file — its
+package.json simply states: "Standard 'no charge' license: https://gsap.com/standard-license".
+
+## Licence
+
+"Standard 'No Charge' GSAP License", effective 30 April 2025 (GSAP 3.13 onward).
+It is a proprietary no-charge licence, **not** an OSI-approved open-source licence.
+
+Permitted: use, reproduce, display and implement GSAP on any website, web
+application or digital interface, including commercial and client work. The
+formerly members-only plugins — SplitText, ScrollTrigger, MorphSVG and the rest —
+are covered at no charge.
+
+Not permitted: using GSAP inside a no-code visual animation builder that competes
+with Webflow's; reverse engineering it to build a competing product; removing or
+altering proprietary notices or branding.
+
+Bundling GSAP into this site is within the permitted uses. Redistributing GSAP as a
+standalone library under a different licence is not.
+
+## What is in this bundle
+
+`gsap-3.15.0.js` is an esbuild bundle exposing `gsap`, `ScrollTrigger` and
+`SplitText`. Call `gsap.registerPlugin(ScrollTrigger, SplitText)` before using the
+plugins. No notice text was stripped from the proprietary code.

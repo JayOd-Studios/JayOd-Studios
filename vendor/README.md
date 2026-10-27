@@ -1,7 +1,7 @@
 # Vendored animation libraries
 
-The two animation bundles are pre-built ES modules, committed so the site keeps
-working without a build step and without a CDN. Neither uses `eval` or
+The four animation bundles are pre-built ES modules, committed so the site keeps
+working without a build step and without a CDN. None uses `eval` or
 `new Function`, so they run under the page's `script-src 'self'`
 Content-Security-Policy unchanged.
 
@@ -9,8 +9,14 @@ Content-Security-Policy unchanged.
 | --- | --- | --- | --- | --- |
 | `anime-4.5.0.js` | [`animejs`](https://animejs.com) | 4.5.0 | 43.1 KB | 17.2 KB |
 | `motion-14.6.0.js` | [`motion`](https://motion.dev) (`motion/mini`) | 14.6.0 | 8.4 KB | 3.4 KB |
+| `lenis-1.3.27.js` | [`lenis`](https://lenis.dev) | 1.3.27 | 18.3 KB | 5.3 KB |
+| `gsap-3.15.0.js` | [`gsap`](https://gsap.com) (core + ScrollTrigger + SplitText) | 3.15.0 | 119.8 KB | 47.2 KB |
 
-Both are MIT licensed — see `LICENSE-animejs.txt` and `LICENSE-motion.txt`.
+Anime.js, Motion and Lenis are MIT licensed — see `LICENSE-animejs.txt`,
+`LICENSE-motion.txt` and `LICENSE-lenis.txt`. **GSAP is not open source**: it uses
+the proprietary Standard "No Charge" licence since 3.13 (April 2025), which covers
+commercial sites but forbids redistributing it as a library or building a competing
+animation tool from it. See `LICENSE-gsap.txt`.
 
 ## Why they are bundled rather than used from a CDN
 
@@ -36,6 +42,19 @@ npx esbuild entry-anime.js --bundle --format=esm --minify --target=es2022 \
 echo 'export { animate } from "motion/mini";' > entry-motion.js
 npx esbuild entry-motion.js --bundle --format=esm --minify --target=es2022 \
   --outfile=vendor/motion-14.6.0.js
+
+# lenis-1.3.27.js — the class only; the /react and /vue builds are not bundled
+npm install lenis@1.3.27
+echo 'export { default as Lenis } from "lenis";' > entry-lenis.js
+npx esbuild entry-lenis.js --bundle --format=esm --minify --target=es2022 \
+  --outfile=vendor/lenis-1.3.27.js
+
+# gsap-3.15.0.js — core plus the two plugins this kind of page needs
+echo 'export { gsap } from "gsap";
+     export { ScrollTrigger } from "gsap/ScrollTrigger";
+     export { SplitText } from "gsap/SplitText";' > entry-gsap.js
+npx esbuild entry-gsap.js --bundle --format=esm --minify --target=es2022 \
+  --outfile=vendor/gsap-3.15.0.js
 ```
 
 `motion/mini` is used deliberately: the full `motion` entry is 25 KB gzipped, where
@@ -45,6 +64,44 @@ API rather than replacing the observer.
 
 To update a library, bump the version in the commands above, rename the output file
 and update the import in `motion.js`, `anime.js` or `hero.js`.
+
+## GSAP and Lenis
+
+Both are committed and **neither is loaded by the page yet**, so page weight, CSP
+and the deployed output are unchanged.
+
+`gsap-3.15.0.js` exports `gsap`, `ScrollTrigger` and `SplitText`. Register the
+plugins once before use:
+
+```js
+import { gsap, ScrollTrigger, SplitText } from "./vendor/gsap-3.15.0.js";
+gsap.registerPlugin(ScrollTrigger, SplitText);
+```
+
+Checked in a DOM harness: `gsap.set` writes the style, and
+`new SplitText(el, { type: "words" })` split a headline into three spans while
+leaving the text content intact.
+
+GSAP is the largest file here at 47.2 KB gzipped — around a quarter of the entire
+current page. It also covers ground Anime.js and Motion already cover, so it is an
+alternative rather than an addition: reaching for it means deciding which of the
+three owns animation, ideally dropping the other.
+
+`lenis-1.3.27.js` exports `Lenis`, the smooth-scroll module:
+
+```js
+import { Lenis } from "./vendor/lenis-1.3.27.js";
+const lenis = new Lenis({ autoRaf: true });
+```
+
+Checked the same way: it instantiates, exposes a numeric `scroll` and survives a
+manual `raf()`. jsdom lacks `matchMedia`, `ResizeObserver` and `Window`, so those
+were stubbed for the test — the library itself needs no shims in a browser.
+
+Two caveats before wiring Lenis in. It takes over scrolling for the whole document,
+which changes the feel of every scroll-driven effect in `motion.js`: the reveal
+thresholds and the approach-rail progress both assume native scroll. And it must
+not initialise at all under `prefers-reduced-motion`.
 
 ## The React-only registries
 
