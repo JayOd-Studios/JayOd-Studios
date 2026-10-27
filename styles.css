@@ -2956,7 +2956,7 @@ html.hero-mega .lab-shell .lab {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 72px;
+  height: var(--space-16);
   background: linear-gradient(to top, var(--pv-bg) 18%, transparent);
   pointer-events: none;
 }
