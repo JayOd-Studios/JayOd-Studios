@@ -6,7 +6,7 @@ A single-page static site: no build step, no framework, and no third-party
 requests at runtime. The two animation libraries are vendored locally, so the
 page never loads anything it does not serve itself.
 
-Live at <https://jayod-studios.github.io/JayOd-Studios/>.
+Live at <https://www.jayodstudios.com/>.
 
 ## The honest bit
 
@@ -21,11 +21,12 @@ counts anywhere. Please keep it that way.
 
 ## The hero stage
 
-The homepage opens on the lab, filling the screen. It is an editor: the markup
-that builds a page on the left, the page it produces on the right, the build
-strip underneath. It holds that size for the first slice of scroll, then docks
-into the card it lives in for the rest of the page — while 56 code glyphs crowd
-the margin around it.
+On desktop, the homepage opens on the lab, filling the screen. It is an editor:
+the markup that builds a page on the left, the page it produces on the right,
+the build strip underneath. It holds that size for the first slice of scroll,
+then docks into the card it lives in for the rest of the page — while 56 code
+glyphs crowd the margin around it. Tablets and phones use the stacked hero so
+the full demo stays readable.
 
 ### The morph
 
@@ -53,8 +54,8 @@ the margin around it.
   the plain stacked layout it ships without JavaScript.
 - The scrub runs both ways: scrolling up returns the frame to full screen and
   scrolling down docks it again, as many times as you like, with no reload.
-- Below 620px of viewport height there is not enough room for both states, so the
-  morph is skipped and the stacked hero is used.
+- Below 1024px of viewport width, or 620px of height, there is not enough room
+  for both states, so the morph is skipped and the stacked hero is used.
 - Reduced motion gets no `hero-mega` at all: stacked hero, copy visible, no scrub.
 
 ### The bubble
@@ -331,11 +332,13 @@ and no split text — only static content.
 ## Security
 
 - A **Content-Security-Policy** in a `<meta>` tag: `default-src 'self'`, with
-  Google Fonts allowed only for styles and font files. No third-party scripts.
+  Google Fonts allowed only for styles and font files. The only third-party
+  script allowed is the cookieless Cloudflare Web Analytics beacon the host
+  injects; its script and report origins are explicitly allowlisted.
 - `referrer` is `strict-origin-when-cross-origin`.
 - The contact form builds its fallback link with DOM nodes, not `innerHTML`.
-- No secrets, no analytics, no cookies. The form stores nothing; it opens the
-  visitor's mail app.
+- No secrets, no cookies. The form stores nothing; it opens the visitor's mail
+  app.
 
 **Limitation:** GitHub Pages cannot send response headers, so the CSP lives in
 the document and cannot use `frame-ancestors` or `report-uri`, and HSTS /

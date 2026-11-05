@@ -23,6 +23,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const html = document.documentElement;
 const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const compactHeroQuery = window.matchMedia("(max-width: 1024px)");
 const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 /* Play forward on the way down, backwards on the way up, and allow both to
@@ -194,11 +195,12 @@ function heroMorph() {
   const HOLD = 0.14;
   const clamp01 = (n) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
-  // Under ~620px there is not enough height for a full-screen stage *and* a
-  // docked frame. Keep the plain stacked hero rather than squeezing both in.
-  if (stage.clientHeight && stage.clientHeight < 620) {
+  // A tablet or phone cannot hold the full-screen stage and a usable docked
+  // panel at the same time. Up to 1024px the stylesheet's stacked hero is the
+  // layout; the same applies under 620px of height, where there is no room for
+  // either state.
+  if (compactHeroQuery.matches || (stage.clientHeight && stage.clientHeight < 620)) {
     html.classList.remove("hero-mega");
-    html.classList.add("hero-live");
     return;
   }
 
@@ -263,7 +265,7 @@ function heroMorph() {
   };
 
   const render = (raw) => {
-    if (!metrics) return;
+    if (!metrics || !html.classList.contains("hero-mega")) return;
 
     // Dead zone first, then smoothstep: slow to leave the full-screen state,
     // slow to settle into the slot, quick in between.
@@ -552,7 +554,10 @@ function build() {
   html.classList.add("motion-ready");
   // Also set by theme-boot before the first paint; repeated here for the case
   // where motion is switched on mid-session, after theme-boot already ran.
-  html.classList.add("hero-mega");
+  // Tablets and phones keep the stacked hero at every height; it is the only
+  // layout with room for both the copy and a complete demo panel.
+  const canOpenFullScreen = window.innerHeight >= 620 && !compactHeroQuery.matches;
+  html.classList.toggle("hero-mega", canOpenFullScreen);
 
   startLenis();
   heroIntro();
@@ -584,6 +589,37 @@ function teardown() {
   stopLenis();
   built = false;
 }
+
+/* If the window is resized from desktop into the stacked range, put the hero
+   back into the document flow. The stylesheet's phone/tablet fallback already
+   overrides the geometry with !important; this also releases the copy and its
+   buttons, which the morph would otherwise leave inert. */
+function collapseCompactHero() {
+  if (!compactHeroQuery.matches && window.innerHeight >= 620) return;
+
+  html.classList.remove("hero-mega");
+
+  const shell = document.getElementById("labShell");
+  if (shell) {
+    shell.style.width = "";
+    shell.style.height = "";
+    shell.style.top = "";
+    shell.style.removeProperty("--lab-radius");
+  }
+
+  const copy = document.getElementById("heroCopy");
+  if (copy) {
+    copy.style.opacity = "";
+    copy.style.transform = "";
+    copy.style.pointerEvents = "";
+    const actions = copy.querySelector(".hero-actions");
+    actions?.removeAttribute("inert");
+    actions?.removeAttribute("aria-hidden");
+  }
+}
+
+compactHeroQuery.addEventListener("change", collapseCompactHero);
+window.addEventListener("resize", collapseCompactHero, { passive: true });
 
 if (reduceQuery.matches) {
   html.classList.add("intro-done");

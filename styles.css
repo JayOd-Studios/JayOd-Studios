@@ -676,8 +676,8 @@ html.is-theming *::after {
 
 .nav-toggle {
   display: none;
-  width: var(--space-10);
-  height: var(--space-10);
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border);
@@ -1370,6 +1370,7 @@ html.is-theming *::after {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 44px;
   padding: 5px 12px;
   border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
@@ -1408,6 +1409,20 @@ html.is-theming *::after {
   background: var(--accent-bright);
   box-shadow: 0 0 0 3px var(--accent-soft);
   animation: lab-live 2.4s var(--ease) infinite;
+}
+
+.lab-hint--touch {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .lab-hint--pointer {
+    display: none;
+  }
+
+  .lab-hint--touch {
+    display: inline;
+  }
 }
 
 @keyframes lab-live {
@@ -1582,6 +1597,10 @@ html.is-theming *::after {
 
 /* ---------- Scroll states ---------- */
 
+section[id] {
+  scroll-margin-top: calc(var(--masthead-h, 61px) + var(--space-4));
+}
+
 html.motion-ready [data-reveal] {
   will-change: transform, opacity;
 }
@@ -1589,12 +1608,13 @@ html.motion-ready [data-reveal] {
 @media (max-width: 900px) {
   .lab-body {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .lab-code {
     border-right: 0;
     border-bottom: 1px solid var(--border);
-    max-height: 210px;
+    max-height: none;
   }
 
   .code-lines li {
@@ -2668,7 +2688,7 @@ html.motion-ready [data-reveal] {
   border-radius: 0;
   color: var(--text);
   font-family: inherit;
-  font-size: 0.98rem;
+  font-size: 1rem;
   transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
@@ -2952,13 +2972,8 @@ html.motion-ok:not(.intro-done) .hero-visual {
   }
 
   .studio-split,
-  .contact-grid,
-  .footer-inner {
+  .contact-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .footer-inner {
-    gap: var(--space-8);
   }
 }
 
@@ -2975,6 +2990,11 @@ html.motion-ok:not(.intro-done) .hero-visual {
 
   .form-row {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
   }
 
   .hero-visual {
@@ -3252,7 +3272,7 @@ html.hero-mega .lab-shell .lab {
 html.hero-mega .lab-caption {
   position: absolute;
   inset-inline: 0;
-  bottom: calc(-1 * var(--space-16));
+  bottom: calc(-1 * var(--space-8));
 }
 
 /* ---------- Lab controls ---------- */
@@ -3440,43 +3460,44 @@ html.hero-mega .lab-caption {
 
 /* ---------- Hero fallbacks ---------- */
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (max-width: 1024px) {
   html.hero-mega .hero {
-    height: auto;
+    height: auto !important;
   }
 
   .hero-stage {
-    position: static;
-    height: auto;
+    position: static !important;
+    height: auto !important;
     padding-block: var(--space-20) var(--space-12);
   }
 
   .hero-copy {
-    position: static;
-    opacity: 1;
-    transform: none;
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
   }
 
   .lab-shell {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    width: min(900px, 100%);
-    height: auto;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: min(900px, 100%) !important;
+    height: auto !important;
     margin: var(--space-10) auto 0;
   }
 
   .lab-shell .lab {
-    height: auto;
+    height: auto !important;
   }
 
   .lab {
-    transform: none;
+    transform: none !important;
   }
 
   .lab-caption {
-    position: static;
+    position: static !important;
     margin-top: var(--space-4);
   }
 }
@@ -3491,6 +3512,29 @@ html.hero-mega .lab-caption {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+/* At 320px the Preview group's three chips are wider than the panel. Let the
+   labels and chips wrap instead of hiding the last control. */
+@media (max-width: 380px) {
+  .lab-tools {
+    gap: var(--space-2);
+    padding-inline: var(--space-2);
+  }
+
+  .tool {
+    flex-wrap: wrap;
+    min-width: 0;
+    row-gap: var(--space-1);
+  }
+
+  .tool-group {
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding-inline: var(--space-2);
   }
 }
 
