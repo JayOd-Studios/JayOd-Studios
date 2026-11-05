@@ -3947,3 +3947,9 @@ html.js:not(.icons-ready) .icon-field {
     --sz: 36px;
   }
 }
+
+/* The hero glow is 20% wider than its box; clip it at the root so the page
+   cannot be dragged sideways into empty space. */
+html {
+  overflow-x: clip;
+}

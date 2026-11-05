@@ -28,8 +28,6 @@
  * margin to float in.
  */
 
-import { gsap } from "./vendor/gsap-3.15.0.js";
-
 const field = document.getElementById("iconField");
 const stage = document.getElementById("heroStage");
 const chips = field ? Array.from(field.querySelectorAll(".ip")) : [];
@@ -45,7 +43,7 @@ const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches
 const K_HOME = 4.2; // spring back to the slot
 const K_BLOCK = 16; // push out of a keep-out rectangle
 const DAMP = 3.1; // velocity lost per second
-const IDLE = 3.2; // the drift that keeps an untouched field alive
+const IDLE = 78; // the drift that keeps an untouched field alive: ~18px of sway against K_HOME
 const R_POINTER = 170; // pointer influence, px
 const F_POINTER = 5400;
 const R_PAIR = 72; // glyph-to-glyph influence, px
@@ -60,7 +58,7 @@ const STEP = 1 / 60;
 const FRAME_MS = 16.7;
 
 function start() {
-  const items = chips.map((chip) => {
+  const items = chips.map((chip, index) => {
     const style = window.getComputedStyle(chip);
     const hx = parseFloat(style.getPropertyValue("--x"));
     const hy = parseFloat(style.getPropertyValue("--y"));
@@ -174,8 +172,8 @@ function start() {
       ax[i] += (item.tx - item.x) * K_HOME;
       ay[i] += (item.ty - item.y) * K_HOME;
 
-      ax[i] += Math.sin(clock * 0.62 + item.phase) * IDLE;
-      ay[i] += Math.cos(clock * 0.48 + item.phase * 1.4) * IDLE;
+      ax[i] += Math.sin(clock * 0.75 + item.phase) * IDLE;
+      ay[i] += Math.cos(clock * 0.58 + item.phase * 1.4) * IDLE;
 
       if (near) {
         const dx = item.x - px;
@@ -287,17 +285,29 @@ function start() {
 
   let running = false;
   let onScreen = true;
+  let raf = 0;
+  let last = 0;
+
+  /* Own frame loop: the field is pure decoration and should not depend on the
+     animation library loading correctly to keep drifting. */
+  const loop = (now) => {
+    raf = requestAnimationFrame(loop);
+    const delta = last ? now - last : FRAME_MS;
+    last = now;
+    tick(now, delta);
+  };
 
   const run = () => {
     if (running || !onScreen || document.hidden) return;
     running = true;
-    gsap.ticker.add(tick);
+    last = 0;
+    raf = requestAnimationFrame(loop);
   };
 
   const halt = () => {
     if (!running) return;
     running = false;
-    gsap.ticker.remove(tick);
+    cancelAnimationFrame(raf);
   };
 
   const reset = () => {
