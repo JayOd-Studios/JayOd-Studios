@@ -21,12 +21,12 @@ counts anywhere. Please keep it that way.
 
 ## The hero stage
 
-On desktop, the homepage opens on the lab, filling the screen. It is an editor:
-the markup that builds a page on the left, the page it produces on the right,
-the build strip underneath. It holds that size for the first slice of scroll,
-then docks into the card it lives in for the rest of the page — while 56 code
-glyphs crowd the margin around it. Tablets and phones use the stacked hero so
-the full demo stays readable.
+On desktop and tablet portrait, the homepage opens on the lab, filling the
+screen. It is an editor: the markup that builds a page on the left, the page it
+produces on the right, the build strip underneath. It holds that size for the
+first slice of scroll, then docks into the card it lives in for the rest of the
+page — while 56 code glyphs crowd the margin around it on widescreen. Phones and
+short landscape screens use the stacked hero so the full demo stays readable.
 
 ### The morph
 
@@ -54,7 +54,8 @@ the full demo stays readable.
   the plain stacked layout it ships without JavaScript.
 - The scrub runs both ways: scrolling up returns the frame to full screen and
   scrolling down docks it again, as many times as you like, with no reload.
-- Below 1024px of viewport width, or 620px of height, there is not enough room
+- Phones (760px wide and below), short windows (under 620px high) and short
+  landscape tablets (1024px wide or less and under 900px high) do not have room
   for both states, so the morph is skipped and the stacked hero is used.
 - Reduced motion gets no `hero-mega` at all: stacked hero, copy visible, no scrub.
 
@@ -67,11 +68,12 @@ starting under the measured masthead, with the corner radius closing from
 leaves is not decoration: it is where the glyph field lives, which is why the
 geometry and the look are one decision — and now one place, the stylesheet.
 
-Below 1024px of width the stylesheet hides the field and the inset collapses
-toward a few pixels. The docked card is `min(900px, 100% - 32px)` wide, so at a
-900–1000px viewport it comes within 34px of both edges and there is no margin to
-float in. **That number is measured, not guessed** — the bands were checked at
-900, 960, 1024, 1280, 1440 and 2560 wide in both frame states.
+Below 1024px of width the stylesheet hides the glyph field: the margins are too
+narrow for all 22 side glyphs. The frame keeps its bubble inset, and a portrait
+tablet docks to a card with room for the complete code and preview panes. The
+docked card is `min(900px, 100% - 32px)` wide. **That number is measured, not
+guessed** — the bands were checked at 760, 768, 820, 834, 900, 960, 1024, 1280,
+1440 and 2560 wide in both frame states.
 
 ### The glyph field
 

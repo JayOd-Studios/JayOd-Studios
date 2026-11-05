@@ -1605,7 +1605,7 @@ html.motion-ready [data-reveal] {
   will-change: transform, opacity;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .lab-body {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
@@ -1619,6 +1619,24 @@ html.motion-ready [data-reveal] {
 
   .code-lines li {
     font-size: 0.6rem;
+  }
+}
+
+/* A portrait tablet keeps the lab side by side during the hero morph. The
+   inline CSS readout is the one thing that can go: without it the five
+   controls fit on a single row, which is the height the preview needs. */
+@media (max-width: 900px) {
+  html.hero-mega .lab-tools {
+    gap: var(--space-2);
+    padding-inline: var(--space-2);
+  }
+
+  html.hero-mega .lab-tools .chip {
+    padding-inline: var(--space-2);
+  }
+
+  html.hero-mega .lab-css {
+    display: none;
   }
 }
 
@@ -3460,7 +3478,7 @@ html.hero-mega .lab-caption {
 
 /* ---------- Hero fallbacks ---------- */
 
-@media (prefers-reduced-motion: reduce), (max-width: 1024px) {
+@media (prefers-reduced-motion: reduce), (max-width: 760px) {
   html.hero-mega .hero {
     height: auto !important;
   }

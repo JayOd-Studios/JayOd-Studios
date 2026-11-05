@@ -23,12 +23,20 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const html = document.documentElement;
 const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-const compactHeroQuery = window.matchMedia("(max-width: 1024px)");
+const compactHeroQuery = window.matchMedia("(max-width: 760px)");
 const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 /* Play forward on the way down, backwards on the way up, and allow both to
    happen as often as the visitor likes. */
 const BOTH_WAYS = "play none none reverse";
+
+/* The full-screen hero needs room for the opening lab *and* the docked one.
+   Desktop always has the width; a portrait tablet needs at least 900px of
+   height. Short landscape tablets use the stacked layout in document flow. */
+function canUseHeroMorph() {
+  if (compactHeroQuery.matches || window.innerHeight < 620) return false;
+  return window.innerWidth > 1024 || window.innerHeight >= 900;
+}
 
 let lenis = null;
 let built = false;
@@ -195,11 +203,9 @@ function heroMorph() {
   const HOLD = 0.14;
   const clamp01 = (n) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
-  // A tablet or phone cannot hold the full-screen stage and a usable docked
-  // panel at the same time. Up to 1024px the stylesheet's stacked hero is the
-  // layout; the same applies under 620px of height, where there is no room for
-  // either state.
-  if (compactHeroQuery.matches || (stage.clientHeight && stage.clientHeight < 620)) {
+  // Phones, and short landscape screens, cannot hold the full-screen stage and
+  // a usable docked panel at the same time. They keep the stacked hero.
+  if (!canUseHeroMorph()) {
     html.classList.remove("hero-mega");
     return;
   }
@@ -554,9 +560,7 @@ function build() {
   html.classList.add("motion-ready");
   // Also set by theme-boot before the first paint; repeated here for the case
   // where motion is switched on mid-session, after theme-boot already ran.
-  // Tablets and phones keep the stacked hero at every height; it is the only
-  // layout with room for both the copy and a complete demo panel.
-  const canOpenFullScreen = window.innerHeight >= 620 && !compactHeroQuery.matches;
+  const canOpenFullScreen = canUseHeroMorph();
   html.classList.toggle("hero-mega", canOpenFullScreen);
 
   startLenis();
@@ -590,12 +594,12 @@ function teardown() {
   built = false;
 }
 
-/* If the window is resized from desktop into the stacked range, put the hero
-   back into the document flow. The stylesheet's phone/tablet fallback already
-   overrides the geometry with !important; this also releases the copy and its
-   buttons, which the morph would otherwise leave inert. */
+/* If the window is resized into a range without room for both hero states,
+   put the hero back into the document flow. The stylesheet's phone fallback
+   already overrides the geometry with !important; this also releases the copy
+   and its buttons, which the morph would otherwise leave inert. */
 function collapseCompactHero() {
-  if (!compactHeroQuery.matches && window.innerHeight >= 620) return;
+  if (canUseHeroMorph()) return;
 
   html.classList.remove("hero-mega");
 

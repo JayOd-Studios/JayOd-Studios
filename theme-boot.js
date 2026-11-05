@@ -27,7 +27,7 @@
   html.classList.add("js");
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var compactHero = window.matchMedia("(max-width: 1024px)").matches;
+  var compactHero = window.matchMedia("(max-width: 760px)").matches;
   if (reduce) {
     html.classList.add("intro-done");
   } else {
@@ -43,9 +43,11 @@
        ScrollTrigger) the class is pulled and the hero falls back to the plain
        stacked layout it ships without JS. */
     /* Only when there is width and height for both a full-screen stage and a
-       complete panel below the copy. Tablets and phones use the stacked hero.
-       motion.js applies the same cut-off. */
-    if (window.innerHeight >= 620 && !compactHero) {
+       complete panel below the copy. Phones use the stacked hero, as do short
+       landscape tablets. motion.js applies the same cut-off. */
+    var roomForMorph =
+      window.innerWidth > 1024 || window.innerHeight >= 900;
+    if (window.innerHeight >= 620 && !compactHero && roomForMorph) {
       html.classList.add("hero-mega");
     }
 
