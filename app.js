@@ -10,7 +10,9 @@ const CONTACT_EMAIL = "jayodstudios@gmail.com";
 const header = document.getElementById("siteHeader");
 const nav = document.getElementById("primaryNav");
 const navToggle = document.getElementById("navToggle");
-const navLinks = Array.from(document.querySelectorAll(".nav-list a"));
+/* Every link in the nav, not just the list items: the CTA lives in the same
+   mobile panel and has to dismiss it too. */
+const navLinks = Array.from(document.querySelectorAll("#primaryNav a"));
 
 /* ---------- Mobile navigation ---------- */
 
