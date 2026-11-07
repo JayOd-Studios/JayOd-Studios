@@ -251,6 +251,10 @@ function heroMorph() {
     // above the caption. Measuring the copy means a longer headline shortens the
     // panel instead of sliding underneath it.
     const copyBottom = copy.offsetTop + copy.offsetHeight;
+    // The buttons are the lowest visible part of the copy. Keep them out of
+    // the keyboard path until the docking frame has passed below them.
+    const actionsBottom =
+      copy.offsetTop + (actions ? actions.offsetTop + actions.offsetHeight : copy.offsetHeight);
     const dockTop = Math.min(
       Math.round(vh * 0.62),
       Math.max(Math.round(vh * 0.42), Math.round(copyBottom + 20))
@@ -265,6 +269,7 @@ function heroMorph() {
       openW: shellRect.width,
       openH: shellRect.height,
       dockTop,
+      actionsBottom,
       w: Math.min(900, vw - 32),
       h: Math.max(300, Math.round(dockH)),
     };
@@ -277,11 +282,11 @@ function heroMorph() {
     // slow to settle into the slot, quick in between.
     const q = clamp01((raw - HOLD) / (1 - HOLD));
     const p = q * q * (3 - 2 * q);
+    const y = metrics.openTop + (metrics.dockTop - metrics.openTop) * p;
 
     if (Math.abs(p - painted.p) > 0.0005) {
       const w = metrics.openW + (metrics.w - metrics.openW) * p;
       const h = metrics.openH + (metrics.h - metrics.openH) * p;
-      const y = metrics.openTop + (metrics.dockTop - metrics.openTop) * p;
 
       shell.style.width = `${w.toFixed(1)}px`;
       shell.style.height = `${h.toFixed(1)}px`;
@@ -304,9 +309,11 @@ function heroMorph() {
     }
 
     // An invisible CTA must not be reachable: a focus ring landing on a button
-    // the visitor cannot see is worse than no button. Only the links go inert —
-    // the heading and lede stay in the accessibility tree throughout.
-    const reachable = c > 0.5;
+    // the visitor cannot see is worse than no button. The frame sits above the
+    // copy while it docks, so wait until its top edge has cleared the buttons
+    // before letting them take focus. Only the links go inert — the heading and
+    // lede stay in the accessibility tree throughout.
+    const reachable = c > 0.5 && y >= metrics.actionsBottom + 8;
     if (actions && reachable !== painted.reachable) {
       actions.toggleAttribute("inert", !reachable);
       if (reachable) actions.removeAttribute("aria-hidden");

@@ -25,8 +25,9 @@ On desktop and tablet portrait, the homepage opens on the lab, filling the
 screen. It is an editor: the markup that builds a page on the left, the page it
 produces on the right, the build strip underneath. It holds that size for the
 first slice of scroll, then docks into the card it lives in for the rest of the
-page — while 56 code glyphs crowd the margin around it on widescreen. Phones and
-short landscape screens use the stacked hero so the full demo stays readable.
+page — while code glyphs crowd the margin around it on widescreen, at half
+density on iPad-width screens. Phones and short landscape screens use the stacked
+hero so the full demo stays readable.
 
 ### The morph
 
@@ -69,8 +70,10 @@ leaves is not decoration: it is where the glyph field lives, which is why the
 geometry and the look are one decision — and now one place, the stylesheet.
 
 Below 1024px of width the stylesheet hides the glyph field: the margins are too
-narrow for all 22 side glyphs. The frame keeps its bubble inset, and a portrait
-tablet docks to a card with room for the complete code and preview panes. The
+narrow for all 22 side glyphs. Between 1024px and 1199px it keeps only every
+other glyph, because the bands are real but all 56 still crowd the frame. The
+frame keeps its bubble inset, and a portrait tablet docks to a card with room for
+the complete code and preview panes. The
 docked card is `min(900px, 100% - 32px)` wide. **That number is measured, not
 guessed** — the bands were checked at 760, 768, 820, 834, 900, 960, 1024, 1280,
 1440 and 2560 wide in both frame states.
@@ -85,7 +88,9 @@ again from the outside in; and **glyph-to-glyph repulsion** — 1,540 pair check
 frame — is what makes it read as fluid rather than scripted, because a glyph
 pushed aside pushes its neighbour in turn. A press on the hero that is *not* on a
 link or a control sends a shockwave through the field; nothing is captured, so a
-drag still selects text and a button still clicks.
+drag still selects text and a button still clicks. At iPad widths (`1024px–
+1199px`) the stylesheet hides alternate glyphs without removing their slots, so
+the field thins out while the remaining spacing stays even.
 
 **Where the glyphs go is not decided in `icons.js`.** It is `icons-boot.js`, a
 classic script, so that it runs while the parser is still at the hero — before the
@@ -394,9 +399,11 @@ node artifacts/smoke.mjs         # the whole page's structure, in jsdom (needs j
 - **`tooling/check-field.cjs`** runs the real `plan()` from `icons-boot.js` against
   synthetic viewport geometry and prints the *visible fraction* of the worst glyph
   at each size, in both frame states. It reads the glyph table back out of
-  `index.html`, so it cannot drift from what ships. Every glyph is at least 78%
-  visible at every width from 1024 to 3840, and none sits over the frame — that
-  promise is the output of this script, not an opinion about the code.
+  `index.html`, so it cannot drift from what ships. Every glyph's planned slot is
+  at least 78% inside the field at every width from 1024 to 3840, and none sits
+  over the frame — that promise is the output of this script, not an opinion about
+  the code. At 1024–1199px the stylesheet then hides alternate glyphs, so the
+  painted count there is 28.
 - **`artifacts/smoke.mjs`** is jsdom, so it has no layout: it proves the markup
   binds, the modules load, the cards carry real copy and the wiring is right. It
   cannot prove anything about pixels.

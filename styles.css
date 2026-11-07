@@ -1701,6 +1701,7 @@ html.motion-ready [data-reveal] {
 /* ---------- Tools ticker ---------- */
 
 .ticker {
+  margin-top: clamp(var(--space-8), 5vw, var(--space-16));
   border-block: 1px solid var(--border);
   background: var(--surface);
   overflow: hidden;
@@ -1717,10 +1718,18 @@ html.motion-ready [data-reveal] {
 .ticker-track {
   display: flex;
   width: max-content;
-  animation: ticker 34s linear infinite;
+  animation: ticker 20s linear infinite;
+  will-change: transform;
 }
 
-.ticker:hover .ticker-track,
+/* A touch screen can leave :hover stuck after a tap, which used to read as the
+   ticker freezing. Only a real pointer may pause it; keyboard focus still does. */
+@media (hover: hover) and (pointer: fine) {
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
+  }
+}
+
 .ticker:focus-within .ticker-track {
   animation-play-state: paused;
 }
@@ -3196,7 +3205,9 @@ html.hero-mega .hero-copy {
   position: absolute;
   inset-inline: 0;
   top: calc(var(--masthead-h, 61px) + var(--space-6));
-  z-index: 2;
+  /* Behind the docking frame: the panel uncovers the copy as it slides down,
+     instead of the copy fading in on top of the demo mid-transition. */
+  z-index: 1;
   opacity: 0;
   pointer-events: none;
 }
@@ -3230,7 +3241,7 @@ html.hero-mega .lab-shell {
   width: calc(100% - 2 * var(--frame-inset-x));
   height: calc(100% - var(--masthead-h, 61px) - 2 * var(--frame-inset-y));
   margin: 0;
-  z-index: 1;
+  z-index: 2;
   contain: layout;
   will-change: width, height, top;
 }
@@ -4007,6 +4018,16 @@ html.js:not(.icons-ready) .icon-field {
 @media (max-width: 1100px) {
   .ip--l {
     --sz: 36px;
+  }
+}
+
+/* iPad-size landscape screens have room for the field, but not for all 56
+   glyphs: the side bands are only about 60–90px wide. Show every other glyph
+   there. `visibility` keeps every layout slot in place, so the remaining field
+   stays evenly spread instead of collapsing into one side. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .icon-field .ip:nth-child(2n) {
+    visibility: hidden;
   }
 }
 
