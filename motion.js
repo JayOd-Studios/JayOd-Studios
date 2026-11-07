@@ -31,11 +31,11 @@ const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches
 const BOTH_WAYS = "play none none reverse";
 
 /* The full-screen hero needs room for the opening lab *and* the docked one.
-   Desktop always has the width; a portrait tablet needs at least 900px of
-   height. Short landscape tablets use the stacked layout in document flow. */
+   Desktop and 1024px-wide tablets have the width; a portrait tablet needs at
+   least 900px of height. Narrower, shorter tablets use the stacked layout. */
 function canUseHeroMorph() {
   if (compactHeroQuery.matches || window.innerHeight < 620) return false;
-  return window.innerWidth > 1024 || window.innerHeight >= 900;
+  return window.innerWidth >= 1024 || window.innerHeight >= 900;
 }
 
 let lenis = null;
@@ -532,6 +532,10 @@ function buildProgress() {
 /* ---------- Ticker reacts to scroll speed ---------- */
 
 let tickerTarget = null;
+let tickerFit = null;
+let tickerObserver = null;
+let tickerTimer = null;
+let tickerSettle = null;
 
 function skewTicker(velocity) {
   if (!tickerTarget || reduceQuery.matches) return;
@@ -541,6 +545,66 @@ function skewTicker(velocity) {
 
 function buildTicker() {
   tickerTarget = document.querySelector(".ticker-track");
+  if (!tickerTarget) return;
+
+  const track = tickerTarget;
+  const groups = [...track.querySelectorAll(".ticker-group:not([data-ticker-clone])")];
+  if (groups.length < 2) return;
+
+  // The keyframes travel half the track. That is only seamless while half the
+  // track still covers the screen, which two groups do at narrow widths but not
+  // on a widescreen monitor. Add pairs of groups until it does, then stretch the
+  // duration with them so one group still passes every 20 seconds.
+  const fit = () => {
+    if (reduceQuery.matches) return;
+
+    const width = track.parentElement?.clientWidth || window.innerWidth || 0;
+    const groupWidth = groups[0].getBoundingClientRect().width;
+    if (!width || !groupWidth) return;
+
+    let count = track.querySelectorAll(".ticker-group").length;
+    let half = (count / 2) * groupWidth;
+
+    while (half < width) {
+      const first = groups[0].cloneNode(true);
+      const second = groups[1].cloneNode(true);
+
+      [first, second].forEach((clone) => {
+        clone.dataset.tickerClone = "";
+        clone.setAttribute("aria-hidden", "true");
+      });
+
+      track.append(first, second);
+      count += 2;
+      half += groupWidth * 2;
+    }
+
+    track.style.animationDuration = `${20 * (count / 2)}s`;
+  };
+
+  // Some browsers settle the final width after the first resize callback;
+  // the second pass catches the completed layout.
+  const scheduleFit = () => {
+    clearTimeout(tickerTimer);
+    clearTimeout(tickerSettle);
+    tickerTimer = setTimeout(fit, 150);
+    tickerSettle = setTimeout(fit, 700);
+  };
+
+  if (tickerObserver) tickerObserver.disconnect();
+  if (tickerFit) window.removeEventListener("resize", tickerFit);
+  clearTimeout(tickerTimer);
+  clearTimeout(tickerSettle);
+  fit();
+  document.fonts?.ready?.then(fit).catch(() => {});
+
+  if ("ResizeObserver" in window) {
+    tickerObserver = new ResizeObserver(scheduleFit);
+    tickerObserver.observe(track.parentElement);
+  }
+
+  tickerFit = scheduleFit;
+  window.addEventListener("resize", tickerFit, { passive: true });
 }
 
 /* ---------- Scroll-hint arrow ---------- */

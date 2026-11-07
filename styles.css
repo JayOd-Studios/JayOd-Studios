@@ -1715,6 +1715,8 @@ html.motion-ready [data-reveal] {
   );
 }
 
+/* Starts with two identical groups. motion.js appends more pairs on wide
+   screens so the -50% loop point is always covered. */
 .ticker-track {
   display: flex;
   width: max-content;
@@ -3072,6 +3074,12 @@ html.motion-ok:not(.intro-done) .hero-visual {
     animation: none;
     width: 100%;
     flex-wrap: wrap;
+  }
+
+  /* If reduced motion is switched on after the wide-screen pairs were added,
+     show only the real row rather than a wrapped stack of duplicates. */
+  .ticker-track [data-ticker-clone] {
+    display: none;
   }
 
   .hero-spot {
