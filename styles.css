@@ -3226,6 +3226,31 @@ html.hero-mega .hero-copy {
   gap: var(--space-4);
 }
 
+/* Short laptops still get the full hero morph. Compress the copy above the lab
+   rather than removing the motion: at 720–840px high this gives the docked frame
+   enough room to sit below the CTA row without covering it. Keep this in step
+   with motion.js's 720px floor and its 280px minimum dock height. */
+@media (max-height: 840px) and (min-width: 761px) {
+  html.hero-mega .hero-copy {
+    top: calc(var(--masthead-h, 61px) + var(--space-3));
+    gap: var(--space-2);
+  }
+
+  html.hero-mega .hero-title {
+    font-size: clamp(2.55rem, 3.6vw, 3.45rem);
+  }
+
+  html.hero-mega .hero-lede {
+    max-width: 58ch;
+    font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+    line-height: 1.45;
+  }
+
+  html.hero-mega .hero-actions {
+    margin-top: 0;
+  }
+}
+
 .lab-shell {
   position: relative;
   width: min(900px, 100%);

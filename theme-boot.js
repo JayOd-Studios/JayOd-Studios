@@ -47,7 +47,7 @@
        narrower, shorter tablets. motion.js applies the same cut-off. */
     var roomForMorph =
       window.innerWidth >= 1024 || window.innerHeight >= 900;
-    if (window.innerHeight >= 800 && !compactHero && roomForMorph) {
+    if (window.innerHeight >= 720 && !compactHero && roomForMorph) {
       html.classList.add("hero-mega");
     }
 

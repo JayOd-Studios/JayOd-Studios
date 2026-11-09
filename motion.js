@@ -34,12 +34,13 @@ const BOTH_WAYS = "play none none reverse";
    Desktop and 1024px-wide tablets have the width; a portrait tablet needs at
    least 900px of height. Narrower, shorter tablets use the stacked layout.
 
-   The 800px floor is measured, not arbitrary: the docked top is capped at 62%
-   of the viewport, and on a 760px-high laptop that cap sits above the action
-   row. The frame then covers the buttons and leaves them inert. Below 800px the
-   stacked hero has room for both the copy and the panel, so use it. */
+   The 720px floor is measured, not arbitrary. Short laptops get a compact copy
+   block and a slightly shorter dock (see the max-height: 840px rule in
+   styles.css), which leaves the frame below the action row instead of covering
+   it. Do not raise this floor just to hide a CTA collision — that removes the
+   hero motion entirely. Tune the compact copy and dock height instead. */
 function canUseHeroMorph() {
-  if (compactHeroQuery.matches || window.innerHeight < 800) return false;
+  if (compactHeroQuery.matches || window.innerHeight < 720) return false;
   return window.innerWidth >= 1024 || window.innerHeight >= 900;
 }
 
@@ -254,7 +255,8 @@ function heroMorph() {
 
     // The docked frame is fitted to what is actually left: under the copy, and
     // above the caption. Measuring the copy means a longer headline shortens the
-    // panel instead of sliding underneath it.
+    // panel instead of sliding underneath it. The max-height rule in styles.css
+    // keeps the short-laptop copy compact enough for this to leave a real dock.
     const copyBottom = copy.offsetTop + copy.offsetHeight;
     // The buttons are the lowest visible part of the copy. Keep them out of
     // the keyboard path until the docking frame has passed below them.
@@ -264,7 +266,9 @@ function heroMorph() {
       Math.round(vh * 0.62),
       Math.max(Math.round(vh * 0.42), Math.round(copyBottom + 20))
     );
-    const dockH = Math.min(540, vh - dockTop - 44);
+    // Short laptops can use 280px of dock once the copy is compact; the lab
+    // remains interactive and the frame still clears the action row.
+    const dockH = Math.min(540, Math.max(280, vh - dockTop - 44));
 
     metrics = {
       vw,
@@ -276,7 +280,7 @@ function heroMorph() {
       dockTop,
       actionsBottom,
       w: Math.min(900, vw - 32),
-      h: Math.max(300, Math.round(dockH)),
+      h: Math.round(dockH),
     };
   };
 

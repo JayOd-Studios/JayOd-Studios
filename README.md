@@ -55,11 +55,13 @@ hero so the full demo stays readable.
   the plain stacked layout it ships without JavaScript.
 - The scrub runs both ways: scrolling up returns the frame to full screen and
   scrolling down docks it again, as many times as you like, with no reload.
-- Phones (760px wide and below), short windows (under 800px high) and tablets
+- Phones (760px wide and below), short windows (under 720px high) and tablets
   narrower than 1024px with less than 900px of height do not have room for both
-  states, so the morph is skipped and the stacked hero is used. The 800px
-  cut-off is measured: below it the docked frame's 62% top cap overlaps the
-  action row, which used to leave the hero CTAs covered and inert.
+  states, so the morph is skipped and the stacked hero is used. The 720px
+  cut-off is measured: below it the docked frame no longer has room for the
+  action row. Between 720px and 840px high the copy tightens above the lab and
+  the dock keeps a 280px floor, so laptop screens keep the hero motion without
+  covering the CTAs.
 - Reduced motion gets no `hero-mega` at all: stacked hero, copy visible, no scrub.
 
 ### The bubble
