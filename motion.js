@@ -32,9 +32,14 @@ const BOTH_WAYS = "play none none reverse";
 
 /* The full-screen hero needs room for the opening lab *and* the docked one.
    Desktop and 1024px-wide tablets have the width; a portrait tablet needs at
-   least 900px of height. Narrower, shorter tablets use the stacked layout. */
+   least 900px of height. Narrower, shorter tablets use the stacked layout.
+
+   The 800px floor is measured, not arbitrary: the docked top is capped at 62%
+   of the viewport, and on a 760px-high laptop that cap sits above the action
+   row. The frame then covers the buttons and leaves them inert. Below 800px the
+   stacked hero has room for both the copy and the panel, so use it. */
 function canUseHeroMorph() {
-  if (compactHeroQuery.matches || window.innerHeight < 620) return false;
+  if (compactHeroQuery.matches || window.innerHeight < 800) return false;
   return window.innerWidth >= 1024 || window.innerHeight >= 900;
 }
 
@@ -312,8 +317,10 @@ function heroMorph() {
     // the visitor cannot see is worse than no button. The frame sits above the
     // copy while it docks, so wait until its top edge has cleared the buttons
     // before letting them take focus. Only the links go inert — the heading and
-    // lede stay in the accessibility tree throughout.
-    const reachable = c > 0.5 && y >= metrics.actionsBottom + 8;
+    // lede stay in the accessibility tree throughout. Two pixels of clearance
+    // are enough; an 8px guard kept the row inert at 1280×800 even after the
+    // frame had cleared it.
+    const reachable = c > 0.5 && y >= metrics.actionsBottom + 2;
     if (actions && reachable !== painted.reachable) {
       actions.toggleAttribute("inert", !reachable);
       if (reachable) actions.removeAttribute("aria-hidden");
