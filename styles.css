@@ -1897,14 +1897,23 @@ html.motion-ready [data-reveal] {
   background: var(--pv-bg);
 }
 
-.preview {
+.preview,
+.card-shot {
   width: 100%;
   height: 100%;
   transition: transform 0.5s var(--ease);
 }
 
+.card-shot {
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
 .card:hover .preview,
-.card:focus-within .preview {
+.card:focus-within .preview,
+.card:hover .card-shot,
+.card:focus-within .card-shot {
   transform: scale(1.03);
 }
 

@@ -180,25 +180,35 @@ markup to touch. Add, remove or reorder objects; the grid reflows on its own
   year: "2026",
   summary: "Two or three specific sentences.",
   tags: ["React", "TypeScript", "Charts"],
-  url: "https://example.com",   // leave "" to keep it a placeholder
-  preview: "dashboard",         // dashboard | editorial | commerce | landing | docs | studio
+  url: "https://example.com",   // leave "" to keep it unlinked
+  sample: true,                 // keeps the "Sample" badge and "View sample"
+  image: "samples/project.jpg", // optional 1440×900 snapshot; omit for drawn preview
+  imageAlt: "Describe the screenshot",
+  preview: "dashboard",         // fallback drawing if there is no image
 }
 ```
 
-- **`url` empty** → no link, "Sample" badge on the artwork, "Sample entry — no
-  live site" in the footer.
-- **`url` set** → the title and a "View site" link open it in a new tab, and the
-  badge disappears. Nothing else needs changing.
-- **`preview`** picks the layout drawn behind the badge — `dashboard | editorial |
-  commerce | landing | docs | studio`; an unknown value falls back to `editorial`.
+- **`url` empty** → no link, "Sample" badge, and "Sample entry — no live site"
+  in the footer.
+- **`url` + `sample: true`** → the title and a "View sample" link open the
+  staging build in a new tab; the badge stays. Use `url` without `sample` for a
+  real project: the CTA changes to "View site" and the badge disappears.
+- **`image`** → local 1440×900 JPEG shown at the top of the card. Omit it to keep
+  the drawn preview.
+- **`preview`** picks the fallback layout drawn behind the badge — `dashboard |
+  editorial | commerce | landing | docs | studio`; an unknown value falls back to
+  `editorial`.
 
 ## Adding another sample project
 
-The six previews are drawn in **`previews.js`**, one function per layout, in a fixed
-320 x 200 space: `photo()` for a clipped photograph, `chart()` and `columns()` for
-graphs, `stars()`, `avatar()` and `say()` for text. Every colour is a class from
-the `--pv-*` tokens, so the artwork re-inks itself when the theme flips. Add a
-layout to `LAYOUTS` and name it in a `portfolio.js` entry.
+The six fallback previews are drawn in **`previews.js`**, one function per layout, in a
+fixed 320 x 200 space: `photo()` for a clipped photograph, `chart()` and
+`columns()` for graphs, `stars()`, `avatar()` and `say()` for text. Every colour
+is a class from the `--pv-*` tokens, so the artwork re-inks itself when the theme
+flips. Add a layout to `LAYOUTS` and name it in a `portfolio.js` entry.
+
+For a snapshot, capture the page at 1440×900, save it as a JPEG under `samples/`,
+and set `image`; cards crop it to 16:10. Leave `image` off to use the drawing.
 
 ## Light and dark
 
@@ -241,7 +251,7 @@ An editorial index, not a card stack:
 - Instrument Serif for display, Inter for everything else, on the studio's own
   navy `#19224D` with paper `#F6F5F1`.
 - Motion is used for meaning, and each section gets the motion its job needs:
-  the hero lab inspects itself, work cards lift and draw their previews, the
+  the hero lab inspects itself, work cards lift and reveal their snapshots, the
   approach rail fills as you scroll past the four steps, the studio statement
   fills in word by word, contact fields rise into place.
 - Every scroll animation is **reversible**: scrolling back up unwinds a section
@@ -277,7 +287,8 @@ contrast: body copy clears 4.5:1 and accent text clears 3:1 in each.
 | `index.html` | The page |
 | `styles.css` | Tokens, layout, components, responsive and reduced-motion rules |
 | `portfolio.js` | Work section data — the only file to edit for projects |
-| `previews.js` | The drawn previews on the work cards: real copy, charts, photographs as clipped plates |
+| `previews.js` | Fallback work-card previews: real copy, charts, photographs as clipped plates |
+| `samples/` | 1440×900 JPEG snapshots used by the six linked sample cards |
 | `hero.js` | The hero lab: code/preview inspector linking, pointer tilt, the demo's accent/theme/density/wireframe/section controls, and the build pipeline |
 | `icons-boot.js` | The glyph field's layout engine, run as a classic script so it places all 56 glyphs before the first paint |
 | `icons.js` | The glyph field's motion: the home spring, pointer and glyph-to-glyph repulsion, the click shockwave |
@@ -373,7 +384,7 @@ its current state, and the studio statement is split into words at runtime
 without `aria-hidden` or a duplicate label, so screen readers still read it as
 one sentence.
 
-The hero stage, the glyph field, the drawn previews and the decorative
+The hero stage, the glyph field, the fallback drawn previews and the decorative
 ticker are `aria-hidden`; everything they convey is also stated in text. The
 field takes no pointer events either, so it is not on the keyboard path, and it
 stops running when the hero leaves the viewport.
@@ -465,10 +476,11 @@ root: `README.md`, `artifacts/`, `tooling/` and the dev configs are not part of 
 site and 404 from the live origin.
 
 ```sh
-mkdir -p public/vendor/preline-5.0.0
+mkdir -p public/vendor/preline-5.0.0 public/samples
 cp index.html styles.css app.js motion.js hero.js icons-boot.js icons.js anime.js \
    portfolio.js previews.js theme.js theme-boot.js logo-mark.png logo.jpg \
    robots.txt sitemap.xml public/
+cp samples/*.jpg public/samples/
 cp vendor/{anime-4.5.0,motion-14.6.0,lenis-1.3.27,gsap-3.15.0}.js public/vendor/
 cp vendor/preline-5.0.0/accordion.js public/vendor/preline-5.0.0/
 # then deploy with manifest.json, which points at ./public

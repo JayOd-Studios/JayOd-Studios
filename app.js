@@ -92,9 +92,10 @@ if ("IntersectionObserver" in window && sections.length) {
 
 /* ---------- Work grid ---------- */
 
-/* The drawn previews live in previews.js, so the artwork is one set of
-   definitions rather than markup per card. If it fails to load the card still
-   renders — with an empty frame rather than nothing.
+/* Card artwork is a local snapshot when portfolio.js provides one; otherwise
+   the drawn previews in previews.js are one set of definitions rather than
+   markup per card. If previews.js fails to load, the card still renders — with
+   an empty frame rather than nothing.
 
    Named `drawPreview` rather than `buildPreview`: a function declaration in a
    classic script is a property of `window`, so naming this one after the global
@@ -112,28 +113,42 @@ function buildCard(project, index) {
 
   const media = document.createElement("div");
   media.className = "card-media";
-  media.append(drawPreview(project.preview));
 
-  // Real text over the line art: the card previews read as sites rather than as
-  // empty boxes with rectangles in them.
-  const overlay = document.createElement("div");
-  overlay.className = "preview-overlay";
-  overlay.setAttribute("aria-hidden", "true");
+  if (project.image) {
+    const shot = document.createElement("img");
+    shot.className = "card-shot";
+    shot.src = project.image;
+    shot.alt = project.imageAlt || `Screenshot of the ${project.title} sample site`;
+    shot.width = 1440;
+    shot.height = 900;
+    shot.loading = "lazy";
+    shot.decoding = "async";
+    media.append(shot);
+  } else {
+    media.append(drawPreview(project.preview));
 
-  const domain = document.createElement("span");
-  domain.className = "preview-domain";
-  domain.textContent = project.domain || "sample.studio";
+    // Real text over the line art: the card previews read as sites rather than
+    // as empty boxes with rectangles in them.
+    const overlay = document.createElement("div");
+    overlay.className = "preview-overlay";
+    overlay.setAttribute("aria-hidden", "true");
 
-  const word = document.createElement("span");
-  word.className = "preview-word";
-  word.textContent = project.word || project.title || "";
+    const domain = document.createElement("span");
+    domain.className = "preview-domain";
+    domain.textContent = project.domain || "sample.studio";
 
-  overlay.append(domain, word);
-  media.append(overlay);
+    const word = document.createElement("span");
+    word.className = "preview-word";
+    word.textContent = project.word || project.title || "";
+
+    overlay.append(domain, word);
+    media.append(overlay);
+  }
 
   const live = Boolean(project.url);
+  const isSample = project.sample === true || !live;
 
-  if (!live) {
+  if (isSample) {
     const badge = document.createElement("span");
     badge.className = "card-badge";
     badge.textContent = "Sample";
@@ -189,7 +204,7 @@ function buildCard(project, index) {
     open.href = project.url;
     open.rel = "noopener noreferrer";
     open.target = "_blank";
-    open.textContent = "View site";
+    open.textContent = project.sample ? "View sample" : "View site";
     const arrow = document.createElement("span");
     arrow.className = "card-arrow";
     arrow.setAttribute("aria-hidden", "true");
